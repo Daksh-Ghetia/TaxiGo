@@ -1,0 +1,295 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body d-flex align-items-end justify-content-between">
+            <h1 class="text-white">Driver</h1>
+            <button class="btn btn-info action-btn" style="align-self: flex-start;" (click)="sideButton()" >{{sideButtonTitle}} Driver</button>
+        </div>
+
+        <!-- Search Form -->
+        <div class="row">
+            <div class="col-xl-12">
+                <form [formGroup]="driverForm" *ngIf="sideButtonTitle == 'Add' " class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-auto" >
+                    <div class="form-group mb-0" [ngClass]="{ 'focused': focus === true }" >
+                        <label for="vehicleName" class="text-white mr-2">Search Driver <span class="text-white ml-1">:</span> </label>
+                        <div class="input-group input-group-alternative">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            </div>
+                            <input class="form-control" id="searchDriver" name="searchDriver" placeholder="Search" type="text" (focus)="focus = true"
+                            (blur)="focus = false" formControlName="driverSearch" #searchDriverInput>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-success" id="submit" type="submit" (click)="searchDriver(searchDriverInput.value)">Search Driver</button>
+                        <button class="btn btn-danger" (click)="cancelDriver()">Cancel</button>
+                    </div>
+                  </form>
+                  <div class="row" *ngIf="(sideButtonTitle === 'Add')">
+                    <div col-md-4>
+                      <div>
+                        <strong class="ml-3">{{customErrMsg}}</strong>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid mt--7">
+    <!-- Form -->
+    <div class="col-xl-12">
+        <form id="driver" [formGroup]="driverForm" *ngIf="sideButtonTitle == 'Search' ">
+            <table>
+                <!-- Driver Name -->
+                <tr>
+                    <td class="label-input text-white">Driver Name:</td>
+                    <td>
+                        <input class="driver-input" formControlName="driverName" type="text" name="driverName" id="driverName" placeholder="Driver Name">
+                        <br>
+                        <div>
+                            <strong *ngIf="driverForm.get('driverName').invalid && driverForm.get('driverName').touched && (driverForm.get('driverName').value == null || driverForm.get('driverName').value == '')">Please add driver name</strong>
+                            <strong *ngIf="driverForm.get('driverName').invalid && driverForm.get('driverName').touched && driverForm.get('driverName').errors.pattern">Please add valid driver name</strong>
+                        </div>                        
+                    </td>
+                </tr>
+                <!-- Driver Email -->
+                <div class="mt-3"></div>
+                <tr>
+                    <td class="">Driver Email:</td>
+                    <td>
+                        <input class="driver-input" formControlName="driverEmail" type="text" name="driverEmail" id="driverEmail" placeholder="Driver email">
+                        <br>
+                        <div>
+                            <strong *ngIf="driverForm.get('driverEmail').invalid && driverForm.get('driverEmail').touched && (driverForm.get('driverEmail').value == null || driverForm.get('driverEmail').value == '')">Please enter driver email</strong>
+                            <strong *ngIf="driverForm.get('driverEmail').invalid && driverForm.get('driverEmail').errors.email">Please enter a valid email</strong>
+                        </div>
+                    </td>
+                </tr>
+                <!-- Driver Country -->
+                <div class="mt-3"></div>
+                <tr>
+                    <td>Driver Country:</td>
+                    <td>
+                        <select class="driver-input" formControlName="driverCountryId" name="driverCountryId" id="driverCountryId" (change)="setSelectedCountry($event.target.value); fillCityDropDown($event.target.value);">
+                            <option disabled selected hidden [value]="null" >Select Country</option>
+                            <option [value]="country._id" *ngFor="let country of countryList">{{country.countryName}} <span>{{country.countryIcon}}</span></option>
+                        </select>
+                        <br>
+                        <div>
+                            <strong *ngIf="driverForm.get('driverCountryId').invalid && driverForm.get('driverCountryId').touched">Please select a country</strong>
+                        </div>
+                    </td>
+                </tr>                
+                <!-- Driver City -->
+                <div class="mt-3"></div>
+                <tr>
+                    <td>Driver City:</td>
+                    <td>
+                        <select class="driver-input" id="driverCityId" formControlName="driverCityId" name="driverCityId">
+                            <option disabled selected hidden [value]="null" >Select city</option>
+                            <option *ngFor="let city of cityList" [value]="city._id" >{{city.cityName}}, {{city.countryName}}</option>
+                        </select>
+                        <br>
+                        <div>
+                            <strong *ngIf="driverForm.get('driverCityId').invalid && driverForm.get('driverCityId').touched">Please select a City</strong>
+                        </div>
+                    </td>
+                </tr>
+                <!-- Driver Phone -->
+                <div class="mt-3"></div>
+                <tr>
+                    <td>Driver Phone:</td>
+                    <td>
+                        <input class="countryCodeInput" type="text" formControlName="driverCountryCode" name="driverCountryCode" [(ngModel)]="selectedCountryCode" id="driverCountryCode" placeholder="" disabled>
+                        <input class="driver-input" formControlName="driverPhone" type="phone" maxlength="10" name="driverPhone" id="driverPhone" placeholder="Driver phone" style="width: 19rem;">
+                        <br>
+                        <div>
+                            <strong *ngIf="driverForm.get('driverPhone').invalid && driverForm.get('driverPhone').touched && (driverForm.get('driverPhone').value == null || driverForm.get('driverPhone').value == '')">Please enter driver phone number</strong>
+                            <strong *ngIf="driverForm.get('driverPhone').invalid && driverForm.get('driverPhone').errors.pattern">Please enter a valid phone number</strong>
+                        </div>
+                    </td>
+                </tr>
+                <!-- Driver Profile -->
+                <div class="mt-3"></div>
+                <tr>
+                    <td>Driver Profile:</td>                    
+                    <td>
+                        <input class="driver-input" formControlName="driverProfile" type="file" name="driverProfile" id="driverProfile"  placeholder="Driver profile picture" accept="image/png, image/jpeg, image/jpg" >
+                    </td>
+                </tr>
+                <!-- Action Button -->
+                <div class="mt-3"></div>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button class="btn btn-success" id="submit" type="submit" (click)="addDriver()">{{actionButton}} Driver</button>
+                        <button class="btn btn-danger" (click)="cancelDriver()">Cancel</button>
+                    </td>
+                </tr>
+                <!-- Error Message -->
+                <tr>
+                    <td></td>
+                    <td>{{customErrMsg}} </td>
+                </tr>
+            </table>
+        </form>
+        <label id="editDriverId" for="id" hidden></label>
+    </div>
+
+    <!-- Driver data table -->
+    <div class="row mt-3">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header border-0">
+              <h3 class="mb-0">Driver List</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                
+                <!-- Table header section -->
+                <thead class="thead-light">
+                  <tr class="text-center">
+                    <th scope="col" (click)="sortData('driverName')">
+                      Driver Name
+                      <i *ngIf="currentSort === 'driverName' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'driverName' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('driverEmail')">
+                      Driver Email-id
+                      <i *ngIf="currentSort === 'driverEmail' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'driverEmail' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('driverPhone')">
+                        Driver Phone number
+                      <i *ngIf="currentSort === 'driverPhone' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'driverPhone' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('driverCountryId')">
+                        Country
+                      <i *ngIf="currentSort === 'driverCountryId' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'driverCountryId' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('driverCityId')">
+                        City
+                      <i *ngIf="currentSort === 'driverCityId' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'driverCityId' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('driverServiceType')">
+                      Driver Service Type
+                      <i *ngIf="currentSort === 'driverServiceType' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'driverServiceType' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col">
+                        Approval Status
+                    </th>
+                    <th scope="col">
+                      Driver Profile
+                    </th>
+                    <th scope="col" >Action</th>
+                  </tr>
+                </thead>
+
+                <!-- Table body section -->
+                <tbody>
+                  <tr *ngFor="let driver of driverDataList" class="text-center text-capitalize">
+                    
+                    <td>{{driver.driverName}}</td>
+                    <td>{{driver.driverEmail}}</td>
+                    <td>{{driver.country.countryCode}} {{driver.driverPhone}}</td>
+                    <td>{{driver.country.countryName}}</td>
+                    <td>{{driver.city.cityName}}</td>
+                    <td *ngIf="driver?.vehicleType.length > 0">{{driver.vehicleType[0].vehicleName}} 
+                        <span (click)="updateServiceModel(content, driver.city._id, driver._id, driver.vehicleType[0]._id)">
+                            <img src="assets/img/icons/editVehicleServiceType.png" alt="editVehicleType" srcset="" height="20px" width="20px">
+                        </span>
+                    </td>
+                    <td *ngIf="driver?.vehicleType.length == 0">
+                         - 
+                        <span (click)="updateServiceModel(content, driver.city._id, driver._id)">
+                            <img src="assets/img/icons/editVehicleServiceType.png" alt="editVehicleType" srcset="" height="20px" width="20px">
+                        </span>
+                    </td>
+
+                    <td>
+                      <div>
+                        <div class="toggle-switch">
+                          <input [id]="driver._id" type="checkbox" [(ngModel)]="driver.driverStatus">
+                          <label class="mt-1" [for]="driver._id" (click)="updateDriverStatus(driver._id, !driver.driverStatus)"></label>
+                        </div>
+                        <span *ngIf="driver.driverStatus">Approved</span>
+                        <span *ngIf="!driver.driverStatus">Declined</span>
+                      </div>
+                    </td>
+                    <td>
+                        <img *ngIf="driver.driverProfile" src="http://localhost:3000/driverImages/{{driver.driverProfile}}" alt="Driver profile" height="80px" >
+                        <img *ngIf="!driver.driverProfile" src="http://localhost:3000/driverImages/defaultImage.png" alt="Driver profile default" height="60px" >
+                    </td>
+                    <td>
+                      <button class="btn btn-info"  (click)="fillDataForEdit(driver)">Edit</button>
+                      <button class="btn btn-danger" [id]="driver._id" (click)="deleteDriver($event.target.id)">Delete</button>
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+            </div>
+
+            <!-- Pagination buttons -->
+            <div class="card-footer py-4">
+              <nav aria-label="...">
+                <ul class="pagination justify-content-end mb-0">
+                  <li class="page-item disabled">
+                    <a class="page-link" href="javascript:void(0)" tabindex="-1">
+                      <i class="fas fa-angle-left"></i>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                  </li>
+                  <li class="page-item active">
+                    <a class="page-link" href="javascript:void(0)">1</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" href="javascript:void(0)">2 <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="page-item"><a class="page-link" href="javascript:void(0)">3</a></li>
+                  <li class="page-item">
+                    <a class="page-link" href="javascript:void(0)">
+                      <i class="fas fa-angle-right"></i>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+
+          </div>
+        </div>
+    </div>
+    
+
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4>Service Type</h4>
+            <!-- <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button> -->
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
+        </div>
+
+        <div class="modal-body">
+          <form [formGroup]="driverServiceTypeForm" id="driverServiceType">
+            <label>Driver service type:</label>
+            <select class="driver-input" formControlName="driverServiceTypeId" name="driverServiceTypeId" id="driverServiceTypeId" style="width: 19rem;">
+                <option disabled selected hidden [value]="null" >Select service type</option>
+                <option *ngFor="let service of serviceList" [value]="service.vehicleType._id">{{service.vehicleType.vehicleName}}</option>
+            </select>
+            <br>
+            <div>
+              <strong *ngIf="driverServiceTypeForm.get('driverServiceTypeId').invalid && driverServiceTypeForm.get('driverServiceTypeId').touched">Please select a service type</strong>
+            </div> 
+          </form>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-info" (click)="updateService()">Save Updates</button>
+            <button type="button" class="btn btn-danger" (click)="updateService('Delete')">Delete Service</button>
+        </div>
+    </ng-template>
+</div>

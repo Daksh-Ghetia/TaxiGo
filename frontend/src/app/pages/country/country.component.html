@@ -1,0 +1,119 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body d-flex align-items-end justify-content-between">
+            <h1 class="text-white">Country</h1>
+            <button class="btn btn-info action-btn" style="align-self: flex-start;" (click)="sideButton()" >{{sideButtonTitle}} Country</button>
+        </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <form [formGroup]="reactiveForm" *ngIf="(title === 'Add')">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <select #countryDropDown id="countryDropDown" name="countrySelection" formControlName="countrySelect" (change)="handleCountryChange($event.target.value)" >
+                                <option value="" disabled selected hidden [value]="null" >Select Country</option>
+                                <option [value]="country.name.common" *ngFor="let country of countryDropDownData">{{country.name.common}} <span>{{country.flag}}</span></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-success" id="submit" type="submit" (click)="addCountryData()">Add Country</button>
+                            <button class="btn btn-danger" (click)="cancel()">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+
+                <form [formGroup]="reactiveForm" class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-auto" *ngIf="(title === 'Search')">
+                    <div class="form-group mb-0" [ngClass]="{ 'focused': focus === true }" >
+                        <label for="countryName" class="text-white mr-2">Search Country <span class="text-white ml-1">:</span> </label>
+                        <div class="input-group input-group-alternative">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            </div>
+                            <input class="form-control" id="searchCountry" name="searchCountry" placeholder="Search" type="text" (focus)="focus = true"
+                            (blur)="focus = false" formControlName="countrySearch" #searchInput>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-success" id="submit" type="submit" (click)="searchCountry(searchInput.value)">Search Country</button>
+                        <button class="btn btn-danger" (click)="cancel()">Cancel</button>
+                    </div>
+                </form>
+                <div class="row" *ngIf="(title === 'Search')">
+                    <div col-md-4>
+                      <div>
+                        <strong>{{customErrMsg}}</strong>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid mt--7">
+    <div class="row">
+        <div class="col-xl-12 mb-5 mb-xl-0" >
+            <form [formGroup]="reactiveForm" id="addNewCountry" *ngIf="(title === 'Add')">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="countryName" class="text-white">Country Name <span class="text-white ml-1">:</span> </label>
+                            <input type="text" class="country-Input ml-1" formControlName="countryName" name="countryName" id="countryName" placeholder="Country name" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-3" >
+                        <div class="form-group">
+                            <label for="countryCurrency" class="text-white">Currency <span class="text-white">:</span> </label>
+                            <input type="text" class="country-Input ml-1" formControlName="countryCurrency" name="countryCurrency" id="countryCurrency" placeholder="Country currency" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="countryCode" class="text-white">Code <span class="text-white">:</span> </label>
+                            <input type="text" class="country-Input ml-1" formControlName="countryCode" name="countryCode" id="countryCode" placeholder="Country code" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="countryTimeZone" class="text-white">Time zone <span class="text-white ml-1">:</span> </label>
+                            <input type="text" class="country-Input ml-1" formControlName="countryTimeZone" name="countryTimeZone" id="countryTimeZone" placeholder="Country time zone" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="countryFlag" class="text-white">Flag<span class="text-white ml-1">:</span> </label>
+                            <input type="text" class="country-Input ml-1" formControlName="countryFlag" name="countryFlag" id="countryFlag" placeholder="Flag" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="(title === 'Add')">
+                    <div col-md-4>
+                      <div>
+                        <strong>{{customErrMsg}}</strong>
+                      </div>
+                    </div>
+                  </div>
+            </form>
+        </div>
+        <div class="col-xl-12 mb-5 mb-xl-6" *ngIf="(title === 'Search')"></div>
+        <!-- <div class="col-xl-12 mb-5 mb-xl-5" *ngIf="(title === 'Search')"></div> -->
+        <div class="row mt-5">
+            <div *ngFor="let country of countryList ">
+                <div class="card mr-4 my-2" style="width: 18rem;" id="">
+                  <!-- width="286px" height="160px" -->
+                    <img class="card-img-top" src="{{country.countryFlag}}" alt="Card image" width="320px" height="200px">
+                    <div class="card-body">
+                      <h5 class="card-title text-capitalize" style="text-align: center;">{{country.countryName}} </h5>
+                      <br>
+                      <h5 class="card-title text-capitalize">Country Code: {{country.countryCode}} </h5>
+                      <br>
+                      <h5 class="card-title text-capitalize">Time zone: {{country.countryTimeZone}} </h5>
+                      <br>
+                      <h5 class="card-title text-capitalize">Currency: {{country.countryCurrencySymbol}} {{country.countryCurrency}} </h5>
+                      <div style="text-align: center;">
+                        <button class="btn btn-danger action-btn" id="{{country._id}}" (click)="deleteCountry($event.target.id)">Delete</button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

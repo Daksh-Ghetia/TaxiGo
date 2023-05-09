@@ -1,0 +1,63 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body">
+            <h1 class="text-white">{{title}} Vehicle Type</h1>
+            
+        </div>
+    </div>
+</div>
+<div class="container-fluid mt--7">
+    <div class="row">
+        <div class="col-xl-9 mb-5 mb-xl-0" >
+            <form [formGroup]="reactiveForm" id="addNewVehicleType">
+                <div class="row">
+                    <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="vehicleName" class="text-white">Vehicle Name <span class="text-white ml-1">:</span> </label>
+                        <input type="text" formControlName="vehicleName" class="vehicle-Input ml-2" name="vehicleName" id="vehicleName" placeholder="Vehicle Type name">
+                        <div>
+                          <small *ngIf="!reactiveForm.get('vehicleName').valid && reactiveForm.get('vehicleName').dirty">Vehicle Name is required</small>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="vehicleName" class="text-white">Upload image <span class="text-white ml-1">:</span> </label>
+                            <input type="file" formControlName="vehicleIcon" class="vehicle-Input ml-2" name="vehicleIcon" id="vehicleIcon" placeholder="Vehicle Type image">
+                            <div>
+                              <small *ngIf="!reactiveForm.get('vehicleIcon').valid && reactiveForm.get('vehicleIcon').touched">Vehicle Icon is required</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-success" id="submit" type="submit" (click)="addVehicleType()">{{title}} Vehicle Type</button>
+                        <button class="btn btn-danger" (click)="cancelAction()">Cancel</button>
+                    </div>
+                </div>
+                <div class="row">
+                  <div col-md-4>
+                    <div>
+                      <strong>{{customErrMsg}}</strong>
+                    </div>
+                  </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row mt-5">
+
+        <div *ngFor="let vehicle of vehicles">
+            <div class="card mr-4 my-2" style="width: 18rem;" id="">
+              <!-- width="286px" height="160px" -->
+                <img class="card-img-top" src="http://localhost:3000/vehicleTypeImages/{{vehicle.vehicleIcon}}" alt="Card image" width="286px" height="350px">
+                <div class="card-body">
+                  <h5 class="card-title text-capitalize" style="text-align: center;">{{vehicle.vehicleName}} </h5>
+                  <div style="text-align: center;">
+                    <button class="btn btn-info action-btn margin-right: 10px;" (click)="editDetails($event.target.id, vehicle.vehicleName); scrollToTop()" id="{{vehicle._id}}">Edit</button>
+                    <button class="btn btn-danger action-btn" (click)="deleteVehicleType($event.target.id)" id="{{vehicle._id}}">Delete</button>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

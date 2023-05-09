@@ -1,0 +1,220 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body d-flex align-items-end justify-content-between">
+            <h1 class="text-white">Users</h1>
+            <button class="btn btn-info action-btn" style="align-self: flex-start;" (click)="sideButton()" >{{sideButtonTitle}} Country</button>
+        </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <form [formGroup]="userForm" *ngIf="sideButtonTitle == 'Add' " class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-auto" >
+                    <div class="form-group mb-0" [ngClass]="{ 'focused': focus === true }" >
+                        <label for="vehicalName" class="text-white mr-2">Search User <span class="text-white ml-1">:</span> </label>
+                        <div class="input-group input-group-alternative">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            </div>
+                            <input class="form-control" id="searchUser" name="searchUser" placeholder="Search" type="text" (focus)="focus = true"
+                            (blur)="focus = false" formControlName="userSearch">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-success" id="submit" type="submit" (click)="searchUser()">Search User</button>
+                        <button class="btn btn-danger" (click)="cancelUser()">Cancel</button>
+                    </div>
+                  </form>
+                  <div class="row" *ngIf="(sideButtonTitle === 'Add')">
+                    <div col-md-4>
+                      <div>
+                        <strong class="ml-3">{{customErrMsg}}</strong>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid mt--7">
+    <!-- Form -->
+    <div class="col-xl-12">
+        <form id="user" [formGroup]="userForm" *ngIf="sideButtonTitle == 'Search' ">
+            <table>
+                <!-- UserName -->
+                <tr>
+                    <td class="label-input text-white">User Name:</td>
+                    <td>
+                        <input class="user-input" formControlName="userName" type="text" name="userName" id="userName" placeholder="User Name">
+                        <br>
+                        <div>
+                            <strong *ngIf="userForm.get('userName').invalid && userForm.get('userName').touched && (userForm.get('userName').value == null || userForm.get('userName').value == '')">Please add user name</strong>
+                            <strong *ngIf="userForm.get('userName').invalid && userForm.get('userName').touched && userForm.get('userName').errors.pattern">Please add valid user name</strong>
+
+                        </div>                        
+                    </td>
+                </tr>
+
+                <!-- User Email -->
+                <div class="mt-3"></div>
+                <tr>
+                    <td class="">User Email:</td>
+                    
+                    <td>
+                        <input class="user-input" formControlName="userEmail" type="text" name="userEmail" id="userEmail" placeholder="User email">
+                        <br>
+                        <div>
+                            <strong *ngIf="userForm.get('userEmail').invalid && userForm.get('userEmail').touched && (userForm.get('userEmail').value == null || userForm.get('userEmail').value == '')">Please enter user email</strong>
+                            <strong *ngIf="userForm.get('userEmail').invalid && userForm.get('userEmail').errors.email">Please enter a valid email</strong>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- User Country -->
+                <div class="mt-3"></div>
+                <tr>
+                    <td>User Country:</td>
+                    <td>
+                        <select class="user-input" formControlName="userCountryId" name="userCountryId" id="userCountryId" (change)="setSelectedCountry($event.target.value)">
+                            <option disabled selected hidden [value]="null" >Select Country</option>
+                            <option [value]="country._id" *ngFor="let country of countryList">{{country.countryName}} <span>{{country.countryIcon}}</span></option>
+                        </select>
+                        <br>
+                        <div>
+                            <strong *ngIf="userForm.get('userCountryId').invalid && userForm.get('userCountryId').touched">Please select a country</strong>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- User Phone -->
+                <div class="mt-3"></div>
+                <tr>
+                    <td>User Phone:</td>
+                    
+                    <td>
+                        <input class="countryCodeInput" type="text" formControlName="userCountryCode" name="userCountryCode" [(ngModel)]="selectedCountryCode" id="userCountryCode" placeholder="" disabled>
+                        <input class="user-input" formControlName="userPhone" type="phone" maxlength="10" name="userPhone" id="userPhone" placeholder="User phone" style="width: 19rem;">
+                        <br>
+                        <div>
+                            <strong *ngIf="userForm.get('userPhone').invalid && userForm.get('userPhone').touched && (userForm.get('userPhone').value == null || userForm.get('userPhone').value == '')">Please enter user phone number</strong>
+                            <strong *ngIf="userForm.get('userPhone').invalid && userForm.get('userPhone').errors.pattern">Please enter a valid phone number</strong>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- User Profile -->
+                <div class="mt-3"></div>
+                <tr>
+                    <td>User Profile:</td>
+                    
+                    <td>
+                        <input class="user-input" formControlName="userProfile" type="file" name="userProfile" id="userProfile" placeholder="User profile pic" >
+                    </td>
+                </tr>
+
+                <!-- Action Button -->
+                <div class="mt-3"></div>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button class="btn btn-success" id="submit" type="submit" (click)="addUser()">{{actionButton}} User</button>
+                        <button class="btn btn-danger" (click)="cancelUser()">Cancel</button>
+                    </td>
+                </tr>
+                <!-- Error Message -->
+                <tr>
+                    <td><label id="editUserId" for="id" hidden></label></td>
+                    <td>{{customErrMsg}} </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header border-0">
+              <h3 class="mb-0">User List</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                
+                <!-- Table header section -->
+                <thead class="thead-light">
+                  <tr class="text-center">
+                    <th scope="col" (click)="sortData('userName')">
+                      User Name
+                      <i *ngIf="currentSort === 'userName' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'userName' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('userEmail')">
+                      User Email-id
+                      <i *ngIf="currentSort === 'userEmail' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'userEmail' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('userPhone')">
+                        User Phone number
+                      <i *ngIf="currentSort === 'userPhone' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'userPhone' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('userCountryId')">
+                        Country
+                      <i *ngIf="currentSort === 'userCountryId' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'userCountryId' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col">
+                      User Profile
+                    </th>
+                    <th scope="col" >Action</th>
+                  </tr>
+                </thead>
+
+                <!-- Table body section -->
+                <tbody>
+                  <tr *ngFor="let user of userDataList" class="text-center text-capitalize">
+                    <td>{{user.userName}}</td>
+                    <td>{{user.userEmail}}</td>
+                    <td>{{user.country.countryCode}} {{user.userPhone}}</td>
+                    <td>{{user.country.countryName}} {{user.country.countryIcon}} </td>
+                    <td>
+                        <img *ngIf="user.userProfile" src="http://localhost:3000/userImages/{{user.userProfile}}" alt="User profile" height="80px" >
+                        <img *ngIf="!user.userProfile" src="http://localhost:3000/userImages/defaultImage.png" alt="User profile default" height="60px" >
+                    </td>
+                    <td>
+                      <button class="btn btn-info" [id]="user._id" (click)="fillDataForEdit(user)">Edit</button>
+                      <button class="btn btn-danger" [id]="user._id" (click)="deleteUser($event.target.id)">Delete</button>
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+            </div>
+
+            <!-- Pagination buttons -->
+            <div class="card-footer py-4">
+              <nav aria-label="...">
+                <ul class="pagination justify-content-end mb-0">
+                  <li class="page-item disabled">
+                    <a class="page-link" href="javascript:void(0)" tabindex="-1">
+                      <i class="fas fa-angle-left"></i>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                  </li>
+                  <li class="page-item active">
+                    <a class="page-link" href="javascript:void(0)">1</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" href="javascript:void(0)">2 <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="page-item"><a class="page-link" href="javascript:void(0)">3</a></li>
+                  <li class="page-item">
+                    <a class="page-link" href="javascript:void(0)">
+                      <i class="fas fa-angle-right"></i>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+
+          </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,291 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body d-flex align-items-end justify-content-between">
+            <h1 class="text-white">Vehicle Pricing</h1>
+
+        </div>
+    </div>
+</div>
+<div class="container-fluid mt--7">
+    
+    <!-- Form -->
+    <div class="col-xl-12">
+        <form id="vehiclePricing" [formGroup]="vehiclePricingForm" >
+            <!-- Country -->
+            <div class="row" >
+                <div class="xl-12">
+                    <label for="countryId">Select Country : </label>
+                    <select class="ml-6" id="countryDropDown" formControlName="countryId" name="countryId" (change)="fillCityDropDown($event.target.value)">
+                        <option disabled selected hidden [value]="null" >Select Country</option>
+                        <option [value]="country._id" *ngFor="let country of countryList">{{country.countryName}} <span>{{country.countryIcon}}</span></option>
+                    </select>
+                    <br>
+                    <div class="inputErrorMessage">
+                        <strong *ngIf="vehiclePricingForm.get('countryId').invalid && vehiclePricingForm.get('countryId').touched">Country selection is required</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- City -->
+            <div class="row mt-3">
+                <div class="xl-12">
+                    <label for="cityId">Select City :&nbsp;&nbsp; </label>
+                    <select class="ml-7" id="cityDropDown" formControlName="cityId" name="cityId">
+                        <option disabled selected hidden [value]="null" >Select city</option>
+                        <option *ngFor="let city of cityList" [value]="city._id" >{{city.cityName}}, {{city.countryName}}</option>
+                    </select>
+                    <br>
+                    <div class="inputErrorMessage">
+                        <strong *ngIf="vehiclePricingForm.get('cityId').invalid && vehiclePricingForm.get('cityId').touched">City selection is required</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicle Type -->
+            <div class="row mt-3">
+                <div class="xl-12">
+                    <label for="vehicleTypeId">Select Vehicle Type :&nbsp;&nbsp;&nbsp; </label>
+                    <select class="ml-4" id="carTypeDropDown" formControlName="vehicleTypeId" name="vehicleTypeId" >
+                        <option disabled selected hidden [value]="null" >Select vehicle type</option>
+                        <option *ngFor="let vehicle of vehicleTypeList" [value]="vehicle._id" >{{vehicle.vehicleName}}</option>
+                    </select>
+                    <br>
+                    <div class="inputErrorMessage">
+                        <strong *ngIf="vehiclePricingForm.get('vehicleTypeId').invalid && vehiclePricingForm.get('vehicleTypeId').touched">Vehica type selection is required</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Driver Profit -->
+            <div class="row mt-3">
+                <div class="xl-12">
+                    <label for="driverProfit">Driver Profit :&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <input class="ml-6 vehicle-Pricing-Input" formControlName="driverProfit" type="number" min="0" max="100" name="driverProfit" id="driverProfit" placeholder="Driver profit in %">
+                    <br>
+                    <div class="inputErrorMessage">
+                        <strong *ngIf="vehiclePricingForm.get('driverProfit').invalid && vehiclePricingForm.get('driverProfit').touched && (vehiclePricingForm.get('driverProfit').value == null)">Driver profit is required</strong>
+                        <strong *ngIf="vehiclePricingForm.get('driverProfit').invalid && vehiclePricingForm.get('driverProfit').errors.min">Profit must be greter than or equal to 0</strong>
+                        <strong *ngIf="vehiclePricingForm.get('driverProfit').invalid && vehiclePricingForm.get('driverProfit').errors.max">Profit must be less than 100</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Minimum Fare -->
+            <div class="row mt-3">
+                <div class="xl-12">
+                    <label for="minimumFare">Minimum Fare :</label>
+                    <input class="ml-6 vehicle-Pricing-Input" formControlName="minimumFare" type="number" min="0" name="minimumFare" id="minimumFare" placeholder="Minimum fare">
+                    <br>
+                    <div class="inputErrorMessage">
+                        <strong *ngIf="vehiclePricingForm.get('minimumFare').invalid && vehiclePricingForm.get('minimumFare').touched">Minimum Fare is required</strong>
+                        <strong *ngIf="vehiclePricingForm.get('minimumFare').invalid && vehiclePricingForm.get('minimumFare').errors.min">Minimum fare must be greter than or equal to 0</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Distance with base price -->
+            <div class="row mt-3">
+                <div class="xl-12">
+                    <label for="distanceForBasePrice">Distance with base price: </label>
+                    <select class="ml-1" id="distanceForBasePrice" formControlName="distanceForBasePrice" name="distanceForBasePrice" >
+                        <option disabled selected hidden [value]="null" >Select Distance for base price</option>
+                        <option *ngFor="let i of [1,2,3,4,5]" [value]="i" >{{i}}</option>
+                    </select>
+                    <br>
+                    <div class="inputErrorMessage">
+                        <strong *ngIf="vehiclePricingForm.get('distanceForBasePrice').invalid && vehiclePricingForm.get('distanceForBasePrice').touched">Distance For Base Price is required</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Base Price -->
+            <div class="row mt-3">
+                <div class="xl-12">
+                    <label for="basePrice">Base Price :&nbsp;&nbsp;</label>
+                    <input class="ml-7 vehicle-Pricing-Input" formControlName="basePrice" type="number" min="0" name="basePrice" id="basePrice" placeholder="Base Price">
+                    <br>
+                    <div class="inputErrorMessage">
+                        <strong *ngIf="vehiclePricingForm.get('basePrice').invalid && vehiclePricingForm.get('basePrice').touched">Base price is required</strong>
+                        <strong *ngIf="vehiclePricingForm.get('basePrice').invalid && vehiclePricingForm.get('basePrice').errors.min">Base price must be greter than or equal to 0</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price per unit distance -->
+            <div class="row mt-3">
+                <div class="xl-12">
+                    <label for="pricePerUnitDistance">Price per unit distance :</label>
+                    <input class="ml-3 vehicle-Pricing-Input" formControlName="pricePerUnitDistance" type="number" min="0" name="pricePerUnitDistance" id="pricePerUnitDistance" placeholder="Price Per Unit Distance">
+                    <br>
+                    <div class="inputErrorMessage">
+                        <strong *ngIf="vehiclePricingForm.get('pricePerUnitDistance').invalid && vehiclePricingForm.get('pricePerUnitDistance').touched && vehiclePricingForm.get('pricePerUnitDistance').value == null">Price Per Unit Distance is required</strong>
+                        <strong *ngIf="vehiclePricingForm.get('pricePerUnitDistance').invalid && vehiclePricingForm.get('pricePerUnitDistance').errors.min">Price Per Unit Distance must be greter than or equal to 0</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price per unit time -->
+            <div class="row mt-3">
+                <div class="xl-12">
+                    <label for="pricePerUnitTime">Price per unit time :</label>
+                    <input class="ml-5 vehicle-Pricing-Input" formControlName="pricePerUnitTime" type="number" min="0" name="pricePerUnitTime" id="pricePerUnitTime" placeholder="Price Per Unit Time">
+                    <br>
+                    <div class="inputErrorMessage">
+                        <strong *ngIf="vehiclePricingForm.get('pricePerUnitTime').invalid && vehiclePricingForm.get('pricePerUnitTime').touched && vehiclePricingForm.get('pricePerUnitTime').value == null">Price Per Unit Time is required</strong>
+                        <strong *ngIf="vehiclePricingForm.get('pricePerUnitTime').invalid && vehiclePricingForm.get('pricePerUnitTime').errors.min">Price Per Unit Time must be greter than or equal to 0</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Max space -->
+            <div class="row mt-3">
+                <div class="xl-12">
+                    <label for="maxSpace">Max Space :&nbsp;&nbsp;</label>
+                    <input class="ml-7 vehicle-Pricing-Input" formControlName="maxSpace" type="number" min="0" name="maxSpace" id="maxSpace" placeholder="Max Space">
+                    <br>
+                    <div class="inputErrorMessage">
+                        <strong *ngIf="vehiclePricingForm.get('maxSpace').invalid && vehiclePricingForm.get('maxSpace').touched && vehiclePricingForm.get('maxSpace').value == null">Max Space is required</strong>
+                        <strong *ngIf="vehiclePricingForm.get('maxSpace').invalid && vehiclePricingForm.get('maxSpace').errors.min">Max Space must be greter than or equal to 0</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3 ml-9">
+                <div class="col-md-3">
+                    <label id="editId" for="id" hidden></label>
+                    <button class="btn btn-success" id="submit" type="submit" (click)="addVehiclePricing()" >{{actionButton}} vehicle Pricing</button>
+                    <button class="btn btn-danger" (click)="cancelVehiclePricing()">Cancel</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div col-md-4>
+                    <div>
+                      <strong>{{customErrMsg}}</strong>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <br><br>
+
+    <div class="row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header border-0">
+              <h3 class="mb-0">Vehicle Pricing</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                
+                <!-- Table header section -->
+                <thead class="thead-light">
+                  <tr class="text-center">
+                    <th scope="col" (click)="sortData('countryId')">
+                      Country
+                      <i *ngIf="currentSort === 'countryId' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'countryId' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('cityId')">
+                      City
+                      <i *ngIf="currentSort === 'cityId' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'cityId' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('vehicleTypeId')">
+                      Vehicle Type
+                      <i *ngIf="currentSort === 'vehicleTypeId' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'vehicleTypeId' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('driverProfit')">
+                      Driver profit
+                      <i *ngIf="currentSort === 'driverProfit' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'driverProfit' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('minimumFare')">
+                      Minimum Fare
+                      <i *ngIf="currentSort === 'minimumFare' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'minimumFare' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('distanceForBasePrice')" class="text-wrap">
+                      Distance for base price
+                      <i *ngIf="currentSort === 'distanceForBasePrice' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'distanceForBasePrice' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('basePrice')">
+                      Base Price
+                      <i *ngIf="currentSort === 'basePrice' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'basePrice' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('pricePerUnitDistance')" class="text-wrap">
+                      Price per unit distance
+                      <i *ngIf="currentSort === 'pricePerUnitDistance' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'pricePerUnitDistance' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('pricePerUnitTime')" class="text-wrap">
+                      Price per unit time
+                      <i *ngIf="currentSort === 'pricePerUnitTime' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'pricePerUnitTime' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" (click)="sortData('maxSpace')">
+                      Max space
+                      <i *ngIf="currentSort === 'maxSpace' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'maxSpace' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                    </th>
+                    <th scope="col" >Action</th>
+                  </tr>
+                </thead>
+
+                <!-- Table body section -->
+                <tbody>
+                  <tr *ngFor="let vehiclePricing of vehiclePricingList" class="text-center text-capitalize">
+                    <td>{{vehiclePricing.country.countryName}}</td>
+                    <td>{{vehiclePricing.city.cityName}}</td>
+                    <td>{{vehiclePricing.vehicleType.vehicleName}}</td>
+                    <td>{{vehiclePricing.driverProfit}}%</td>
+                    <td>{{vehiclePricing.minimumFare}}</td>
+                    <td>{{vehiclePricing.distanceForBasePrice}}</td>
+                    <td>{{vehiclePricing.basePrice}}</td>
+                    <td>{{vehiclePricing.pricePerUnitDistance}}</td>
+                    <td>{{vehiclePricing.pricePerUnitTime}}</td>
+                    <td>{{vehiclePricing.maxSpace}}</td>
+                    <td >
+                      <button class="btn btn-info" [id]="vehiclePricing._id" (click)="fillDataForEdit(vehiclePricing)">Edit</button>
+                      <button class="btn btn-danger" [id]="vehiclePricing._id" (click)="deleteVehiclePricing($event.target.id)">Delete</button>
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+            </div>
+            <!-- Pagination buttons -->
+            <div class="card-footer py-4">
+              <nav aria-label="...">
+                <ul class="pagination justify-content-end mb-0">
+                  <li class="page-item disabled">
+                    <a class="page-link" href="javascript:void(0)" tabindex="-1">
+                      <i class="fas fa-angle-left"></i>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                  </li>
+                  <li class="page-item active">
+                    <a class="page-link" href="javascript:void(0)">1</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" href="javascript:void(0)">2 <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="page-item"><a class="page-link" href="javascript:void(0)">3</a></li>
+                  <li class="page-item">
+                    <a class="page-link" href="javascript:void(0)">
+                      <i class="fas fa-angle-right"></i>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+
+          </div>
+        </div>
+    </div>
+</div>

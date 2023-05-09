@@ -1,0 +1,60 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body d-flex align-items-end justify-content-between">
+            <h1 class="text-white">Setting</h1>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--7">
+    <!-- Form -->
+    <div class="col-xl-12">
+        <form id="setting" [formGroup]="settingForm">
+            <table>
+                <!-- Time to accept request -->
+                <div class="mt-9"></div>
+                <tr>
+                    <td class="">Time to accept request:</td>
+                    <td>
+                        <select class="setting-input" formControlName="timeToAcceptRequest" name="timeToAcceptRequest" id="timeToAcceptRequest">
+                            <option disabled selected hidden [value]="null" >Select time to accept request</option>
+                            <option [value]="timeCount" *ngFor="let timeCount of timeCountList">{{timeCount}} </option>
+                        </select>
+                        <br>
+                        <div>
+                            <strong *ngIf="settingForm.get('timeToAcceptRequest').invalid && settingForm.get('timeToAcceptRequest').touched">Please select time to accept request</strong>
+                        </div>
+                    </td>
+                </tr>                
+                <!-- Stops in between two destination -->
+                <div class="mt-3"></div>
+                <tr>
+                    <td>Stops allowed while travelling:</td>
+                    <td>
+                        <select class="setting-input" id="stopsInBetweenDestination" formControlName="stopsInBetweenDestination" name="stopsInBetweenDestination">
+                            <option disabled selected hidden [value]="null" >Select stops in-Between destination</option>
+                            <option *ngFor="let stop of stopCountList" [value]="stop" >{{stop}}</option>
+                        </select>
+                        <br>
+                        <div>
+                            <strong *ngIf="settingForm.get('stopsInBetweenDestination').invalid && settingForm.get('stopsInBetweenDestination').touched">Please select number of stops allowed while traveling</strong>
+                        </div>
+                    </td>
+                </tr>
+                <!-- Action Button -->
+                <div class="mt-3"></div>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button class="btn btn-success" id="submit" type="submit" (click)="updateSetting()">Update Setting</button>
+                    </td>
+                </tr>
+                <!-- Error Message -->
+                <tr>
+                    <td></td>
+                    <td>{{customErrMsg}} </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>

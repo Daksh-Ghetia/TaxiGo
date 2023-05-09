@@ -1,0 +1,166 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body d-flex align-items-end justify-content-between">
+            <h1 class="text-white">Create Ride</h1>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--7">
+    <!-- Form -->
+    <div class="col-xl-12">
+        <div class="row">
+            <form id="createRide" [formGroup]="createRideForm">
+                <table col-xl-9>
+                    <!-- Create Ride -->
+                    <tr>
+                        <td class="label-input text-white">Phone number:</td>
+                        <td>
+                            <input class="createRide-input" formControlName="rideCustomerPhone" type="text" maxlength="10" name="rideCustomerPhone" id="rideCustomerPhone" placeholder="10 digit phone number">
+                            <br>
+                            <div>
+                                <strong *ngIf="createRideForm.get('rideCustomerPhone').invalid && createRideForm.get('rideCustomerPhone').touched && (createRideForm.get('rideCustomerPhone').value == null || createRideForm.get('rideCustomerPhone').value == '')">Please add phone number</strong>
+                                <strong *ngIf="createRideForm.get('rideCustomerPhone').invalid && createRideForm.get('rideCustomerPhone').touched && createRideForm.get('rideCustomerPhone').errors.pattern">Please add valid phone number</strong>
+                            </div>
+                        </td>                    
+                    </tr>
+                    <!-- Customer Name -->
+                    <div class="mt-3"></div>
+                    <tr>
+                        <td class="label-input ">Name:</td>
+                        <td>
+                            <input class="createRide-input" formControlName="rideCustomerName" type="text" name="rideCustomerName" id="rideCustomerName" placeholder="Customer Name" disabled>
+                            <br>
+                            <div>
+                                <strong *ngIf="createRideForm.get('rideCustomerName').invalid && createRideForm.get('rideCustomerName').touched && (createRideForm.get('rideCustomerName').value == null || createRideForm.get('rideCustomerName').value == '')">Please add your Name</strong>
+                                <strong *ngIf="createRideForm.get('rideCustomerName').invalid && createRideForm.get('rideCustomerName').touched && createRideForm.get('rideCustomerName').errors.pattern">Please add valid name</strong>                            
+                            </div>                        
+                        </td>
+                    </tr>
+                    <!-- Customer Email -->
+                    <div class="mt-3"></div>
+                    <tr>
+                        <td class="">Email id:</td>
+                        <td>
+                            <input class="createRide-input" formControlName="rideCustomerEmail" type="text" name="rideCustomerEmail" id="rideCustomerEmail" placeholder="Email id" disabled>
+                            <br>
+                            <div>
+                                <strong *ngIf="createRideForm.get('rideCustomerEmail').invalid && createRideForm.get('rideCustomerEmail').touched && (createRideForm.get('rideCustomerEmail').value == null || createRideForm.get('rideCustomerEmail').value == '')">Please enter email id</strong>
+                                <strong *ngIf="createRideForm.get('rideCustomerEmail').invalid && createRideForm.get('rideCustomerEmail').errors.email">Please enter a valid email id</strong>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Pickup Locatin -->
+                    <div class="mt-3"></div>
+                    <tr>
+                        <td>Pickup location:</td>
+                        <td>
+                            <input class="createRide-input" formControlName="ridePickUpLocation" type="text" name="ridePickUpLocation" id="ridePickUpLocation" placeholder="Pick up location" [readOnly]="createRideForm.get('rideCustomerEmail').invalid">
+                            <br>
+                            <div>
+                                <strong *ngIf="createRideForm.get('ridePickUpLocation').invalid && createRideForm.get('ridePickUpLocation').touched">Please enter a pickup location</strong>
+                            </div>
+                        </td>
+                    </tr>                
+                    <!-- Intermediate stops -->
+                    <ng-container *ngFor="let stop of createRideForm.get('rideIntermediateStops')['controls']; index as i" formArrayName="rideIntermediateStops">
+                        <tr>
+                            <td>Add Stop: </td>
+                            <td>
+                                <span class="deleteicon">
+                                    <input class="createRide-input mt-3" type="text" placeholder="Add location" formControlName="{{i}}" [id]="i" (load)="bindAutoComplete(i)" [readOnly]="createRideForm.get('rideCustomerEmail').invalid">
+                                    <span (click)="deleteElement(i)">x</span>
+                                </span>
+                                <br>
+                                <strong *ngIf="createRideForm.get('rideIntermediateStops')['controls'][i].invalid && createRideForm.get('rideIntermediateStops')['controls'][i].touched">Please add a stop</strong>
+                            </td>
+                        </tr>
+                    </ng-container>
+                    
+                    <!-- Drop Locatin -->
+                    <div class="mt-3"></div>
+                    <tr>
+                        <td>Drop location:</td>
+                        <td>
+                            <input class="createRide-input" formControlName="rideDropLocation" type="text" name="rideDropLocation" id="rideDropLocation" placeholder="Drop location" [readOnly]="createRideForm.get('rideCustomerEmail').invalid">
+                            <br>
+                            <div>
+                                <strong *ngIf="createRideForm.get('rideDropLocation').invalid && createRideForm.get('rideDropLocation').touched">Please enter drop location</strong>
+                            </div>
+                        </td>
+                    </tr>
+    
+                    <!-- Add intermediate stop button -->
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button type="button" class="btn btn-outline-secondary" *ngIf="createRideForm.get('rideIntermediateStops')['controls'].length < allowedStopsCount && createRideForm.get('rideCustomerEmail').valid" (click)="addIntermediateStop()">Add stop</button>
+                        </td>
+                    </tr>
+    
+                    <!-- Service Type -->
+                    <div class="mt-3" *ngIf="createRideForm.get('rideCustomerEmail').invalid"></div>
+                    <tr *ngIf="createRideForm.get('ridePickUpLocation').valid">
+                        <td>Service type:</td>
+                        <td>
+                            <select class="createRide-input" id="rideServiceType" formControlName="rideServiceType" name="rideServiceType" (click)="showDirection()">
+                                <option disabled selected hidden [value]="null" >Select service type</option>
+                                <option *ngFor="let service of serviceTypeList" [value]="service._id" >{{service.vehicleType.vehicleName}}</option>
+                            </select>
+                            <br>
+                            <div>
+                                <strong *ngIf="createRideForm.get('rideServiceType').invalid && createRideForm.get('rideServiceType').touched">Please select a service type</strong>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Bookin option -->
+                    <div class="mt-3"></div>
+                    <tr *ngIf="createRideForm.get('rideCustomerEmail').valid">
+                        <td>Booking time:</td>
+                        <td>
+                            <input type="radio" id="bookNow" value="bookNow" formControlName="rideDateTime" >
+                            <label for="bookNow">Book now</label>
+                            <input type="radio" id="scheduleBooking" value="schedule" class="ml-3" formControlName="rideDateTime">
+                            <label for="scheduleBooking">Schedule ride</label>
+                            <br>
+                            <input class="date-input" *ngIf="createRideForm.get('rideDateTime').value === 'schedule'" type="datetime-local" id="scheduleDateTime" name="scheduleDateTime">
+
+                          <div>
+                              <strong *ngIf="createRideForm.get('rideDateTime').invalid && createRideForm.get('rideDateTime').touched">Please select time to book rride</strong>
+                          </div>
+                        </td>
+                    </tr>
+
+                    <!-- Action Button -->
+                    <div class="mt-3"></div>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button class="btn btn-success" id="submit" type="submit" (click)="addNewRide()" >Book Ride</button>
+                            <button class="btn btn-danger" (click)="cancel()">Cancel</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div class="col-4">
+                <div class="border border mt-3 ml-9 text-center full" id="map"></div>
+                <br><br>
+                <table class=" ml-9 full" *ngIf="createRideForm.get('ridePickUpLocation').valid">
+                    <tr>
+                        <td class="label-info">Estimate distance: </td>
+                        <td class="info-data" id="distance"></td>
+                    </tr>
+                    <div class="mt-3"></div>
+                    <tr>
+                        <td class="label-info">Estimate time: </td>
+                        <td class="info-data" id="duration"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

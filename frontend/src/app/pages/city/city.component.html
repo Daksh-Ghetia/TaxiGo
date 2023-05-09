@@ -1,0 +1,69 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body d-flex align-items-end justify-content-between">
+            <h1 class="text-white">City</h1>
+
+        </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <form [formGroup]="reactiveForm">
+                    <div class="row" >
+                        <div class="col-md-3">
+                            <select id="countryDropDown" formControlName="countryId" name="countryIdion">
+                                <option value="" disabled selected hidden [value]="null" >Select Country</option>
+                                <option [value]="country._id" *ngFor="let country of countryList">{{country.countryName}} <span>{{country.countryIcon}}</span></option>
+                            </select>
+                            <div>
+                                <strong *ngIf="reactiveForm.get('countryId').invalid && reactiveForm.get('countryId').touched">Country selection is required</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-4" >
+                            <div class="form-group">
+                                <label for="cityName" class="text-white">City Name <span class="text-white ml-1">:</span> </label>
+                                <input type="text" class="city-Input " formControlName="cityName" name="cityName" id="cityName" placeholder="City name">
+                                <div>
+                                    <strong class="pl-7" *ngIf="reactiveForm.get('cityName').invalid && reactiveForm.get('cityName').touched">City Name is required</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-success" id="submit" type="submit" (click)="addCity()">Add City</button>
+                            <button class="btn btn-danger" (click)="resetMap()">Cancel</button>
+                        </div>                            
+                    </div>
+                </form>
+                <div class="row">
+                    <div col-md-4>
+                      <div>
+                        <strong>{{customErrMsg}}</strong>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid mt--7">
+    <div class="row">
+        <div class="col-xl-8">
+            <div class="col mt-5">
+                <div>
+                    <strong class="pl-3" *ngIf="reactiveForm.get('cityLatLng').touched">Please select a zone</strong>
+                </div>
+                <div class="col-11 border  border mt-0 text-center full" id="map"></div>
+            </div>
+        </div>
+        <div class="col-xl-3 mt-5">
+            <h2 class="text-white">City List</h2>
+            <ul style="background-color: #f8f9fe;">
+                <label style="color: crimson;">click on the zone OR city name to edit</label>
+                <li *ngFor="let city of cityList; let i = index" id="{{city.cityName}}" style="cursor: pointer;" #countryName>
+                    {{city.cityName}}, {{city.country[0].countryIcon}}
+                    <hr *ngIf="i < cityList.length - 1 && city.country[0].countryName !== cityList[i + 1].country[0].countryName">
+                </li>
+                    
+            </ul>
+                
+        </div>
+    </div>
+</div>
