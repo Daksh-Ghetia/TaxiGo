@@ -22,6 +22,7 @@ import { SettingComponent } from './pages/setting/setting.component';
 import { CreateRideComponent } from './pages/create-ride/create-ride.component';
 import { ToastrModule } from 'ngx-toastr';
 import { VehicleTypeComponent } from './pages/vehicle-type/vehicle-type.component';
+import { ConfirmedRideComponent } from './pages/confirmed-ride/confirmed-ride.component';
 
 @NgModule({
   imports: [
@@ -57,6 +58,7 @@ import { VehicleTypeComponent } from './pages/vehicle-type/vehicle-type.componen
     SettingComponent,
     CreateRideComponent,
     VehicleTypeComponent,
+    ConfirmedRideComponent,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor,

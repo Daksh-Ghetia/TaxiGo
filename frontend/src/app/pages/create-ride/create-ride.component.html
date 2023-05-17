@@ -75,8 +75,7 @@
                                 <strong *ngIf="createRideForm.get('rideIntermediateStops')['controls'][i].invalid && createRideForm.get('rideIntermediateStops')['controls'][i].touched">Please add a stop</strong>
                             </td>
                         </tr>
-                    </ng-container>
-                    
+                    </ng-container>                    
                     <!-- Drop Locatin -->
                     <div class="mt-3"></div>
                     <tr>
@@ -88,33 +87,30 @@
                                 <strong *ngIf="createRideForm.get('rideDropLocation').invalid && createRideForm.get('rideDropLocation').touched">Please enter drop location</strong>
                             </div>
                         </td>
-                    </tr>
-    
+                    </tr>    
                     <!-- Add intermediate stop button -->
                     <tr>
                         <td></td>
                         <td>
                             <button type="button" class="btn btn-outline-secondary" *ngIf="createRideForm.get('rideIntermediateStops')['controls'].length < allowedStopsCount && createRideForm.get('rideCustomerEmail').valid" (click)="addIntermediateStop()">Add stop</button>
                         </td>
-                    </tr>
-    
+                    </tr>    
                     <!-- Service Type -->
                     <div class="mt-3" *ngIf="createRideForm.get('rideCustomerEmail').invalid"></div>
                     <tr *ngIf="createRideForm.get('ridePickUpLocation').valid">
                         <td>Service type:</td>
                         <td>
-                            <select class="createRide-input" id="rideServiceType" formControlName="rideServiceType" name="rideServiceType" (click)="showDirection()">
+                            <select class="createRide-input" id="rideServiceTypeId" formControlName="rideServiceTypeId" name="rideServiceTypeId" (change)="calculateFare($event.target.value)">
                                 <option disabled selected hidden [value]="null" >Select service type</option>
-                                <option *ngFor="let service of serviceTypeList" [value]="service._id" >{{service.vehicleType.vehicleName}}</option>
+                                <option *ngFor="let service of serviceTypeList" [value]="service.vehicleType._id" >{{service.vehicleType.vehicleName}}</option>
                             </select>
                             <br>
                             <div>
-                                <strong *ngIf="createRideForm.get('rideServiceType').invalid && createRideForm.get('rideServiceType').touched">Please select a service type</strong>
+                                <strong *ngIf="createRideForm.get('rideServiceTypeId').invalid && createRideForm.get('rideServiceTypeId').touched">Please select a service type</strong>
                             </div>
                         </td>
                     </tr>
-
-                    <!-- Bookin option -->
+                    <!-- Booking option -->
                     <div class="mt-3"></div>
                     <tr *ngIf="createRideForm.get('rideCustomerEmail').valid">
                         <td>Booking time:</td>
@@ -127,18 +123,32 @@
                             <input class="date-input" *ngIf="createRideForm.get('rideDateTime').value === 'schedule'" type="datetime-local" id="scheduleDateTime" name="scheduleDateTime">
 
                           <div>
-                              <strong *ngIf="createRideForm.get('rideDateTime').invalid && createRideForm.get('rideDateTime').touched">Please select time to book rride</strong>
+                              <strong *ngIf="createRideForm.get('rideDateTime').invalid && createRideForm.get('rideDateTime').touched">Please select time to book ride</strong>
                           </div>
                         </td>
                     </tr>
-
+                    <!-- Payment option -->
+                    <div class="mt-3"></div>
+                    <tr *ngIf="createRideForm.get('rideCustomerEmail').valid">
+                        <td>Payment option:</td>
+                        <td>
+                            <input type="radio" id="cash" value="cash" formControlName="ridePaymentMethod" >
+                            <label for="cash">Cash</label>
+                            <input type="radio" id="card" value="card" class="ml-3" formControlName="ridePaymentMethod">
+                            <label for="card">Card</label>
+                            <br>
+                          <div>
+                              <strong *ngIf="createRideForm.get('ridePaymentMethod').invalid && createRideForm.get('ridePaymentMethod').touched">Please select any one type of payment</strong>
+                          </div>
+                        </td>
+                    </tr>
                     <!-- Action Button -->
                     <div class="mt-3"></div>
                     <tr>
                         <td></td>
                         <td>
-                            <button class="btn btn-success" id="submit" type="submit" (click)="addNewRide()" >Book Ride</button>
-                            <button class="btn btn-danger" (click)="cancel()">Cancel</button>
+                            <button class="btn btn-success" id="submit" type="button" (click)="addNewRide()" [disabled]="createRideForm.invalid">Book Ride</button>
+                            <button class="btn btn-danger" type="reset" (click)="cancel()">Cancel</button>
                         </td>
                     </tr>
                 </table>
@@ -155,6 +165,11 @@
                     <tr>
                         <td class="label-info">Estimate time: </td>
                         <td class="info-data" id="duration"></td>
+                    </tr>
+                    <div class="mt-3"></div>
+                    <tr>
+                        <td class="label-info">Estimate Fare: </td>
+                        <td class="info-data" id="fare"></td>
                     </tr>
                 </table>
             </div>

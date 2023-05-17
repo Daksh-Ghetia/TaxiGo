@@ -24,8 +24,6 @@ export class CityComponent implements OnInit {
   private infoWindow = new google.maps.InfoWindow();
   public polygon: google.maps.Polygon;
 
-  private originalPaths: google.maps.MVCArray<google.maps.LatLng>;
-
   constructor(private _countryService: CountryService, private _cityService: CityService) { }
 
   ngOnInit(): void {
@@ -56,7 +54,7 @@ export class CityComponent implements OnInit {
 
     let location:any = {lat: Number(latitude), lng: Number(longitude)};
       
-    this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+    this.map = new google.maps.Map(document.getElementById('maps') as HTMLElement, {
       center: location,
       zoom: zoomSize
     });
@@ -95,7 +93,20 @@ export class CityComponent implements OnInit {
       }
     });
 
-    this.initAutoComplete()
+    this.initAutoComplete();
+  }
+
+  handleCountryChange(countryId: string = "") {    
+    const selectedCountry = this.countryList.find(country => countryId === country._id)    
+    this._countryService.getSingleCountryData(selectedCountry.countryName).subscribe({
+      next: (response) => {
+        this.autocomplete.setComponentRestrictions({'country': [response[0].cca2]});
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {}
+    })
   }
 
   getCity() {
@@ -170,7 +181,7 @@ export class CityComponent implements OnInit {
     })
     poly.setMap(this.map);
     this.createdPolygonList.push(poly);
-
+    
     /**Add listener that exexutes every time a map is clicked */
     google.maps.event.addListener(poly, "click", (event) => {
 
@@ -187,6 +198,7 @@ export class CityComponent implements OnInit {
         /**Make the polygon editable and set editable polygon value to current polygon*/
         poly.setEditable(true);
         this.editablePolygon = poly;
+        this.handleCountryChange(city.countryId);
 
         /**get the bounds of curent polygon and get the center point   */
         const bounds = new google.maps.LatLngBounds();
@@ -207,7 +219,7 @@ export class CityComponent implements OnInit {
             <br>
 
             <button class="btn btn-success editButton" id="editCity">Update City</button>
-            <button class="btn btn-danger editButton" id="cancelCity">Delete City</button>
+            <button class="btn btn-danger editButton" id="cancelCity">Cancel</button>
           </div>
         `;
 
@@ -284,13 +296,13 @@ export class CityComponent implements OnInit {
 
           /**Delete */
           document.getElementById("cancelCity").addEventListener("click", () => {
-            let cityId =  (document.getElementById('cityId') as HTMLInputElement).value;
-            this._cityService.deleteCity(cityId).subscribe({
-              next: (response) => {
-                this.resetMap();
-                this.getCity();
-              }
-            })
+          //   let cityId =  (document.getElementById('cityId') as HTMLInputElement).value;
+          //   this._cityService.deleteCity(cityId).subscribe({
+          //     next: (response) => {
+          //       this.resetMap();
+          //       this.getCity();
+          //     }
+          //   })
             this.resetMap();
           });
 
@@ -334,7 +346,6 @@ export class CityComponent implements OnInit {
       } else {
         poly.setEditable(false);
         this.editablePolygon = null;
-        this.originalPaths = null;
         this.infoWindow.close();
       }
     })

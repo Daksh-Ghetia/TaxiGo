@@ -8,7 +8,7 @@ const cityRouter = require('./routers/city');
 const vehiclePricingRouter = require('./routers/vehiclePricing');
 const userRouter = require('./routers/user');
 const driverRouter = require('./routers/driver');
-
+const rideRouter = require('./routers/ride');
 
 const settingRouter = require('./routers/setting');
 
@@ -25,7 +25,7 @@ app.use(cityRouter);
 app.use(vehiclePricingRouter);
 app.use(userRouter);
 app.use(driverRouter);
-
+app.use(rideRouter);
 
 app.use(settingRouter)
 

@@ -294,7 +294,8 @@ export class DriverListComponent implements OnInit {
       driverFormData = new FormData(driverForm);
     } else {
       driverFormData = new FormData();
-      driverFormData.append('driverServiceTypeId', null);    
+      driverFormData.append('driverServiceTypeId', null);
+      this.driverServiceTypeForm.reset();
     }
 
     /**Update the service type */

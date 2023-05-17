@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CityService } from 'src/app/shared/city.service';
+import { RideService } from 'src/app/shared/ride.service';
 import { SettingService } from 'src/app/shared/setting.service';
 import { UserService } from 'src/app/shared/user.service';
 import { VehiclePricingService } from 'src/app/shared/vehicle-pricing.service';
@@ -17,8 +18,10 @@ export class CreateRideComponent implements OnInit {
   public customErrMsg: string;
   public allowedStopsCount: Number;
   public serviceTypeList: any = [];
-  private userId: string;
-  private serviceTypeId: string;
+  private user: any;
+  private totalDistance: number = 0;
+  private totalTime: number = 0;
+  private totalFare: number = 0;
 
   /**Map variables */
   private map: google.maps.Map;
@@ -33,7 +36,8 @@ export class CreateRideComponent implements OnInit {
     private _userService: UserService,
     private _settingSerive: SettingService,
     private _cityService: CityService,
-    private _vehiclePricing: VehiclePricingService,
+    private _vehiclePricingService: VehiclePricingService,
+    private _rideService: RideService,
     private _toastrService: ToastrService,
     private _cdr: ChangeDetectorRef,
   ) { }
@@ -51,8 +55,9 @@ export class CreateRideComponent implements OnInit {
       ridePickUpLocation: new FormControl(null, [Validators.required,]),
       rideDropLocation: new FormControl(null, [Validators.required]),
       rideIntermediateStops: new FormArray([]),
-      rideServiceType: new FormControl(null, [Validators.required]),
-      rideDateTime: new FormControl(null, [Validators.required])
+      rideServiceTypeId: new FormControl(null, [Validators.required]),
+      rideDateTime: new FormControl(null, [Validators.required]),
+      ridePaymentMethod: new FormControl(null, [Validators.required]),
     })
 
     /**Get data of user whenever the phone number field is of length 10 and valid*/
@@ -92,7 +97,7 @@ export class CreateRideComponent implements OnInit {
 
         if (response.user.length >0) {
           this.customErrMsg = "";
-          this.userId = response.user[0]._id;
+          this.user = response.user[0];
           this.createRideForm.patchValue({
             rideCustomerName: response.user[0].userName,
             rideCustomerEmail: response.user[0].userEmail,
@@ -114,6 +119,10 @@ export class CreateRideComponent implements OnInit {
     })
     this.autocompletePickUp.addListener("place_changed", () => {
       this.checkPointIsInsZone();
+      this.showDirection();
+      setTimeout(() => {
+        this.calculateFare((document.getElementById('rideServiceTypeId')as HTMLSelectElement).value);      
+      }, 100);
     });
 
     /**Drop location */
@@ -121,6 +130,10 @@ export class CreateRideComponent implements OnInit {
       types: ['establishment']
     })
     this.autocompleteDrop.addListener("place_changed", () => {
+      this.showDirection();
+      setTimeout(() => {
+        this.calculateFare((document.getElementById('rideServiceTypeId')as HTMLSelectElement).value);      
+      }, 100);
     });
   }
 
@@ -134,6 +147,10 @@ export class CreateRideComponent implements OnInit {
   /**Delete the stop whenever called */
   deleteElement(index: number) {
     (<FormArray>this.createRideForm.get('rideIntermediateStops')).removeAt(index);
+    this.showDirection();
+    setTimeout(() => {
+      this.calculateFare((document.getElementById('rideServiceTypeId')as HTMLSelectElement).value);      
+    }, 1000);
   }
 
   /**Auto complete functionality for stops */
@@ -143,6 +160,10 @@ export class CreateRideComponent implements OnInit {
         types: ['establishment']
       })
       autoCompleteIndex.addListener("place_changed", () => {
+        this.showDirection();
+        setTimeout(() => {
+          this.calculateFare((document.getElementById('rideServiceTypeId')as HTMLSelectElement).value);
+        }, 1000);
       });
     }, 100);
         
@@ -181,10 +202,9 @@ export class CreateRideComponent implements OnInit {
   }
 
   fillServiceType(cityId: string) {
-    this._vehiclePricing.getVehiclePricing(cityId).subscribe({
+    this._vehiclePricingService.getVehiclePricing(cityId).subscribe({
       next: (response) => {
         this.serviceTypeList = response.vehiclePricing
-        console.log(response);        
         this._cdr.detectChanges();
       },
       error: (error) => {
@@ -196,9 +216,9 @@ export class CreateRideComponent implements OnInit {
 
   showDirection() {
     if (this.createRideForm.get('ridePickUpLocation').invalid || this.createRideForm.get('rideDropLocation').invalid || this.createRideForm.get('rideIntermediateStops').invalid) {
-      this.createRideForm.markAllAsTouched();
-      this.createRideForm.get('rideServiceType').reset();
-      this._toastrService.warning("Please fill all the required field to perform search", "");
+      // this.createRideForm.markAllAsTouched();
+      this.createRideForm.get('rideServiceTypeId').reset();
+      // this._toastrService.warning("Please fill all the required field to perform search", "");
       return;
     }
 
@@ -248,38 +268,86 @@ export class CreateRideComponent implements OnInit {
       avoidTolls: false
     })
     .then((response) => {
-      let totalDistance = 0;
-      let totalTime = 0;
+      this.totalDistance = 0;
+      this.totalTime = 0;
       const routes = response.rows[0].elements;
 
       for (let i = 0; i < routes.length; i++) {
         const element = routes[i];
         if (element.status === "OK") {
-          totalDistance += element.distance.value;
-          totalTime += element.duration.value;
+          this.totalDistance += element.distance.value;
+          this.totalTime += element.duration.value;
         }
       };      
 
-      (document.getElementById("distance") as HTMLInputElement).innerText = (totalDistance/1000).toFixed(1) + " km";
-      (document.getElementById("duration") as HTMLInputElement).innerText = Math.floor(totalTime/60) + " mins";
+      this.totalDistance = Number((this.totalDistance/1000).toFixed(1));
+      this.totalTime = Math.floor(this.totalTime/60);
+
+      (document.getElementById("distance") as HTMLInputElement).innerText = this.totalDistance + " km";
+      (document.getElementById("duration") as HTMLInputElement).innerText = this.totalTime + " mins";
     })
     .catch((error) => {
       console.log(error);
     })
   }
 
-  calculatePricing(){
+  calculateFare(vehicleTypeId: string){
+    if (this.createRideForm.get('ridePickUpLocation').invalid || this.createRideForm.get('rideDropLocation').invalid || this.createRideForm.get('rideIntermediateStops').invalid || this.createRideForm.get('rideServiceTypeId').invalid) {
+      return;
+    }
 
-    this._vehiclePricing.getVehiclePricing()
+    let servicePricing = this.serviceTypeList.find(service => service.vehicleType._id === vehicleTypeId)
+    this._vehiclePricingService.calculateVehiclePricing(servicePricing._id, this.totalDistance, this.totalTime).subscribe({
+      next: (response) => {
+        this.totalFare = response.totalFare;
+        (document.getElementById("fare") as HTMLInputElement).innerText = this.totalFare.toString();
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
   }
 
   addNewRide() {
-    // if (this.createRideForm.invalid) {
-    //   return
-    // }
-    const createRideData = new FormData();
+    if (this.createRideForm.invalid) {
+      this._toastrService.error("please fill all the necessary details", "Information missing");
+      this.createRideForm.markAllAsTouched();
+      return
+    }
 
-    console.log((document.getElementById('rideServiceType') as HTMLInputElement).value);
+    let rideIntermediateStops = [];
+    for (let i = 0; i < (this.createRideForm.get('rideIntermediateStops') as FormArray).length; i++) {
+      rideIntermediateStops.push((document.getElementById(String(i) )as HTMLInputElement).value)
+    }
     
+    const createRideData = {
+      'rideCustomerId': this.user._id,
+      'rideServiceTypeId': (document.getElementById('rideServiceTypeId') as HTMLInputElement).value,
+      'ridePickUpLocation': (document.getElementById('ridePickUpLocation') as HTMLInputElement).value,
+      'rideDropLocation': (document.getElementById('rideDropLocation') as HTMLInputElement).value,
+      'rideIntermediateStops': rideIntermediateStops,
+      'rideDistance': this.totalDistance,
+      'rideTime': this.totalTime,
+      'rideFare': this.totalFare,
+    };
+    
+    /**Add date and time for booking ride */
+    (this.createRideForm.get('rideDateTime').value == 'bookNow') ? (createRideData["rideDateTime"] = new Date().toISOString()) : (createRideData["rideDateTime"] = (document.getElementById('scheduleDateTime') as HTMLInputElement).value);
+    /**Add payment method */
+    (this.createRideForm.get('ridePaymentMethod').value == 'cash') ? (createRideData["ridePaymentMethod"] = 0) : (createRideData["ridePaymentMethod"] = 1);
+
+    /**Send data to create a new ride*/
+    this._rideService.addNewRide(createRideData).subscribe({
+      next: (response) => {
+        this._toastrService.success("Your ride has been booked successfully", "Success");
+        this.cancel();
+      },
+      error: (error) => {
+        console.log(error);
+        this._toastrService.error("Error occured while booking", "Error occured")
+      },
+      complete: () => {}
+    })
+
   }
 }

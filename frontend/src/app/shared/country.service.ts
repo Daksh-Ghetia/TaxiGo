@@ -16,6 +16,11 @@ export class CountryService {
     return this.http.get<any>(this._url);
   }
 
+  getSingleCountryData(countryName: string) : Observable <any> {
+    this._url = "https://restcountries.com/v3.1/name/" + encodeURIComponent(countryName) + "?fullText=true";
+    return this.http.get<any>(this._url);
+  }
+
   getCountry(data: any = "") : Observable<any> {
     this._url = "http://localhost:3000/country/GetCountryDetails?countryName=" + encodeURIComponent(data);
     return this.http.get<any>(this._url)

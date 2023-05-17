@@ -76,13 +76,6 @@ router.get('/driver/getDriverDetails', auth, async (req, res) => {
         const escapedQuery = searchQuery.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
         const regexp = new RegExp(escapedQuery, "i");
 
-        // driverName
-        // driverEmail
-        // driverPhone
-        // driverCountryId
-        // driverCityId
-        // driverServiceTypeId
-
         let pipeline = [
             {
                 $match:{
@@ -128,16 +121,6 @@ router.get('/driver/getDriverDetails', auth, async (req, res) => {
 
         /**Find all the driver data and if not found return no data to display*/
         let driver = await Driver.aggregate(pipeline);
-        // let driver = await Driver.find({ $or: [
-        //     {driverName: regexp},
-        //     {driverEmail: regexp},
-        //     {driverPhone: regexp},
-        //     {driverCountry: regexp},
-        //     {driverCity: regexp},
-        //     {driverServiceTypeId: regexp},
-        //     {driverCountryCode: regexp},
-        //     {_id: dataID}
-        // ]});
         if (!driver) {
             return res.status(404).send({msg: "No driver to display", status: "failed"});
         }

@@ -143,4 +143,29 @@ router.delete('/vehiclePricing/deleteVehiclePricing/:id', auth, async (req, res)
     }
 })
 
+/**Calculate ride fare */
+router.get('/vehiclePricing/calculatePricing/:id', auth, async (req,res) => {
+    try {
+        /**Find the vehicle pricing and if not found return error*/
+        const vehiclePricing = await VehiclePricing.findOne({_id: req.params.id});
+        if (!vehiclePricing) {
+            return res.status(400).send({msg: "Vehicle pricing not found for update", status: "failed"})
+        }
+
+        /**Calculate total fare */
+        let totalFare = vehiclePricing.basePrice + ((req.query.distance - vehiclePricing.distanceForBasePrice)* vehiclePricing.pricePerUnitDistance) + (req.query.  time * vehiclePricing.pricePerUnitTime);
+
+        /**If total fare is less than minimum fare return minimum fare 
+         * and if total fare is greater return total fare
+         */
+        if (totalFare < vehiclePricing.minimumFare) {
+            return res.status(200).send({totalFare: vehiclePricing.minimumFare, msg: 'total fare calculation succesful', status: 'success'})
+        } else {
+            return res.status(200).send({totalFare: totalFare, msg: 'total fare calculation succesful', status: 'success'})
+        }
+    } catch (error) {
+        return res.status(500).send({msg: "Error occured while calculating ride fare", error: error, status: "failed"});
+    }
+})
+
 module.exports = router;

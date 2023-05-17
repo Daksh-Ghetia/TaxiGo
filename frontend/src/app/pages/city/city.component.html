@@ -9,9 +9,9 @@
                 <form [formGroup]="reactiveForm">
                     <div class="row" >
                         <div class="col-md-3">
-                            <select id="countryDropDown" formControlName="countryId" name="countryIdion">
+                            <select id="countryDropDown" formControlName="countryId" name="countryIdion" (change)="handleCountryChange($event.target.value)">
                                 <option value="" disabled selected hidden [value]="null" >Select Country</option>
-                                <option [value]="country._id" *ngFor="let country of countryList">{{country.countryName}} <span>{{country.countryIcon}}</span></option>
+                                <option [value]="country._id" *ngFor="let country of countryList" #countryName>{{country.countryName}} <span>{{country.countryIcon}}</span></option>
                             </select>
                             <div>
                                 <strong *ngIf="reactiveForm.get('countryId').invalid && reactiveForm.get('countryId').touched">Country selection is required</strong>
@@ -50,7 +50,7 @@
                 <div>
                     <strong class="pl-3" *ngIf="reactiveForm.get('cityLatLng').touched">Please select a zone</strong>
                 </div>
-                <div class="col-11 border  border mt-0 text-center full" id="map"></div>
+                <div class="col-11 border  border mt-0 text-center full" id="maps"></div>
             </div>
         </div>
         <div class="col-xl-3 mt-5">

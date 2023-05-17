@@ -30,4 +30,10 @@ export class VehiclePricingService {
     this._url = "http://localhost:3000/vehiclePricing/deleteVehiclePricing/" + encodeURIComponent(id);
     return this.http.delete(this._url);
   }
+
+  calculateVehiclePricing(id: string, distance: number, time: number) : Observable <any> {
+
+    this._url = "http://localhost:3000/vehiclePricing/calculatePricing/" + encodeURIComponent(id) + "?distance=" + encodeURIComponent(distance) + "&time=" + encodeURIComponent(time);
+    return this.http.get(this._url);
+  }
 }
