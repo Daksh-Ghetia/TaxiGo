@@ -78,21 +78,22 @@ router.get('/driver/getDriverDetails', auth, async (req, res) => {
 
         let pipeline = [
             {
-                $match:{
-                    $or: [
-                        {driverName: {$regex: regexp}},
-                        {driverEmail: {$regex: regexp}},
-                        {driverPhone: {$regex: regexp}},
-                        {_id: dataID},
-                    ]
-                }
-            },
-            {
                 $lookup: {
                     from: 'countries',
                     as: 'country',
                     localField: 'driverCountryId',
                     foreignField: '_id',
+                }
+            },
+            {
+                $match:{
+                    $or: [
+                        {driverName: {$regex: regexp}},
+                        {driverEmail: {$regex: regexp}},
+                        {driverPhone: {$regex: regexp}},
+                        {'country.countryCode': {$regex: regexp}},
+                        {_id: dataID},
+                    ]
                 }
             },
             {
@@ -116,7 +117,7 @@ router.get('/driver/getDriverDetails', auth, async (req, res) => {
             },
             {
                 $unwind: '$city'
-            }
+            },
         ];
 
         /**Find all the driver data and if not found return no data to display*/

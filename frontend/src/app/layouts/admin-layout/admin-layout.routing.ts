@@ -13,6 +13,7 @@ import { UserComponent } from 'src/app/pages/user/user.component';
 import { DriverListComponent } from 'src/app/pages/driver-list/driver-list.component';
 import { SettingComponent } from 'src/app/pages/setting/setting.component';
 import { CreateRideComponent } from 'src/app/pages/create-ride/create-ride.component';
+import { ConfirmedRideComponent } from 'src/app/pages/confirmed-ride/confirmed-ride.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard',      component: DashboardComponent },
@@ -27,6 +28,8 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'users',          component: UserComponent},
     { path: 'driverList',     component: DriverListComponent},
     { path: 'createRide',     component: CreateRideComponent},
+    { path: 'confirmedRide',  component: ConfirmedRideComponent},
+    
 
     { path: 'setting',     component: SettingComponent},
 

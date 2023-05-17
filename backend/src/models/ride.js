@@ -25,7 +25,8 @@ const rideSchema = new mongoose.Schema({
         required: [true, 'Ride date and time is required'],
     },
     rideStatus: {
-        type: Number
+        type: Number,
+        default: 0
     },
     rideDriverId: {
         type: mongoose.Schema.Types.ObjectId,

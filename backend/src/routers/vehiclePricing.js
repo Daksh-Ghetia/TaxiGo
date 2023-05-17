@@ -70,7 +70,6 @@ router.get('/vehiclePricing/getVehiclePricing', auth, async (req,res) => {
         /**If data found send successs message */
         res.status(200).send({vehiclePricing: vehiclePricing, msg: 'Vehicle pricing found', status: "success"})
     } catch (error) {
-        console.log(error);
         res.status(500).send({msg: "Error occured while getting data of vehicle pricing", status: "failed", error: error});
     }
 })

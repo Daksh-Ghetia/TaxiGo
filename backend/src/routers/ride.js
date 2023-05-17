@@ -10,19 +10,48 @@ const upload = multer();
 /**Get ride data */
 router.get('/ride/getRideDetails', auth, async (req, res) => {
     try {
-        // let pipeline = [
-        //     {
-        //         $lookup: {
-        //             from: 'users',
-        //             as: 'user',
-        //             localField: 'rideCustomerId',
-        //             foreignField: '_id'
-        //         }
-        //     }
-        // ]
+        let pipeline = [
+            {
+                $lookup: {
+                             from: 'users',
+                             as: 'user',
+                             localField: 'rideCustomerId',
+                             foreignField: '_id'
+                         }
+            },
+            {
+                $lookup: {
+                    from: 'countries',
+                    as: 'country',
+                    localField: 'user.userCountryId',
+                    foreignField: '_id'
+                }
+            },
+            // {
+            //     $match: {
+            //         $or: [
+            //             {}
+            //         ]
+            //     }
+            // },
+            {
+                $lookup: {
+                    from: 'vehicletypes',
+                    as: 'vehicleType',
+                    localField: 'rideServiceTypeId',
+                    foreignField: '_id'
+                }
+            },
+            {
+                $unwind: '$user'
+            },
+            {
+                $unwind: '$vehicleType'
+            }
+        ]
 
         /**Find all the ride data and if not found return no data to display*/
-        let ride = await Ride.find({});
+        let ride = await Ride.aggregate(pipeline);
         if (!ride) {
             return res.status(404).send({msg: "No ride to display", status: "failed"});
         }

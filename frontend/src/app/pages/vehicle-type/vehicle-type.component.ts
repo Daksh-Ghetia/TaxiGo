@@ -29,9 +29,7 @@ export class VehicleTypeComponent implements OnInit {
   /**Get the details of all the vehicles */
   getVehicleType() {
     /**Call the service and subscribe to the data change */
-    this._vehicleTypeService.getVehicleType().subscribe((response) => {
-      console.log(response.vehicle);
-      
+    this._vehicleTypeService.getVehicleType().subscribe((response) => {      
       this.vehicles = response.vehicle;
     })
   }
