@@ -271,7 +271,8 @@ export class DriverListComponent implements OnInit {
     });
   }
 
-  updateServiceModel(content: any, cityId: string, driverId: string, vehicleServiceTypeId: string = null){    
+  updateServiceModel(content: any, cityId: string, driverId: string, vehicleServiceTypeId: string = null){
+    this.driverServiceTypeForm.reset();
 		this.modalRef = this._modalService.open(content, { centered: true });
     this.fillVehicleDropDown(cityId);
     this.driverServiceTypeForm.patchValue({driverServiceTypeId: vehicleServiceTypeId});

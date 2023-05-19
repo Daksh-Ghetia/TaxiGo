@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { RideService } from 'src/app/shared/ride.service';
 
 @Component({
@@ -11,6 +12,7 @@ export class RideHistoryComponent implements OnInit {
 
   constructor(
     private _rideService: RideService,
+    private _toastrService: ToastrService,
     private _modalService: NgbModal
   ) { }
 
@@ -26,6 +28,9 @@ export class RideHistoryComponent implements OnInit {
   getRideData() {
     this._rideService.getRideData().subscribe({
       next: (response) => {
+        if (response.ride.length <= 0) {
+          return this._toastrService.info("Currently there are no rides to display", "")
+        }
         this.rideDataList = response.ride;
       },
       error: (error) => {

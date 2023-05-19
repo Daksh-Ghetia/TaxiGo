@@ -16,6 +16,11 @@ export class DriverService {
     return this.http.get(this._url);
   }
 
+  getDriverDetailsForRide(rideServiceTypeId: string, rideCityId: string) : Observable <any> {
+    this._url = "http://localhost:3000/driver/getDriverDetailsForRide?rideServiceTypeId=" + encodeURIComponent(rideServiceTypeId) + "&rideCityId=" + encodeURIComponent(rideCityId);
+    return this.http.get(this._url);
+  }
+
   addNewDriver(data: any) : Observable<any> {
     this._url = "http://localhost:3000/driver/addDriver";
     return this.http.post(this._url, data);

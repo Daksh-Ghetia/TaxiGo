@@ -19,10 +19,12 @@ export class CreateRideComponent implements OnInit {
   public customErrMsg: string;
   public allowedStopsCount: Number;
   public serviceTypeList: any = [];
+
   private user: any;
   private totalDistance: number = 0;
   private totalTime: number = 0;
   private totalFare: number = 0;
+  private cityDetails: any;
 
   /**Map variables */
   private map: google.maps.Map;
@@ -191,7 +193,8 @@ export class CreateRideComponent implements OnInit {
   checkPointIsInsZone() {
     this._cityService.checkPointIsInsZone(this.autocompletePickUp.getPlace().geometry.location.lat(), this.autocompletePickUp.getPlace().geometry.location.lng()).subscribe({
       next: (response) => {
-        this.fillServiceType(response.city._id);
+        this.cityDetails = response.city._id;
+        this.fillServiceType(this.cityDetails);
       },
       error: (error) => {
         this.createRideForm.get('ridePickUpLocation').reset();
@@ -327,6 +330,7 @@ export class CreateRideComponent implements OnInit {
       'ridePickUpLocation': (document.getElementById('ridePickUpLocation') as HTMLInputElement).value,
       'rideDropLocation': (document.getElementById('rideDropLocation') as HTMLInputElement).value,
       'rideIntermediateStops': rideIntermediateStops,
+      'rideCityId': this.cityDetails,
       'rideDistance': this.totalDistance,
       'rideTime': this.totalTime,
       'rideFare': this.totalFare,

@@ -34,7 +34,7 @@
                 <!-- Table body section -->
                 <tbody>
                   <tr *ngFor="let ride of rideDataList; let i = index" class="text-center text-capitalize">
-                    <ng-container *ngIf="ride.rideStatus > 0">
+                    <ng-container *ngIf="ride.rideStatus > 0 && ride.rideStatus < 3">
                       <td class="text-wrap">{{ride._id}}</td>
                       <!-- <td class="text-wrap">{{ride.user._id}}</td> -->
                       <td>{{ride.user.userName}}</td>
@@ -43,12 +43,13 @@
                       <td>{{ride.vehicleType.vehicleName}} </td>
                       <td>
                         <span *ngIf="ride.rideStatus === 1"class="badge badge-dot mr-4"><i class="bg-warning"></i>Pending</span>
+                        <span *ngIf="ride.rideStatus === 2"class="badge badge-dot mr-4"><i class="bg-warning"></i>Assigning</span>
                       </td>
                       <td>
                         <img src="assets/img/icons/fullRideInfo.png" alt="getFullInfo" srcset="" height="20px" width="20px" (click)="getFullRideInfo(content, i)">
                       </td>
                       <td>
-                        <button class="btn btn-info" [id]="ride._id">Assign</button>
+                        <button class="btn btn-info" [id]="ride._id" (click)="getDriverDetailsForRide(contentDriverInfo, ride.rideServiceTypeId, ride.rideCityId, i)">Assign</button>
                         <button class="btn btn-danger" [id]="ride._id" (click)="cancelRide($event.target.id)">Cancel</button>
                       </td>
                     </ng-container>
@@ -88,8 +89,7 @@
         </div>
     </div>
 
-
-
+    <!-- Display full ride info -->
     <ng-template #content let-modal>
       <div class="modal-header">
           <h4>Full ride info</h4>
@@ -134,7 +134,7 @@
                 <td>
                   <li>{{rideStops}}</li>
                 </td>
-              </tr>              
+              </tr>
             </ng-container>
             <tr>
               <td class="label-input">Drop point: </td>
@@ -168,5 +168,75 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="modal.dismiss('Cross click')">Close</button>
       </div>
-  </ng-template>
+    </ng-template>
+
+    <!-- Display driver info -->
+    <ng-template #contentDriverInfo let-modal>
+      <div class="modal-header">
+          <h4>Assign Driver</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
+      </div>
+
+      <div class="modal-body">
+        <h4>Trip info</h4>
+        <table>
+          <tbody *ngFor="let ride of fullRideData">
+            <tr>
+              <td class="label-input">User name: </td>
+              <td>{{ride.user.userName}} </td>
+            </tr>
+            <tr>              
+              <td class="label-input">Vehicle type: </td>
+              <td>{{ride.vehicleType.vehicleName}} </td>
+            </tr>
+            <tr>
+              <td class="label-input">Pick point: </td>
+              <td>{{ride.ridePickUpLocation}} </td>
+            </tr>
+            <ng-container *ngIf="(ride.rideIntermediateStops).length > 0">
+              <tr *ngFor="let rideStops of ride.rideIntermediateStops; let i = index">
+                <td class="label-input" *ngIf="i == 0">Intermediate stops: </td>
+                <td class="label-input" *ngIf="i > 0"></td>
+                <td>
+                  <li>{{rideStops}}</li>
+                </td>
+              </tr>
+            </ng-container>
+            <tr>
+              <td class="label-input">Drop point: </td>
+              <td>{{ride.rideDropLocation}} </td>
+            </tr>
+            <tr>
+              <td class="label-input">Ride Date and Time: </td>
+              <td>{{ride.rideDateTime | date}} {{ride.rideDateTime | date: 'shortTime'}} </td>
+            </tr>
+          </tbody>
+        </table>
+
+      
+        <table class="table align-items-center table-flush">
+          <thead class="thead-light">
+            <tr class="text-center">
+              <th scope="col" >Driver Id</th>
+              <th scope="col" >Driver Name</th>
+              <th scope="col" >Driver Phone</th>
+              <th scope="col" >Driver Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let driver of driverList; let i = index" [ngClass]="{'selected-row': selectedRowIndex === i}" (click)="selectedRowIndex = i" class="text-center text-capitalize">
+              <td class="text-wrap">{{driver._id}}</td>
+              <td>{{driver.driverName}}</td>
+              <td class="text-wrap">{{driver.driverPhone}}</td>
+              <td class="text-wrap">{{driver.driverEmail}} </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.dismiss('Cross click')">Close</button>
+      </div>
+    </ng-template>
 </div>

@@ -175,7 +175,7 @@ router.patch('/driver/editDriver/:id', auth, handleUpload, async(req,res) => {
     try {
         /**Parse the body and store the keys of sent data */
         let updates = Object.keys(req.body);
-        const allowedUpdates = ["driverName", "driverEmail", "driverPhone", "driverCountryId", "driverCityId", "driverServiceTypeId", "driverStatus", "driverProfile"];
+        const allowedUpdates = ["driverName", "driverEmail", "driverPhone", "driverCountryId", "driverCityId", "driverServiceTypeId", "driverStatus", "driverRideStatus", "driverProfile"];
 
         /**Check if the updates are applied for permissible  type only and if other update found return invalid updates*/
         const isValidOpertaion = updates.every((update) => allowedUpdates.includes(update));
@@ -246,6 +246,36 @@ router.delete('/driver/deleteDriver/:id', auth, async (req, res) => {
         res.status(200).send({driver: driver,msg: "Driver Deleted successfully", status: "success"});
     } catch (error) {
         res.status(500).send({error, msg: "Server error while deleting Driver", status: "failed"})
+    }
+})
+
+/**Get list of all available drivers for ride*/
+router.get('/driver/getDriverDetailsForRide', auth, async (req, res) => {
+    try {
+
+        let pipeline = [
+            {
+                $match : {
+                    $and: [
+                        { driverStatus: true },
+                        { driverRideStatus: 0},
+                        { driverServiceTypeId: new ObjectId(req.query.rideServiceTypeId)},
+                        {driverCityId: new ObjectId(req.query.rideCityId)},
+                    ]
+                }
+            }
+        ];
+
+        /**Find all the driver data and if not found return no data to display*/
+        let driver = await Driver.aggregate(pipeline);
+        if (!driver) {
+            return res.status(404).send({msg: "No driver to display", status: "failed"});
+        }
+
+        /**If data found send the data */
+        res.status(200).send({driver: driver, msg: 'Driver found', status: "success"});
+    } catch (error) {
+        res.status(500).send({msg: "Error occured while getting data of driver", status: "failed", error: error});
     }
 })
 

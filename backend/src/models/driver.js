@@ -45,10 +45,10 @@ const driverSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         default: null,
     },
-    // driverPricingId: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     default: null
-    // },
+    driverRideStatus: {
+        type: Number,
+        default: 0
+    },
     driverStatus: {
         type: Boolean,
         default: false,

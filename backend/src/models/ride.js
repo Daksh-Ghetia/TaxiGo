@@ -9,6 +9,10 @@ const rideSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: [true, 'Service id is required to create a ride'],
     },
+    rideCityId : {
+        type: mongoose.Schema.Types.ObjectId,
+        required: [true, 'City id is required to create a ride'],
+    },
     ridePickUpLocation: {
         type: String,
         required: [true, 'Pick up location is required to create a ride'],
@@ -60,6 +64,7 @@ module.exports = Ride;
 const ride = new Ride({
     rideCustomerId: '6448d378ab88b71e1bf405b4',
     rideServiceTypeId: '6437c8403a9efe74c712069d',
+    rideCityId : '6453af8b0a59be37cb3a4897',
     ridePickUpLocation: 'Rajkot bus port, rajkot, gujarat, India',
     rideDropLocation: 'Rajkot air port, rajkot, gujarat, India',
     rideIntermediateStops: ['Kotecha chowk bus stop, Kalawad Road, Nutan Nagar, Kotecha Nagar, Rajkot, Gujarat, India'],
