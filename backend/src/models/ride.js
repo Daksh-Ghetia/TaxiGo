@@ -26,7 +26,7 @@ const rideSchema = new mongoose.Schema({
     },
     rideStatus: {
         type: Number,
-        default: 0
+        default: 1
     },
     rideDriverId: {
         type: mongoose.Schema.Types.ObjectId,

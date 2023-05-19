@@ -20,4 +20,9 @@ export class RideService {
     this._url = "http://localhost:3000/ride/addRide";
     return this.http.post(this._url, data);
   }
+
+  updateRide(id: string, data: any) : Observable <any> {
+    this._url = "http://localhost:3000/ride/editRide/" + encodeURIComponent(id);
+    return this.http.patch(this._url, data);
+  }
 }

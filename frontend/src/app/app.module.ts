@@ -23,6 +23,10 @@ import { CreateRideComponent } from './pages/create-ride/create-ride.component';
 import { ToastrModule } from 'ngx-toastr';
 import { VehicleTypeComponent } from './pages/vehicle-type/vehicle-type.component';
 import { ConfirmedRideComponent } from './pages/confirmed-ride/confirmed-ride.component';
+import { DatePipe } from '@angular/common';
+import { ConvertMinutesToHoursAndMinutesPipe } from './shared/convert-minutes-to-hours-and-minutes.pipe';
+import { RideHistoryComponent } from './pages/ride-history/ride-history.component';
+import { RunningRequestComponent } from './pages/running-request/running-request.component';
 
 @NgModule({
   imports: [
@@ -59,11 +63,17 @@ import { ConfirmedRideComponent } from './pages/confirmed-ride/confirmed-ride.co
     CreateRideComponent,
     VehicleTypeComponent,
     ConfirmedRideComponent,
+    ConvertMinutesToHoursAndMinutesPipe,
+    RideHistoryComponent,
+    RunningRequestComponent
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor,
-    multi: true,
-  }],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor,
+      multi: true,
+    },
+    DatePipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CityService } from 'src/app/shared/city.service';
+import { ConvertMinutesToHoursAndMinutesPipe } from 'src/app/shared/convert-minutes-to-hours-and-minutes.pipe';
 import { RideService } from 'src/app/shared/ride.service';
 import { SettingService } from 'src/app/shared/setting.service';
 import { UserService } from 'src/app/shared/user.service';
@@ -284,7 +285,7 @@ export class CreateRideComponent implements OnInit {
       this.totalTime = Math.floor(this.totalTime/60);
 
       (document.getElementById("distance") as HTMLInputElement).innerText = this.totalDistance + " km";
-      (document.getElementById("duration") as HTMLInputElement).innerText = this.totalTime + " mins";
+      (document.getElementById("duration") as HTMLInputElement).innerText = new ConvertMinutesToHoursAndMinutesPipe().transform(this.totalTime);
     })
     .catch((error) => {
       console.log(error);

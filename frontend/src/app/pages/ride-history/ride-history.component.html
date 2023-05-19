@@ -1,7 +1,7 @@
 <div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
     <div class="container-fluid">
         <div class="header-body d-flex align-items-end justify-content-between">
-            <h1 class="text-white">Confirmed Ride</h1>
+            <h1 class="text-white">Ride History</h1>
         </div>
     </div>
 </div>
@@ -27,14 +27,13 @@
                       <th scope="col" >Service type</th>
                       <th scope="col" >Status</th>
                       <th scope="col" class="text-wrap">Full information</th>
-                      <th scope="col" >Action</th>
                     </tr>
                   </thead>
 
                 <!-- Table body section -->
                 <tbody>
                   <tr *ngFor="let ride of rideDataList; let i = index" class="text-center text-capitalize">
-                    <ng-container *ngIf="ride.rideStatus > 0">
+                    <ng-container *ngIf="ride.rideStatus == 0 || ride.rideStatus == 5">
                       <td class="text-wrap">{{ride._id}}</td>
                       <!-- <td class="text-wrap">{{ride.user._id}}</td> -->
                       <td>{{ride.user.userName}}</td>
@@ -42,14 +41,11 @@
                       <td class="text-wrap">{{ride.rideDropLocation}} </td>
                       <td>{{ride.vehicleType.vehicleName}} </td>
                       <td>
-                        <span *ngIf="ride.rideStatus === 1"class="badge badge-dot mr-4"><i class="bg-warning"></i>Pending</span>
+                        <span *ngIf="ride.rideStatus === 0"class="badge badge-dot mr-4"><i class="bg-gradient-danger"></i>Canceled</span>
+                        <span *ngIf="ride.rideStatus === 5"class="badge badge-dot mr-4"><i class="bg-success"></i>Completed</span>
                       </td>
                       <td>
                         <img src="assets/img/icons/fullRideInfo.png" alt="getFullInfo" srcset="" height="20px" width="20px" (click)="getFullRideInfo(content, i)">
-                      </td>
-                      <td>
-                        <button class="btn btn-info" [id]="ride._id">Assign</button>
-                        <button class="btn btn-danger" [id]="ride._id" (click)="cancelRide($event.target.id)">Cancel</button>
                       </td>
                     </ng-container>
                   </tr>
@@ -87,8 +83,6 @@
           </div>
         </div>
     </div>
-
-
 
     <ng-template #content let-modal>
       <div class="modal-header">

@@ -64,7 +64,7 @@ router.get('/ride/getRideDetails', auth, async (req, res) => {
 })
 
 /**Add new ride */
-router.post('/ride/addRide', auth, async (req,res) => {
+router.post('/ride/addRide', auth, upload.none(), async (req,res) => {
     try {
         /**Create a new instance of type ride and save it to database*/
         const ride = new Ride({
@@ -84,7 +84,7 @@ router.post('/ride/addRide', auth, async (req,res) => {
 })
 
 /**Update the Ride */
-router.patch('/ride/editRide/:id', auth, async(req,res) => {
+router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
     try {
         /**Parse the body and store the keys of sent data */
         let updates = Object.keys(req.body);

@@ -1,0 +1,4 @@
+//This css will make modal clickable
+::ng-deep .modal-backdrop {
+    z-index: 1020 !important;
+}

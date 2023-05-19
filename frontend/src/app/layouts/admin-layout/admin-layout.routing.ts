@@ -14,6 +14,8 @@ import { DriverListComponent } from 'src/app/pages/driver-list/driver-list.compo
 import { SettingComponent } from 'src/app/pages/setting/setting.component';
 import { CreateRideComponent } from 'src/app/pages/create-ride/create-ride.component';
 import { ConfirmedRideComponent } from 'src/app/pages/confirmed-ride/confirmed-ride.component';
+import { RideHistoryComponent } from 'src/app/pages/ride-history/ride-history.component';
+import { RunningRequestComponent } from 'src/app/pages/running-request/running-request.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard',      component: DashboardComponent },
@@ -29,6 +31,9 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'driverList',     component: DriverListComponent},
     { path: 'createRide',     component: CreateRideComponent},
     { path: 'confirmedRide',  component: ConfirmedRideComponent},
+    { path: 'rideHistory',    component: RideHistoryComponent},
+    { path: 'runningRequest',    component: RunningRequestComponent},
+
     
 
     { path: 'setting',     component: SettingComponent},
