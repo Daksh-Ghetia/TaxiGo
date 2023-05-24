@@ -18,27 +18,10 @@ async function getSettingData() {
             let data = new Date().toUTCString();
             console.log(data);
             console.log(expression);
-
-
-            cron.schedule(expression, function () {
-                // let data = new Date().toUTCString();
-                // console.log(data);
-
-                const currentTime = new Date().toUTCString();
-                const currentSecond = new Date().getSeconds();
-                const timeDifference = Math.floor((Math.abs((new Date(currentTime))-(new Date(data)))) / 1000);
-
-
-                
-                if (typeof currentTime >= typeof timeDifference) {
-                    console.log(typeof currentTime, typeof timeDifference);
-                    console.log("difference is equal");
-                }
-                console.log(timeDifference);
-                console.log(currentTime);
-            });
         }
     } catch (error) {}
 }
 
-// module.exports = cronTask;
+cron.schedule('*/30 * * * * *', function () {
+    
+});

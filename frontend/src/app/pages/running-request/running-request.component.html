@@ -47,17 +47,17 @@
                       <td>{{ride.vehicleType.vehicleName}} </td>
                       <td>
                         <span *ngIf="ride.rideStatus === 2"class="badge badge-dot mr-4"><i class="bg-warning"></i>{{ride.rideStatus | rideStatus}}</span>
-                        <span *ngIf="ride.rideStatus === 3"class="badge badge-dot mr-4"><i class="bg-info"></i>{{ride.rideStatus | rideStatus}}</span>
-                        <span *ngIf="ride.rideStatus === 4"class="badge badge-dot mr-4"><i class="bg-info"></i>{{ride.rideStatus | rideStatus}}</span>
-                        <span *ngIf="ride.rideStatus === 5"class="badge badge-dot mr-4"><i class="bg-info"></i>{{ride.rideStatus | rideStatus}}</span>
+                        <span *ngIf="ride.rideStatus === 3 || ride.rideStatus === 4 || ride.rideStatus === 5"class="badge badge-dot mr-4"><i class="bg-info"></i>{{ride.rideStatus | rideStatus}}</span>
+                        <!-- <span *ngIf="ride.rideStatus === 4"class="badge badge-dot mr-4"><i class="bg-info"></i>{{ride.rideStatus | rideStatus}}</span>
+                        <span *ngIf="ride.rideStatus === 5"class="badge badge-dot mr-4"><i class="bg-info"></i>{{ride.rideStatus | rideStatus}}</span> -->
                       </td>
                       <td>
                         <img src="assets/img/icons/fullRideInfo.png" alt="getFullInfo" srcset="" height="20px" width="20px" (click)="getFullRideInfo(content, i)">
                       </td>
                       <td></td>
                       <td>
-                        <button class="btn btn-info" [id]="ride._id" *ngIf="ride.rideStatus == 2" [disabled]="ride.rideStatus != 2" (click)="clickCheck()">Accept</button>
-                        <button class="btn btn-danger" [id]="ride._id" *ngIf="ride.rideStatus == 2" [disabled]="ride.rideStatus != 2" (click)="clickCheck()">Reject</button>
+                        <button class="btn btn-info" [id]="ride._id" *ngIf="ride.rideStatus == 2" [disabled]="ride.rideStatus != 2" (click)="acceptRequest(ride)">Accept</button>
+                        <button class="btn btn-danger" [id]="ride._id" *ngIf="ride.rideStatus == 2" [disabled]="ride.rideStatus != 2" (click)="rejectRequest(ride)">Reject</button>
                         <label for="action" *ngIf="ride.rideStatus != 2">No action required</label>
                       </td>
                     </ng-container>

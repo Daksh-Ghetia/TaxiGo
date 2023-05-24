@@ -11,7 +11,7 @@
 ## Driver status
 
 0 = Free
-1 = Has req
+1 = Has request
 2 = Accepted Ride
 
 ## Ride, driver assign type

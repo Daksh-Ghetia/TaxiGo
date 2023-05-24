@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { RideService } from 'src/app/shared/ride.service';
+import { WebSocketService } from 'src/app/shared/web-socket.service';
 
 @Component({
   selector: 'app-running-request',
@@ -18,6 +19,7 @@ export class RunningRequestComponent implements OnInit {
   constructor(
     private _rideService: RideService,
     private _toastrService: ToastrService,
+    private _webSocketService: WebSocketService,
     private _modalService: NgbModal,
   ) { }
 
@@ -42,8 +44,28 @@ export class RunningRequestComponent implements OnInit {
     this.fullRideData = [this.rideDataList[index]];
   }
 
+  acceptRequest(ride: any) {    
+    this._webSocketService.emit('driverAcceptReuest', {driver: {_id: ride.rideDriverId}, ride: {_id: ride._id}});
+    this.getRideData();
+  }
+
+  rejectRequest(ride: any) {
+    if (ride.rideDriverAssignType == 1) {
+      let confirmation = confirm('Are you sure you want to reject the ride');
+      if (confirmation) {
+        this._webSocketService.emit('driverRejectRequestSelected', {driver: {_id: ride.rideDriverId}, ride: {_id: ride._id}});
+        this.getRideData();        
+      }
+    } else {
+      let confirmation = confirm('Are you sure you want to reject the ride');
+      if (confirmation) {
+        this._webSocketService.emit('driverRejectRequestNearest', {driver: {_id: ride.rideDriverId}, ride: {_id: ride._id}});
+        this.getRideData();
+      }
+    }
+  }
+
   clickCheck() {
     console.log("click working");
-    
   }
 }

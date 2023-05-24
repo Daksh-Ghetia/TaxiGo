@@ -355,6 +355,3 @@ export class CreateRideComponent implements OnInit {
 
   }
 }
-
-
-
