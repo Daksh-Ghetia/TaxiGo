@@ -41,8 +41,8 @@
                       <td class="text-wrap">{{ride.rideDropLocation}} </td>
                       <td>{{ride.vehicleType.vehicleName}} </td>
                       <td>
-                        <span *ngIf="ride.rideStatus === 0"class="badge badge-dot mr-4"><i class="bg-gradient-danger"></i>Canceled</span>
-                        <span *ngIf="ride.rideStatus === 6"class="badge badge-dot mr-4"><i class="bg-success"></i>Completed</span>
+                        <span *ngIf="ride.rideStatus === 0"class="badge badge-dot mr-4"><i class="bg-gradient-danger"></i>{{ride.rideStatus | rideStatus}}</span>
+                        <span *ngIf="ride.rideStatus === 6"class="badge badge-dot mr-4"><i class="bg-success"></i>{{ride.rideStatus | rideStatus}}</span>
                       </td>
                       <td>
                         <img src="assets/img/icons/fullRideInfo.png" alt="getFullInfo" srcset="" height="20px" width="20px" (click)="getFullRideInfo(content, i)">

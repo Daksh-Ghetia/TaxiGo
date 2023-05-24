@@ -42,15 +42,16 @@
                       <td class="text-wrap">{{ride.rideDropLocation}} </td>
                       <td>{{ride.vehicleType.vehicleName}} </td>
                       <td>
-                        <span *ngIf="ride.rideStatus === 1"class="badge badge-dot mr-4"><i class="bg-warning"></i>Pending</span>
-                        <span *ngIf="ride.rideStatus === 2"class="badge badge-dot mr-4"><i class="bg-warning"></i>Assigning</span>
+                        <span *ngIf="ride.rideStatus === 1"class="badge badge-dot mr-4"><i class="bg-warning"></i>{{ride.rideStatus | rideStatus}}</span>
+                        <span *ngIf="ride.rideStatus === 2"class="badge badge-dot mr-4"><i class="bg-warning"></i>{{ride.rideStatus | rideStatus}}</span>
                       </td>
                       <td>
                         <img src="assets/img/icons/fullRideInfo.png" alt="getFullInfo" srcset="" height="20px" width="20px" (click)="getFullRideInfo(content, i)">
                       </td>
                       <td>
-                        <button class="btn btn-info" [id]="ride._id" (click)="getDriverDetailsForRide(contentDriverInfo, ride.rideServiceTypeId, ride.rideCityId, i)">Assign</button>
-                        <button class="btn btn-danger" [id]="ride._id" (click)="cancelRide($event.target.id)">Cancel</button>
+                        <button class="btn btn-info" [id]="ride._id" (click)="getDriverDetailsForRide(contentDriverInfo, ride.rideServiceTypeId, ride.rideCityId, i); rideId = ride" *ngIf="ride.rideStatus != 2">Assign</button>
+                        <label for="driverName" class="btn" *ngIf="ride.rideStatus == 2">{{ride.driver[0].driverName}}</label>
+                        <button class="btn btn-danger" [id]="ride._id" (click)="cancelRide($event.target.id)" *ngIf="ride.rideStatus != 2">Cancel</button>
                       </td>
                     </ng-container>
                   </tr>
@@ -178,6 +179,7 @@
       </div>
 
       <div class="modal-body">
+        <!-- Trip info -->
         <h4>Trip info</h4>
         <table>
           <tbody *ngFor="let ride of fullRideData">
@@ -213,7 +215,7 @@
           </tbody>
         </table>
 
-      
+        <!-- Driver info -->
         <table class="table align-items-center table-flush">
           <thead class="thead-light">
             <tr class="text-center">
@@ -224,11 +226,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let driver of driverList; let i = index" [ngClass]="{'selected-row': selectedRowIndex === i}" (click)="selectedRowIndex = i" class="text-center text-capitalize">
+            <tr *ngFor="let driver of driverList; let i = index" [id]="i" [ngClass]="{'selected-row': selectedRowIndex === i}" (click)="selectedRowIndex = i" class="text-center text-capitalize">
               <td class="text-wrap">{{driver._id}}</td>
               <td>{{driver.driverName}}</td>
               <td class="text-wrap">{{driver.driverPhone}}</td>
               <td class="text-wrap">{{driver.driverEmail}} </td>
+            </tr>
+            <tr>
+              <td><button type="button" class="btn btn-outline-primary" (click)="assignSelectedDriver()">Assign Selected Driver</button></td>
+              <td><button type="button" class="btn btn-outline-primary">Assign Nearest Driver</button></td>
             </tr>
           </tbody>
 

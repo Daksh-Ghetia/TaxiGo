@@ -36,6 +36,18 @@ const rideSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         default: null
     },
+    rideRejectedByDriverId: {
+        type: Array,
+        default: []
+    },
+    rideNoActionByDriverId: {
+        type: Array,
+        default: []
+    },
+    rideDriverAssignType: {
+        type: Number,
+        default: 0
+    },
     rideDistance: {
         type: Number,
         required: [true, 'Ride distance is required'],

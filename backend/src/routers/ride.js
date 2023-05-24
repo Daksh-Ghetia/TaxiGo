@@ -43,6 +43,14 @@ router.get('/ride/getRideDetails', auth, async (req, res) => {
                 }
             },
             {
+                $lookup: {
+                    from: 'drivers',
+                    as: 'driver',
+                    localField: 'rideDriverId',
+                    foreignField: '_id'
+                }
+            },
+            {
                 $unwind: '$user'
             },
             {
@@ -88,7 +96,7 @@ router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
     try {
         /**Parse the body and store the keys of sent data */
         let updates = Object.keys(req.body);
-        const allowedUpdates = ["rideStatus", "rideDriverId"];
+        const allowedUpdates = ["rideStatus", "rideDriverId", "rideRejectedByDriverId", "rideNoActionByDriverId", "rideDriverAssignType"];
 
         /**Check if the updates are applied for permissible  type only and if other update found return invalid updates*/
         const isValidOpertaion = updates.every((update) => allowedUpdates.includes(update));

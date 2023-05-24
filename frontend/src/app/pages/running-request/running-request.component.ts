@@ -41,4 +41,9 @@ export class RunningRequestComponent implements OnInit {
     this.modalRef = this._modalService.open(content, { centered: true, scrollable: true });
     this.fullRideData = [this.rideDataList[index]];
   }
+
+  clickCheck() {
+    console.log("click working");
+    
+  }
 }

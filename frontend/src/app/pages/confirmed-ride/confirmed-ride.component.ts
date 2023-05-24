@@ -3,6 +3,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { DriverService } from 'src/app/shared/driver.service';
 import { RideService } from 'src/app/shared/ride.service';
+import { WebSocketService } from 'src/app/shared/web-socket.service';
 
 @Component({
   selector: 'app-confirmed-ride',
@@ -15,6 +16,7 @@ export class ConfirmedRideComponent implements OnInit {
   public fullRideData: any = [];
   public driverList: any = [];
   public selectedRowIndex: number;
+  public rideId: any;
   
   private modalRef: NgbModalRef;
 
@@ -22,7 +24,8 @@ export class ConfirmedRideComponent implements OnInit {
     private _rideService: RideService,
     private _driverService: DriverService,
     private _modalService: NgbModal,
-    private _toastrServie: ToastrService
+    private _toastrServie: ToastrService,
+    private _webSocketService: WebSocketService
   ) { }
 
   ngOnInit(): void {
@@ -33,6 +36,8 @@ export class ConfirmedRideComponent implements OnInit {
     this._rideService.getRideData().subscribe({
       next: (response) => {
         this.rideDataList = response.ride;
+        console.log(this.rideDataList);
+        
       },
       error: (error) => {
         console.log(error);
@@ -73,12 +78,21 @@ export class ConfirmedRideComponent implements OnInit {
           this._toastrServie.info("There are no drivers providing the facilities required by the customer", "Driver not found")
         }
         this.driverList =  response.driver;
-        console.log(this.driverList);        
       },
       error: (error) => {
         console.log(error);        
       },
       complete: () => {}
     })
+  }
+
+  assignSelectedDriver() {
+    if (this.selectedRowIndex === undefined) {
+      return this._toastrServie.info("please select a driver to assign", "Driver not selected");
+    }
+    
+    this._webSocketService.emit('assignSelectedDriver', {driver: this.driverList[this.selectedRowIndex], rideDriverAssignType: 1, ride: this.rideId});
+    this.modalRef.close();
+    this.getRideData();
   }
 }

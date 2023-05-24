@@ -23,9 +23,11 @@
                       <th scope="col" >Driver Name</th>
                       <th scope="col" class="text-wrap">Pick up location</th>
                       <th scope="col" class="text-wrap">Drop location</th>
+                      <th scope="col" class="text-wrap">Driver Name</th>
                       <th scope="col" >Service type</th>
                       <th scope="col" >Status</th>
                       <th scope="col" class="text-wrap">Full information</th>
+                      <th scope="col" class="text-wrap">Time to accept</th>
                       <th scope="col" >Action</th>
                     </tr>
                   </thead>
@@ -38,19 +40,25 @@
                       <td>{{ride.user.userName}}</td>
                       <td class="text-wrap">{{ride.ridePickUpLocation}}</td>
                       <td class="text-wrap">{{ride.rideDropLocation}} </td>
+                      <td class="text-wrap">
+                        <span *ngIf="ride.driver.length > 0">{{ride.driver[0].driverName}}</span>
+                        <span *ngIf="ride.driver.length == 0">-</span>
+                      </td>
                       <td>{{ride.vehicleType.vehicleName}} </td>
                       <td>
-                        <span *ngIf="ride.rideStatus === 2"class="badge badge-dot mr-4"><i class="bg-warning"></i>Assigning</span>
-                        <span *ngIf="ride.rideStatus === 3"class="badge badge-dot mr-4"><i class="bg-info"></i>Accepted</span>
-                        <span *ngIf="ride.rideStatus === 4"class="badge badge-dot mr-4"><i class="bg-info"></i>Arrived</span>
-                        <span *ngIf="ride.rideStatus === 5"class="badge badge-dot mr-4"><i class="bg-info"></i>Started</span>
+                        <span *ngIf="ride.rideStatus === 2"class="badge badge-dot mr-4"><i class="bg-warning"></i>{{ride.rideStatus | rideStatus}}</span>
+                        <span *ngIf="ride.rideStatus === 3"class="badge badge-dot mr-4"><i class="bg-info"></i>{{ride.rideStatus | rideStatus}}</span>
+                        <span *ngIf="ride.rideStatus === 4"class="badge badge-dot mr-4"><i class="bg-info"></i>{{ride.rideStatus | rideStatus}}</span>
+                        <span *ngIf="ride.rideStatus === 5"class="badge badge-dot mr-4"><i class="bg-info"></i>{{ride.rideStatus | rideStatus}}</span>
                       </td>
                       <td>
                         <img src="assets/img/icons/fullRideInfo.png" alt="getFullInfo" srcset="" height="20px" width="20px" (click)="getFullRideInfo(content, i)">
                       </td>
+                      <td></td>
                       <td>
-                        <!-- <button class="btn btn-info" [id]="ride._id" (click)="getDriverDetailsForRide(contentDriverInfo, ride.rideServiceTypeId, ride.rideCityId, i)">Assign</button>
-                        <button class="btn btn-danger" [id]="ride._id" (click)="cancelRide($event.target.id)">Cancel</button> -->
+                        <button class="btn btn-info" [id]="ride._id" *ngIf="ride.rideStatus == 2" [disabled]="ride.rideStatus != 2" (click)="clickCheck()">Accept</button>
+                        <button class="btn btn-danger" [id]="ride._id" *ngIf="ride.rideStatus == 2" [disabled]="ride.rideStatus != 2" (click)="clickCheck()">Reject</button>
+                        <label for="action" *ngIf="ride.rideStatus != 2">No action required</label>
                       </td>
                     </ng-container>
                   </tr>

@@ -27,6 +27,7 @@ import { DatePipe } from '@angular/common';
 import { ConvertMinutesToHoursAndMinutesPipe } from './shared/convert-minutes-to-hours-and-minutes.pipe';
 import { RideHistoryComponent } from './pages/ride-history/ride-history.component';
 import { RunningRequestComponent } from './pages/running-request/running-request.component';
+import { RideStatusPipe } from './shared/ride-status.pipe';
 
 @NgModule({
   imports: [
@@ -65,7 +66,8 @@ import { RunningRequestComponent } from './pages/running-request/running-request
     ConfirmedRideComponent,
     ConvertMinutesToHoursAndMinutesPipe,
     RideHistoryComponent,
-    RunningRequestComponent
+    RunningRequestComponent,
+    RideStatusPipe,
   ],
   providers: [
     {

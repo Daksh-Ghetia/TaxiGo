@@ -153,14 +153,14 @@ router.get('/vehiclePricing/calculatePricing/:id', auth, async (req,res) => {
 
         /**Calculate total fare */
         let totalFare = vehiclePricing.basePrice + ((req.query.distance - vehiclePricing.distanceForBasePrice)* vehiclePricing.pricePerUnitDistance) + (req.query.  time * vehiclePricing.pricePerUnitTime);
-
+        
         /**If total fare is less than minimum fare return minimum fare 
          * and if total fare is greater return total fare
          */
         if (totalFare < vehiclePricing.minimumFare) {
-            return res.status(200).send({totalFare: vehiclePricing.minimumFare, msg: 'total fare calculation succesful', status: 'success'})
+            return res.status(200).send({totalFare: Number((vehiclePricing.minimumFare).toFixed(2)), msg: 'total fare calculation succesful', status: 'success'})
         } else {
-            return res.status(200).send({totalFare: totalFare, msg: 'total fare calculation succesful', status: 'success'})
+            return res.status(200).send({totalFare: Number(totalFare.toFixed(2)), msg: 'total fare calculation succesful', status: 'success'})
         }
     } catch (error) {
         return res.status(500).send({msg: "Error occured while calculating ride fare", error: error, status: "failed"});

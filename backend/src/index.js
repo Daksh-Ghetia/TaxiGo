@@ -1,3 +1,4 @@
+const cron = require('./routers/crone');
 const express = require('express');
 require('./db/mongoose')
 const cors = require('cors');
@@ -9,7 +10,7 @@ const vehiclePricingRouter = require('./routers/vehiclePricing');
 const userRouter = require('./routers/user');
 const driverRouter = require('./routers/driver');
 const rideRouter = require('./routers/ride');
-
+const socket = require('./routers/socket-io');
 const settingRouter = require('./routers/setting');
 
 const app = express();
@@ -26,9 +27,17 @@ app.use(vehiclePricingRouter);
 app.use(userRouter);
 app.use(driverRouter);
 app.use(rideRouter);
+app.use(settingRouter);
 
-app.use(settingRouter)
+/**Connect to socket io */
+var server = require('http').Server(app);
+var io = require('socket.io')(server, {cors: {origin: "*"}});
+socket(server)
 
-app.listen(3000, () => {
+server.listen(3000, () => {
     console.log("port up on 3000");
 })
+
+// app.listen(3000, () => {
+//     console.log("port up on 3000");
+// })

@@ -220,9 +220,7 @@ export class CreateRideComponent implements OnInit {
 
   showDirection() {
     if (this.createRideForm.get('ridePickUpLocation').invalid || this.createRideForm.get('rideDropLocation').invalid || this.createRideForm.get('rideIntermediateStops').invalid) {
-      // this.createRideForm.markAllAsTouched();
       this.createRideForm.get('rideServiceTypeId').reset();
-      // this._toastrService.warning("Please fill all the required field to perform search", "");
       return;
     }
 
@@ -245,6 +243,7 @@ export class CreateRideComponent implements OnInit {
     .then((response) => {
       this.directionsRenderer.setDirections(response)
       this.setDistanceAndTime();
+      this.calculateFare((document.getElementById('rideServiceTypeId')as HTMLSelectElement).value);
     })
     .catch((error) => {
       this.directionsRenderer.setDirections({routes: []});
@@ -356,3 +355,6 @@ export class CreateRideComponent implements OnInit {
 
   }
 }
+
+
+
