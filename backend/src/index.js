@@ -10,7 +10,7 @@ const userRouter = require('./routers/user');
 const driverRouter = require('./routers/driver');
 const rideRouter = require('./routers/ride');
 const socketIo = require('./routers/socket-io');
-// const cron = require('./routers/crone');
+const cron = require('./routers/crone');
 const settingRouter = require('./routers/setting');
 
 const app = express();

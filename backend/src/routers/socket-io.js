@@ -26,6 +26,8 @@ function socket(server) {
                 /**Update ride status as assigned to a driver and waiting for driver response */
                 const ride = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus : 2, rideDriverId: data.driver._id,rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
 
+                let currentlyTime = new Date().getSeconds();
+                console.log("create", currentlyTime);
                 if (driver.length <= 0 || ride.length <= 0) {
                     throw new Error('Error occured in socket');
                 }
