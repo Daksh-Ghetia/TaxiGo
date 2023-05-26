@@ -117,6 +117,10 @@
               <td class="label-input">Vehicle type: </td>
               <td>{{ride.vehicleType.vehicleName}} </td>
             </tr>
+            <tr *ngIf="ride.rideStatus == 6 && ride.driver[0]._id">
+              <td class="label-input">Driver Name: </td>
+              <td>{{ride.driver[0].driverName}} </td>
+            </tr>
             <tr>
               <td class="label-input">Pick point: </td>
               <td><li>{{ride.ridePickUpLocation}}</li> </td>

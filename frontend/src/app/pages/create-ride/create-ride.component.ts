@@ -65,7 +65,7 @@ export class CreateRideComponent implements OnInit {
 
     /**Get data of user whenever the phone number field is of length 10 and valid*/
     this.createRideForm.get('rideCustomerPhone').valueChanges.subscribe(value => {
-      if (value && value.length == 10 && this.createRideForm.get('rideCustomerPhone').valid) {
+      if (value && this.createRideForm.get('rideCustomerPhone').valid) {
         this.getUserData(value);
       } else {
         this.createRideForm.get('rideCustomerName').reset();

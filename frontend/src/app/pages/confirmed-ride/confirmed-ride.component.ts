@@ -30,14 +30,13 @@ export class ConfirmedRideComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRideData();
+    this.listenToSocket();
   }
 
   getRideData() {
     this._rideService.getRideData().subscribe({
       next: (response) => {
-        this.rideDataList = response.ride;
-        console.log(this.rideDataList);
-        
+        this.rideDataList = response.ride;        
       },
       error: (error) => {
         console.log(error);
@@ -94,5 +93,17 @@ export class ConfirmedRideComponent implements OnInit {
     this._webSocketService.emit('assignSelectedDriver', {driver: this.driverList[this.selectedRowIndex], rideDriverAssignType: 1, ride: this.rideId});
     this.modalRef.close();
     this.getRideData();
+  }
+
+  listenToSocket() {
+    this._webSocketService.listen('dataChange').subscribe({
+      next: () => {
+        this.getRideData();
+      },
+      error: (error) => {
+        console.log(error);        
+      },
+      complete: () => {}
+    })
   }
 }

@@ -25,6 +25,7 @@ export class RunningRequestComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRideData();
+    this.listenToSocket();
   }
 
   getRideData() {
@@ -67,5 +68,18 @@ export class RunningRequestComponent implements OnInit {
 
   clickCheck() {
     console.log("click working");
+  }
+
+  listenToSocket() {
+    this._webSocketService.listen('dataChange').subscribe({
+      next: () => {
+        // console.log(response);
+        this.getRideData();
+      },
+      error: (error) => {
+        console.log(error);        
+      },
+      complete: () => {}
+    })
   }
 }

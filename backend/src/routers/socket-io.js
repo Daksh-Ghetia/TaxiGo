@@ -25,6 +25,7 @@ function socket(server) {
                 
                 /**Update ride status as assigned to a driver and waiting for driver response */
                 const ride = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus : 2, rideDriverId: data.driver._id,rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
+                socketEmit('dataChange');
 
                 let currentlyTime = new Date().getSeconds();
                 console.log("create", currentlyTime);
@@ -44,6 +45,7 @@ function socket(server) {
 
                 /**Update ride status as assigned to a driver and waiting for driver response */
                 const ride = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus: 3}, {new: true, runValidators: true});
+                socketEmit('dataChange');
             } catch (error) {
                 console.log(error);
             }
@@ -54,6 +56,7 @@ function socket(server) {
             try {
                 const driver = await Driver.findByIdAndUpdate(data.driver._id, {driverRideStatus: 0}, {new: true, runValidators: true});
                 const ride = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus: 0}, {new: true, runValidators: true});
+                socketEmit('dataChange');
             } catch (error) {
                 console.log(error);
             }
@@ -61,4 +64,11 @@ function socket(server) {
     })
 }
 
-module.exports = socket;
+function socketEmit(eventName, data="") {
+    io.emit(eventName, data);
+}
+
+module.exports = {
+    socket: socket,
+    socketEmit: socketEmit
+};

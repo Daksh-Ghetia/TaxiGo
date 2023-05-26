@@ -32,7 +32,7 @@ app.use(settingRouter);
 /**Connect to socket io */
 var server = require('http').Server(app);
 var io = require('socket.io')(server, {cors: {origin: "*"}});
-socketIo(server)
+socketIo.socket(server)
 
 server.listen(3000, () => {
     console.log("port up on 3000");

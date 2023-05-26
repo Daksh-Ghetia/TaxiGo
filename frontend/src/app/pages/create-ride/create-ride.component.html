@@ -16,7 +16,7 @@
                     <tr>
                         <td class="label-input text-white">Phone number:</td>
                         <td>
-                            <input class="createRide-input" formControlName="rideCustomerPhone" type="text" maxlength="10" name="rideCustomerPhone" id="rideCustomerPhone" placeholder="10 digit phone number">
+                            <input class="createRide-input" formControlName="rideCustomerPhone" type="number" name="rideCustomerPhone" id="rideCustomerPhone" placeholder="10 digit phone number" onKeyPress="if(this.value.length==10) return false;">
                             <br>
                             <div>
                                 <strong *ngIf="createRideForm.get('rideCustomerPhone').invalid && createRideForm.get('rideCustomerPhone').touched && (createRideForm.get('rideCustomerPhone').value == null || createRideForm.get('rideCustomerPhone').value == '')">Please add phone number</strong>

@@ -2,6 +2,7 @@ const express = require('express');
 const auth = require('../middleware/authentication');
 const multer = require('multer');
 const Ride = require('../models/ride');
+const Driver = require('../models/driver');
 
 const router = new express.Router();
 
@@ -108,6 +109,10 @@ router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
         const ride = await Ride.findOne({_id: req.params.id});
         if (!ride) {
             return res.status(404).send({msg: "Ride not found for update", status: "failed"})
+        }
+
+        if (req.body.rideStatus == 6) {
+            await Driver.findByIdAndUpdate(ride.rideDriverId, {driverRideStatus: 0}, {new: true, runValidators: true});
         }
         
         /**Apply updates to the field and save the data*/
