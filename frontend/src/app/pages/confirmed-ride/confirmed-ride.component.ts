@@ -95,6 +95,16 @@ export class ConfirmedRideComponent implements OnInit {
     this.getRideData();
   }
 
+   assignRandomDriver() {
+      if (this.driverList.length == 0) {
+        return this._toastrServie.info("Currently there are no drivers available for selection", "Driver not found");
+      }
+
+      this._webSocketService.emit('assignRandomDriver', {});
+      this.modalRef.close();
+      this.getRideData();
+   }
+
   listenToSocket() {
     this._webSocketService.listen('dataChange').subscribe({
       next: () => {

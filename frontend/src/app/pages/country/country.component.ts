@@ -75,6 +75,7 @@ export class CountryComponent implements OnInit {
     this._countryService.getCountry().subscribe({
       next: (response) => {
         this.countryList = response.country;
+        console.log(this.countryList);
       },
       error: (error) => {
         this.customErrMsg = error.error.msg;

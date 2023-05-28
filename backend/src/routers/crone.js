@@ -6,25 +6,23 @@ const Driver = require('../models/driver');
 const Ride = require('../models/ride');
 
 let timeToAcceptRequest;
-let expression;
 
-getSettingData();
+cron.schedule('*/30 * * * * *', function () {
+    getDriverData();
+    assignNewDriver();
+});
 
+/**Get the data necessary for the further execution */
 async function getSettingData() {
     try {
         /**Find all the setting data and if not found return no data to display*/
         let setting = await Setting.find({});
         if (setting.length > 0) {
             timeToAcceptRequest = setting[0].timeToAcceptRequest;
-            expression = `*/${timeToAcceptRequest} * * * * *`;
         }
     } catch (error) {}
 }
-
-cron.schedule('*/30 * * * * *', function () {
-    getDriverData();
-    assignNewDriver();
-});
+getSettingData();
 
 async function getDriverData() {
     try {
@@ -39,84 +37,40 @@ async function getDriverData() {
 
         /**Update each and every driver and ride corresponding to it */
         drivers.forEach(async (driver) => {
-            
-           freeDriver(driver);
-
-            /**If the timer is equal to or past the limited time then update ride request */
-            // if ((((currentTime - driver.updatedAt) / 1000)+5) >= timeToAcceptRequest) {
-            //     let sec = new Date().getSeconds();
-            //     console.log("complete", sec);
-            //     driver.driverRideStatus = 0;
-            //     await driver.save();
-            //     let ride = await Ride.findOne({rideDriverId: driver._id});
-            //     if (ride) {
-            //         ride.rideNoActionByDriverId.push(driver._id);
-            //         ride.rideStatus = 1;
-            //         ride.rideDriverId = null;
-            //         await ride.save();
-            //         SocketIo.socketEmit('dataChange');
-            //     }
-            // }
+            freeDriver(driver);
         });
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
-async function assignNewDriver() {
-    const ride = Ride.find({rideStatus: 1, rideDriverAssignType: 2})
+/**Free Driver */
+function freeDriver(driver) {
+    async function checkCondition() {
+        if ((Math.floor((new Date() - driver.updatedAt)/1000)) >= timeToAcceptRequest) {
+            driver.driverRideStatus = 0;
+            await driver.save();
+            let ride = await Ride.findOne({rideDriverId: driver._id});
+            if (ride) {
+                ride.rideNoActionByDriverId.push(driver._id);
+                ride.rideStatus = 1;
+                ride.rideDriverId = null;
+                await ride.save();
+                SocketIo.socketEmit('dataChange');
+            }
+        } else {
+            setImmediate(checkCondition);
+        }
+    }
+    checkCondition();
+}
 
+/**Assign new driver */
+async function assignNewDriver() {
+    const ride = await Ride.find({rideStatus: 1, rideDriverAssignType: 2});
     if (ride.length == 0) {
         console.log("No ride with random driver assign");
     }
 
-
-}
-
-async function freeDriver(driver) {
-    while (checkTime(driver)) {
-        let sec = new Date().getSeconds();
-        console.log("complete", sec);
-        driver.driverRideStatus = 0;
-        await driver.save();
-        let ride = await Ride.findOne({rideDriverId: driver._id});
-        if (ride) {
-            ride.rideNoActionByDriverId.push(driver._id);
-            ride.rideStatus = 1;
-            ride.rideDriverId = null;
-            await ride.save();
-            SocketIo.socketEmit('dataChange');
-        }
-    }
-    // let currentTime = new Date();
-    // if (((currentTime - driver.updatedAt)/1000) >= timeToAcceptRequest) {
-    //     let sec = new Date().getSeconds();
-    //     console.log("complete", sec);
-    //     driver.driverRideStatus = 0;
-    //     await driver.save();
-    //     let ride = await Ride.findOne({rideDriverId: driver._id});
-    //     if (ride) {
-    //         ride.rideNoActionByDriverId.push(driver._id);
-    //         ride.rideStatus = 1;
-    //         ride.rideDriverId = null;
-    //         await ride.save();
-    //         SocketIo.socketEmit('dataChange');
-    //     }
-    //     return
-    // } else {
-        // while ((Math.floor((new Date() - driver.updatedAt)/1000)) < timeToAcceptRequest) {
-        //     checkTime(driver);
-        // }
-    // }
-}
-
-function checkTime(driver) {
-    return new Promise(function (resolve,reject) {
-        if ((Math.floor((new Date() - driver.updatedAt)/1000)) >= timeToAcceptRequest) {
-            resolve(true);
-        }
-        else {
-            reject(false);
-        }
-    })
+    console.log(ride);
 }

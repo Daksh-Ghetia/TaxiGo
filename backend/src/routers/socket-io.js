@@ -61,6 +61,10 @@ function socket(server) {
                 console.log(error);
             }
         });
+
+        socket.on('assignRandomDriver', async (data) => {
+            console.log("Random driver called");
+        })
     })
 }
 
