@@ -48,6 +48,8 @@ async function getDriverData() {
 function freeDriver(driver) {
     async function checkCondition() {
         if ((Math.floor((new Date() - driver.updatedAt)/1000)) >= timeToAcceptRequest) {
+            let currenttSecond = new Date().getSeconds();
+            console.log(currenttSecond);
             driver.driverRideStatus = 0;
             await driver.save();
             let ride = await Ride.findOne({rideDriverId: driver._id});
@@ -69,8 +71,7 @@ function freeDriver(driver) {
 async function assignNewDriver() {
     const ride = await Ride.find({rideStatus: 1, rideDriverAssignType: 2});
     if (ride.length == 0) {
-        console.log("No ride with random driver assign");
+        return console.log("No ride with random driver assign");
     }
-
-    console.log(ride);
+    // console.log(ride);
 }

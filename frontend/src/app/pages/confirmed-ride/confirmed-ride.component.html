@@ -49,8 +49,11 @@
                         <img src="assets/img/icons/fullRideInfo.png" alt="getFullInfo" srcset="" height="20px" width="20px" (click)="getFullRideInfo(content, i)">
                       </td>
                       <td>
-                        <button class="btn btn-info" [id]="ride._id" (click)="getDriverDetailsForRide(contentDriverInfo, ride.rideServiceTypeId, ride.rideCityId, i); rideId = ride" *ngIf="ride.rideStatus != 2">Assign</button>
-                        <label for="driverName" class="btn" *ngIf="ride.rideStatus == 2">{{ride.driver[0].driverName}}</label>
+                        <button class="btn btn-info" [id]="ride._id" (click)="getDriverDetailsForRide(contentDriverInfo, ride.rideServiceTypeId, ride.rideCityId, i); rideId = ride" *ngIf="ride.rideStatus != 2">
+                          <span *ngIf="ride.rideStatus == 1 && ride.rideDriverAssignType == 0">Assign</span>
+                          <span *ngIf="ride.rideStatus == 1 && ride.rideDriverAssignType != 0">Re-assign</span>
+                        </button>
+                        <label for="driverName" class="btn" *ngIf="ride.rideStatus == 2 && ride.driver[0]">{{ride.driver[0].driverName}}</label>
                         <button class="btn btn-danger" [id]="ride._id" (click)="cancelRide($event.target.id)" *ngIf="ride.rideStatus != 2">Cancel</button>
                       </td>
                     </ng-container>
@@ -234,7 +237,7 @@
             </tr>
             <tr>
               <td><button type="button" class="btn btn-outline-primary" (click)="assignSelectedDriver()">Assign Selected Driver</button></td>
-              <td><button type="button" class="btn btn-outline-primary">Assign Nearest Driver</button></td>
+              <td><button type="button" class="btn btn-outline-primary" (click)="assignRandomDriver()">Assign Nearest Driver</button></td>
             </tr>
           </tbody>
 

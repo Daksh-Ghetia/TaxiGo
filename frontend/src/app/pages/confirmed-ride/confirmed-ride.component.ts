@@ -36,7 +36,7 @@ export class ConfirmedRideComponent implements OnInit {
   getRideData() {
     this._rideService.getRideData().subscribe({
       next: (response) => {
-        this.rideDataList = response.ride;        
+        this.rideDataList = response.ride;
       },
       error: (error) => {
         console.log(error);
@@ -100,7 +100,8 @@ export class ConfirmedRideComponent implements OnInit {
         return this._toastrServie.info("Currently there are no drivers available for selection", "Driver not found");
       }
 
-      this._webSocketService.emit('assignRandomDriver', {});
+      this._webSocketService.emit('assignRandomDriver', {rideDriverAssignType: 2, ride: this.rideId});
+      this._toastrServie.success("Nearest driver assigning succesful", "");
       this.modalRef.close();
       this.getRideData();
    }
@@ -111,7 +112,17 @@ export class ConfirmedRideComponent implements OnInit {
         this.getRideData();
       },
       error: (error) => {
-        console.log(error);        
+        console.log(error);
+      },
+      complete: () => {}
+    })
+
+    this._webSocketService.listen('watchData').subscribe({
+      next: (data) => {
+        console.log(data);
+      },
+      error: (error) => {
+        console.log(error);
       },
       complete: () => {}
     })

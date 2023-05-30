@@ -25,17 +25,79 @@ function socket(server) {
                 
                 /**Update ride status as assigned to a driver and waiting for driver response */
                 const ride = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus : 2, rideDriverId: data.driver._id,rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
-                socketEmit('dataChange');
-
+                
                 let currentlyTime = new Date().getSeconds();
                 console.log("create", currentlyTime);
+                
                 if (driver.length <= 0 || ride.length <= 0) {
                     throw new Error('Error occured in socket');
                 }
+                socketEmit('dataChange');
             } catch (error) {
                 console.log(error);
             }
         });
+
+        socket.on('assignRandomDriver', async (data) => {
+            try {
+                const updateRide = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus: 1, rideDriverAssignType: data.rideDriverAssignType}, {new: true, runValidators: true});
+
+                if (updateRide.length == 0) {
+                    return console.log("Error occured while updating ride with random driver selection");
+                }
+
+                let pipeline = [
+                    {
+                        $match: {
+                            $and: [
+                                {rideStatus: 1},
+                                {rideDriverAssignType: 2}
+                            ]
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'drivers',
+                            as: 'driver',
+                            localField: 'rideServiceTypeId',
+                            foreignField: 'driverServiceTypeId'
+                        }
+                    },
+                    {
+                        $match: {
+                            $and: [
+                                { "driver.driverStatus": true },
+                                { "driver.driverRideStatus": 0}
+                            ]
+                        }
+                    },
+                    {
+                        $addFields: {
+                            driver: {
+                                $filter: {
+                                    input: "$driver",
+                                    as: "driverInfo",
+                                    cond: {
+                                        $eq: ["$$driverInfo.driverCityId", "$rideCityId"]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        $addFields:{
+                            driver: {
+                                $setDifference: ["$driver._id", "$rideRejectedByDriverId"]
+                            }
+                        }
+                    },
+                ];
+                const rda = await Ride.aggregate(pipeline);
+                socketEmit('watchData', rda);
+            } catch (error) {
+                console.log(error);
+            }
+        })
 
         /**Driver accept request */
         socket.on('driverAcceptReuest', async (data) => {
@@ -61,10 +123,6 @@ function socket(server) {
                 console.log(error);
             }
         });
-
-        socket.on('assignRandomDriver', async (data) => {
-            console.log("Random driver called");
-        })
     })
 }
 
