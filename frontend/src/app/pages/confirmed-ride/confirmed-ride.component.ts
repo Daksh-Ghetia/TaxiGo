@@ -67,11 +67,11 @@ export class ConfirmedRideComponent implements OnInit {
     this.fullRideData = [this.rideDataList[index]];
   }
 
-  getDriverDetailsForRide(content: any, rideServiceTypeId: string, rideCityId: string, index: number) {
+  getDriverDetailsForRide(content: any, ride: any, index: number) {
     this.modalRef = this._modalService.open(content, { size: 'lg', centered: true, scrollable: true });
     this.selectedRowIndex = undefined;
     this.fullRideData = [this.rideDataList[index]];
-    this._driverService.getDriverDetailsForRide(rideServiceTypeId, rideCityId).subscribe({
+    this._driverService.getDriverDetailsForRide(ride.rideServiceTypeId, ride.rideCityId).subscribe({
       next: (response) => {
         if (response.driver.length <= 0) {
           this._toastrServie.info("There are no drivers providing the facilities required by the customer", "Driver not found")
@@ -79,7 +79,7 @@ export class ConfirmedRideComponent implements OnInit {
         this.driverList =  response.driver;
       },
       error: (error) => {
-        console.log(error);        
+        console.log(error);
       },
       complete: () => {}
     })

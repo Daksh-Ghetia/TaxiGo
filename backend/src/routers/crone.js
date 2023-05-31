@@ -7,7 +7,7 @@ const Ride = require('../models/ride');
 
 let timeToAcceptRequest;
 
-cron.schedule('*/30 * * * * *', function () {
+cron.schedule('*/10 * * * * *', function () {
     getDriverData();
     assignNewDriver();
 });
@@ -75,3 +75,69 @@ async function assignNewDriver() {
     }
     // console.log(ride);
 }
+
+function setTimeToAcceptRequest(timeToAccept) {
+    timeToAcceptRequest = timeToAccept;
+}
+
+module.exports = {
+    setTimeToAcceptRequest: setTimeToAcceptRequest,
+};
+
+
+/*
+let pipeline = [
+                    {
+                        $match: {
+                            $and: [
+                                {rideStatus: 1},
+                                {rideDriverAssignType: 2}
+                            ]
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'drivers',
+                            as: 'driver',
+                            localField: 'rideServiceTypeId',
+                            foreignField: 'driverServiceTypeId'
+                        }
+                    },
+                    {
+                        $match: {
+                            $and: [
+                                { "driver.driverStatus": true },
+                                { "driver.driverRideStatus": 0}
+                            ]
+                        }
+                    },
+                    {
+                        $addFields: {
+                            driver: {
+                                $filter: {
+                                    input: "$driver",
+                                    as: "driverInfo",
+                                    cond: {
+                                        $eq: ["$$driverInfo.driverCityId", "$rideCityId"]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        $addFields:{
+                            driver: {
+                                $setDifference: ["$driver._id", "$rideRejectedByDriverId"]
+                            }
+                        }
+                    },
+                    {
+                        $addFields:{
+                            driver: {
+                                $setDifference: ["$driver", "$rideNoActionByDriverId"]
+                            }
+                        }
+                    }
+                ];
+                
+*/

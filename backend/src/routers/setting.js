@@ -2,6 +2,8 @@ const express = require('express');
 const auth = require('../middleware/authentication');
 const multer = require('multer');
 const Setting = require('../models/setting');
+const SocketIo = require('./socket-io');
+const Cron = require('../routers/crone');
 
 const router = new express.Router();
 
@@ -45,8 +47,9 @@ router.patch('/setting/editSetting/:id', auth, upload.none(), async(req,res) => 
         /**Apply updates to the field and save the data*/
         updates.forEach((update) => setting[update] = req.body[update])
         await setting.save();
-        
-        res.status(200).send({msg: "Edit success", setting: setting, status: "success"});
+        Cron.setTimeToAcceptRequest(setting.timeToAcceptRequest);
+        return res.status(200).send({msg: "Edit success", setting: setting, status: "success"});
+
     } catch (error) {
         res.status(500).send({msg: "Server error while updating setting", status: "failed", error: error});
     }       

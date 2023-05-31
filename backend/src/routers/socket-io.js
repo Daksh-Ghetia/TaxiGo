@@ -2,10 +2,9 @@ const express = require('express');
 const router = new express.Router();
 const Driver = require('../models/driver');
 const Ride = require('../models/ride');
+const { ObjectId } = require('mongodb');
 
 const app = express();
-var http = require('http').Server(app);
-
 let io;
 
 function socket(server) {
@@ -30,7 +29,7 @@ function socket(server) {
                 console.log("create", currentlyTime);
                 
                 if (driver.length <= 0 || ride.length <= 0) {
-                    throw new Error('Error occured in socket');
+                    throw new Error('Error occured in socket while assigning selected driver');
                 }
                 socketEmit('dataChange');
             } catch (error) {
@@ -40,7 +39,7 @@ function socket(server) {
 
         socket.on('assignRandomDriver', async (data) => {
             try {
-                const updateRide = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus: 1, rideDriverAssignType: data.rideDriverAssignType}, {new: true, runValidators: true});
+                const updateRide = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus: 1, rideNoActionByDriverId: [], rideDriverAssignType: data.rideDriverAssignType}, {new: true, runValidators: true});
 
                 if (updateRide.length == 0) {
                     return console.log("Error occured while updating ride with random driver selection");
@@ -49,10 +48,7 @@ function socket(server) {
                 let pipeline = [
                     {
                         $match: {
-                            $and: [
-                                {rideStatus: 1},
-                                {rideDriverAssignType: 2}
-                            ]
+                            _id: new ObjectId(data.ride._id)
                         }
                     },
                     {
@@ -91,9 +87,32 @@ function socket(server) {
                             }
                         }
                     },
+                    {
+                        $addFields:{
+                            driver: {
+                                $setDifference: ["$driver", "$rideNoActionByDriverId"]
+                            }
+                        }
+                    }
                 ];
-                const rda = await Ride.aggregate(pipeline);
-                socketEmit('watchData', rda);
+                const rides = await Ride.aggregate(pipeline);
+                socketEmit('watchData', rides);
+
+                rides.forEach( async (ride) => {
+                    if (ride.driver.length == 0) {
+                        return;
+                    }
+
+                    console.log(ride.driver[0]._id);
+
+                    const driver = await Driver.findByIdAndUpdate(ride.driver[0]._id, { driverRideStatus: 1}, { new: true, runValidators: true });
+                    const rideUpdate = await Ride.findByIdAndUpdate(ride._id, {rideStatus : 2, rideDriverId: ride.driver[0]._id, rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
+
+                    if (driver.length <= 0 || rideUpdate.length <= 0) {
+                        throw new Error('Error occured in socket while assigning random driver');
+                    }
+                });                
+                socketEmit('dataChange');
             } catch (error) {
                 console.log(error);
             }
@@ -123,6 +142,21 @@ function socket(server) {
                 console.log(error);
             }
         });
+
+        socket.on('driverRejectRequestNearest', async (data) => {
+            try {
+                const driver = await Driver.findByIdAndUpdate(data.driver._id, {driverRideStatus: 0}, {new: true, runValidators: true});
+                const ride = await Ride.findByIdAndUpdate(
+                    data.ride._id, 
+                    {
+                        rideStatus: 1,
+                        $push: { rideRejectedByDriverId: new ObjectId(data.driver._id)}
+                    }, 
+                    {new: true, runValidators: true});
+            } catch (error) {
+                
+            }
+        })
     })
 }
 

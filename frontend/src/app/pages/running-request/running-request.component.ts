@@ -51,6 +51,8 @@ export class RunningRequestComponent implements OnInit {
   }
 
   rejectRequest(ride: any) {
+    console.log(ride);
+    
     if (ride.rideDriverAssignType == 1) {
       let confirmation = confirm('Are you sure you want to reject the ride');
       if (confirmation) {
