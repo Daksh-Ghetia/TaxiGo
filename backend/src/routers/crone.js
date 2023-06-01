@@ -12,7 +12,6 @@ cron.schedule('*/10 * * * * *', function () {
     // let currenttSecond = new Date().getSeconds();
     // console.log(currenttSecond);
     getDriverData();
-    // assignNewDriver();
 });
 
 /**Get the data necessary for the further execution */
@@ -50,8 +49,13 @@ async function getDriverData() {
         // });
 
         rides.forEach(async (ride) => {
+            
             let driver = await Driver.findOne({_id: new ObjectId(ride.rideDriverId)});
             await freeDriver(driver,ride);
+
+            // if (driver._id == "64673ef3cf6558e6cb70bffc" && ride._id == "6466037fe7c5f27b1bc22692") {
+            //     console.log(driver,ride);
+            //} 
         });
     } catch (error) {
         console.log(error);
@@ -67,12 +71,12 @@ async function freeDriver(driver,ride) {
                 await driver.save();
                 // let ride = await Ride.findOne({rideDriverId: driver._id});
                 // if (ride) {
-                    ride.rideNoActionByDriverId.push(driver._id);
-                    ride.rideStatus = 1;
-                    ride.rideDriverId = null;
-                    await ride.save();
-                    await assignNewDriver();
-                    SocketIo.socketEmit('dataChange');
+                ride.rideNoActionByDriverId.push(driver._id);
+                ride.rideStatus = 1;
+                ride.rideDriverId = null;
+                await ride.save();
+                await assignNewDriver();
+                SocketIo.socketEmit('dataChange');
                 // }
             } else {
                 setImmediate(checkCondition);
@@ -88,16 +92,18 @@ async function freeDriver(driver,ride) {
 async function assignNewDriver() {
     const rides = await Ride.find({rideStatus: 1, rideDriverAssignType: 2});
     if (rides.length == 0) {
-        return //console.log("No ride with random driver assign");
+        return console.log("No ride with random driver assign");
     }
 
-    SocketIo.socketEmit('watchData', rides);
-
-    rides.forEach( async (ride) => {
-        await SocketIo.findDriver({ride: ride});
+    await rides.forEach( async (ride) => {
+        console.log("Before");
+        const data = await SocketIo.findDriver({ride: ride});
         SocketIo.socketEmit('dataChange');
-    });
 
+        if (data[0]._id == "6464978690c2a508542b7b48" || data[0]._id == "6466037fe7c5f27b1bc22692") {
+            console.log("After" , data[0]);
+        }
+    });
 }
 
 module.exports = {

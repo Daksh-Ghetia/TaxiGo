@@ -11,10 +11,6 @@ function socket(server) {
     io = require('socket.io')(server, {cors: {origin: "*"}});
 
     io.on('connection', function (socket) {
-        // Code whenever the socket is closed
-        // socket.on('disconnect', () => {
-        //     console.log(`A user disconnected`);
-        // })
     
         /**Assign selected driver event */
         socket.on('assignSelectedDriver', async (data) => {
@@ -109,7 +105,6 @@ function socketEmit(eventName, data="") {
 
 async function findDriver(data) {
     try {
-        // console.log(data);
         let pipeline = [
             {
                 $match: {
@@ -170,17 +165,25 @@ async function findDriver(data) {
         ];
         const rides = await Ride.aggregate(pipeline);
 
-        rides.forEach( async (ride) => {
+        await rides.forEach( async (ride) => {
             if (ride.driver.length == 0) {
                 return;
             }
-            
-            const driver = await Driver.findByIdAndUpdate(ride.driver[0]._id, { driverRideStatus: 1}, { new: true, runValidators: true });
-            const rideUpdate = await Ride.findByIdAndUpdate(ride._id, {rideStatus : 2, rideDriverId: ride.driver[0]._id, rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
 
-            if (driver.length <= 0 || rideUpdate.length <= 0) {
-                throw new Error('Error occured in socket while assigning random driver');
-            }
+            ride.driver.forEach(async(driverList) => {
+                const driverData = await Driver.findOne({_id: new ObjectId(driverList)});
+
+                if (driverData && driverData.driverRideStatus == 0) {
+                    const driver = await Driver.findByIdAndUpdate(ride.driver[0]._id, { driverRideStatus: 1}, { new: true, runValidators: true });
+                    const rideUpdate = await Ride.findByIdAndUpdate(ride._id, {rideStatus : 2, rideDriverId: ride.driver[0]._id, rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
+                }
+            });
+
+            
+
+            // if (driver.length <= 0 || rideUpdate.length <= 0) {
+                // throw new Error('Error occured in socket while assigning random driver');
+            // }
         });
 
         return rides;
