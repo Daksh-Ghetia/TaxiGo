@@ -126,5 +126,15 @@ export class ConfirmedRideComponent implements OnInit {
       },
       complete: () => {}
     })
+
+    this._webSocketService.listen('cronData').subscribe({
+      next: (response) => {
+        console.log(response);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {},
+    })
   }
 }

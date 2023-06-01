@@ -47,7 +47,7 @@ router.patch('/setting/editSetting/:id', auth, upload.none(), async(req,res) => 
         /**Apply updates to the field and save the data*/
         updates.forEach((update) => setting[update] = req.body[update])
         await setting.save();
-        Cron.setTimeToAcceptRequest(setting.timeToAcceptRequest);
+        Cron.getSettingData();
         return res.status(200).send({msg: "Edit success", setting: setting, status: "success"});
 
     } catch (error) {

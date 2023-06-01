@@ -4,12 +4,15 @@ const Setting = require('../models/setting');
 const SocketIo = require('./socket-io');
 const Driver = require('../models/driver');
 const Ride = require('../models/ride');
+const { ObjectId } = require('mongodb');
 
 let timeToAcceptRequest;
 
 cron.schedule('*/10 * * * * *', function () {
+    // let currenttSecond = new Date().getSeconds();
+    // console.log(currenttSecond);
     getDriverData();
-    assignNewDriver();
+    // assignNewDriver();
 });
 
 /**Get the data necessary for the further execution */
@@ -27,17 +30,28 @@ getSettingData();
 async function getDriverData() {
     try {
         /**Get the data of the driver who are having request currently */
-        let drivers = await Driver.find({"driverRideStatus": 1}).sort({updatedAt: 1});
+        // let drivers = await Driver.find({"driverRideStatus": 1}).sort({updatedAt: 1});
+        let rides = await Ride.find({"rideStatus": 2}).sort({updatedAt: 1});
         
-        /**If no drivers are having  */
-        if (drivers.length == 0) {
+        // /**If no drivers are having  */
+        // if (drivers.length == 0) {
+        //     return
+        //     // return console.log("No driver in assigning state");
+        // }
+        /**If no rides are found  */
+        if (rides.length == 0) {
             return
             // return console.log("No driver in assigning state");
-        }
+        }        
 
         /**Update each and every driver and ride corresponding to it */
-        drivers.forEach(async (driver) => {
-            freeDriver(driver);
+        // drivers.forEach(async (driver) => {
+        //     freeDriver(driver);
+        // });
+
+        rides.forEach(async (ride) => {
+            let driver = await Driver.findOne({_id: new ObjectId(ride.rideDriverId)});
+            await freeDriver(driver,ride);
         });
     } catch (error) {
         console.log(error);
@@ -45,99 +59,47 @@ async function getDriverData() {
 }
 
 /**Free Driver */
-function freeDriver(driver) {
-    async function checkCondition() {
-        if ((Math.floor((new Date() - driver.updatedAt)/1000)) >= timeToAcceptRequest) {
-            let currenttSecond = new Date().getSeconds();
-            console.log(currenttSecond);
-            driver.driverRideStatus = 0;
-            await driver.save();
-            let ride = await Ride.findOne({rideDriverId: driver._id});
-            if (ride) {
-                ride.rideNoActionByDriverId.push(driver._id);
-                ride.rideStatus = 1;
-                ride.rideDriverId = null;
-                await ride.save();
-                SocketIo.socketEmit('dataChange');
+async function freeDriver(driver,ride) {
+   try {
+        async function checkCondition() {
+            if ((Math.floor((new Date() - driver.updatedAt)/1000)) >= timeToAcceptRequest) {
+                driver.driverRideStatus = 0;
+                await driver.save();
+                // let ride = await Ride.findOne({rideDriverId: driver._id});
+                // if (ride) {
+                    ride.rideNoActionByDriverId.push(driver._id);
+                    ride.rideStatus = 1;
+                    ride.rideDriverId = null;
+                    await ride.save();
+                    await assignNewDriver();
+                    SocketIo.socketEmit('dataChange');
+                // }
+            } else {
+                setImmediate(checkCondition);
             }
-        } else {
-            setImmediate(checkCondition);
         }
-    }
-    checkCondition();
+        checkCondition();
+   } catch (error) {
+        console.log(error);
+   }
 }
 
 /**Assign new driver */
 async function assignNewDriver() {
-    const ride = await Ride.find({rideStatus: 1, rideDriverAssignType: 2});
-    if (ride.length == 0) {
-        return console.log("No ride with random driver assign");
+    const rides = await Ride.find({rideStatus: 1, rideDriverAssignType: 2});
+    if (rides.length == 0) {
+        return //console.log("No ride with random driver assign");
     }
-    // console.log(ride);
-}
 
-function setTimeToAcceptRequest(timeToAccept) {
-    timeToAcceptRequest = timeToAccept;
+    SocketIo.socketEmit('watchData', rides);
+
+    rides.forEach( async (ride) => {
+        await SocketIo.findDriver({ride: ride});
+        SocketIo.socketEmit('dataChange');
+    });
+
 }
 
 module.exports = {
-    setTimeToAcceptRequest: setTimeToAcceptRequest,
+    getSettingData: getSettingData,
 };
-
-
-/*
-let pipeline = [
-                    {
-                        $match: {
-                            $and: [
-                                {rideStatus: 1},
-                                {rideDriverAssignType: 2}
-                            ]
-                        }
-                    },
-                    {
-                        $lookup: {
-                            from: 'drivers',
-                            as: 'driver',
-                            localField: 'rideServiceTypeId',
-                            foreignField: 'driverServiceTypeId'
-                        }
-                    },
-                    {
-                        $match: {
-                            $and: [
-                                { "driver.driverStatus": true },
-                                { "driver.driverRideStatus": 0}
-                            ]
-                        }
-                    },
-                    {
-                        $addFields: {
-                            driver: {
-                                $filter: {
-                                    input: "$driver",
-                                    as: "driverInfo",
-                                    cond: {
-                                        $eq: ["$$driverInfo.driverCityId", "$rideCityId"]
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        $addFields:{
-                            driver: {
-                                $setDifference: ["$driver._id", "$rideRejectedByDriverId"]
-                            }
-                        }
-                    },
-                    {
-                        $addFields:{
-                            driver: {
-                                $setDifference: ["$driver", "$rideNoActionByDriverId"]
-                            }
-                        }
-                    }
-                ];
-                
-*/

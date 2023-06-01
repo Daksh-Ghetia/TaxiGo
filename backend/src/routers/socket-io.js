@@ -45,73 +45,8 @@ function socket(server) {
                     return console.log("Error occured while updating ride with random driver selection");
                 }
 
-                let pipeline = [
-                    {
-                        $match: {
-                            _id: new ObjectId(data.ride._id)
-                        }
-                    },
-                    {
-                        $lookup: {
-                            from: 'drivers',
-                            as: 'driver',
-                            localField: 'rideServiceTypeId',
-                            foreignField: 'driverServiceTypeId'
-                        }
-                    },
-                    {
-                        $match: {
-                            $and: [
-                                { "driver.driverStatus": true },
-                                { "driver.driverRideStatus": 0}
-                            ]
-                        }
-                    },
-                    {
-                        $addFields: {
-                            driver: {
-                                $filter: {
-                                    input: "$driver",
-                                    as: "driverInfo",
-                                    cond: {
-                                        $eq: ["$$driverInfo.driverCityId", "$rideCityId"]
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        $addFields:{
-                            driver: {
-                                $setDifference: ["$driver._id", "$rideRejectedByDriverId"]
-                            }
-                        }
-                    },
-                    {
-                        $addFields:{
-                            driver: {
-                                $setDifference: ["$driver", "$rideNoActionByDriverId"]
-                            }
-                        }
-                    }
-                ];
-                const rides = await Ride.aggregate(pipeline);
-                socketEmit('watchData', rides);
-
-                rides.forEach( async (ride) => {
-                    if (ride.driver.length == 0) {
-                        return;
-                    }
-
-                    console.log(ride.driver[0]._id);
-
-                    const driver = await Driver.findByIdAndUpdate(ride.driver[0]._id, { driverRideStatus: 1}, { new: true, runValidators: true });
-                    const rideUpdate = await Ride.findByIdAndUpdate(ride._id, {rideStatus : 2, rideDriverId: ride.driver[0]._id, rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
-
-                    if (driver.length <= 0 || rideUpdate.length <= 0) {
-                        throw new Error('Error occured in socket while assigning random driver');
-                    }
-                });                
+                const rides = await findDriver(data);
+                // socketEmit('watchData', rides);
                 socketEmit('dataChange');
             } catch (error) {
                 console.log(error);
@@ -152,9 +87,17 @@ function socket(server) {
                         rideStatus: 1,
                         $push: { rideRejectedByDriverId: new ObjectId(data.driver._id)}
                     }, 
-                    {new: true, runValidators: true});
-            } catch (error) {
+                    {new: true, runValidators: true}
+                );
                 
+                if (driver.length == 0 || ride.length == 0) {
+                    return console.log("No driver or ride to update after rejection");
+                }
+
+                const rides = await findDriver(data);
+                socketEmit('dataChange', rides);
+            } catch (error) {
+                console.log(error);
             }
         })
     })
@@ -164,7 +107,90 @@ function socketEmit(eventName, data="") {
     io.emit(eventName, data);
 }
 
+async function findDriver(data) {
+    try {
+        // console.log(data);
+        let pipeline = [
+            {
+                $match: {
+                    _id: new ObjectId(data.ride._id)
+                }
+            },
+            {
+                $lookup: {
+                    from: 'drivers',
+                    as: 'driver',
+                    localField: 'rideServiceTypeId',
+                    foreignField: 'driverServiceTypeId'
+                }
+            },
+            {
+                $addFields: {
+                    driver: {
+                        $filter: {
+                            input: "$driver",
+                            as: "driverInfoCheck",
+                            cond: {
+                                $and: [
+                                    {$eq: ["$$driverInfoCheck.driverStatus", true]},
+                                    {$eq: ["$$driverInfoCheck.driverRideStatus", 0]}
+                                ]                                
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $addFields: {
+                    driver: {
+                        $filter: {
+                            input: "$driver",
+                            as: "driverInfo",
+                            cond: {
+                                $eq: ["$$driverInfo.driverCityId", "$rideCityId"]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $addFields:{
+                    driver: {
+                        $setDifference: ["$driver._id", "$rideRejectedByDriverId"]
+                    }
+                }
+            },
+            {
+                $addFields:{
+                    driver: {
+                        $setDifference: ["$driver", "$rideNoActionByDriverId"]
+                    }
+                }
+            }
+        ];
+        const rides = await Ride.aggregate(pipeline);
+
+        rides.forEach( async (ride) => {
+            if (ride.driver.length == 0) {
+                return;
+            }
+            
+            const driver = await Driver.findByIdAndUpdate(ride.driver[0]._id, { driverRideStatus: 1}, { new: true, runValidators: true });
+            const rideUpdate = await Ride.findByIdAndUpdate(ride._id, {rideStatus : 2, rideDriverId: ride.driver[0]._id, rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
+
+            if (driver.length <= 0 || rideUpdate.length <= 0) {
+                throw new Error('Error occured in socket while assigning random driver');
+            }
+        });
+
+        return rides;
+    } catch (error) {
+        console.log("Error while finding driver function", error);
+    }    
+}
+
 module.exports = {
     socket: socket,
-    socketEmit: socketEmit
+    socketEmit: socketEmit,
+    findDriver: findDriver,
 };
