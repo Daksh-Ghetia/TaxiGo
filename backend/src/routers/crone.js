@@ -12,6 +12,7 @@ cron.schedule('*/10 * * * * *', function () {
     // let currenttSecond = new Date().getSeconds();
     // console.log(currenttSecond);
     getDriverData();
+    // assignNewDriver();
 });
 
 /**Get the data necessary for the further execution */
@@ -75,8 +76,9 @@ async function freeDriver(driver,ride) {
                 ride.rideStatus = 1;
                 ride.rideDriverId = null;
                 await ride.save();
-                await assignNewDriver();
+                SocketIo.findDriver({ride: ride});
                 SocketIo.socketEmit('dataChange');
+                await assignNewDriver(ride._id);
                 // }
             } else {
                 setImmediate(checkCondition);
@@ -90,20 +92,16 @@ async function freeDriver(driver,ride) {
 
 /**Assign new driver */
 async function assignNewDriver() {
-    const rides = await Ride.find({rideStatus: 1, rideDriverAssignType: 2});
+    // const rides = await Ride.find({_id: ride_id});
+    const rides = await Ride.find({rideStatus: 1, rideDriverAssignType: 2, rideDriverId: null});
     if (rides.length == 0) {
         return console.log("No ride with random driver assign");
     }
 
-    await rides.forEach( async (ride) => {
-        console.log("Before");
+    for await (const ride of rides){
         const data = await SocketIo.findDriver({ride: ride});
         SocketIo.socketEmit('dataChange');
-
-        if (data[0]._id == "6464978690c2a508542b7b48" || data[0]._id == "6466037fe7c5f27b1bc22692") {
-            console.log("After" , data[0]);
-        }
-    });
+    }
 }
 
 module.exports = {

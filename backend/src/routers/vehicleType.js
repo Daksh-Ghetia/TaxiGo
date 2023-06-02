@@ -44,9 +44,9 @@ const handleUpload = async(req, res, next) => {
             }
 
             /**If file is not uploaded while updating then it is okay */
-            if (req.url.includes('/editvehicle') && !req.file) {
+            if (req.url.includes('/editVehicle') && !req.file) {
                return next();
-            } 
+            }
             /**If file is not uploaded while adding new vehicle type throw error */
             if (!req.file) {
                 return res.status(404).send({msg: "Please upload image file to proceed", status: "failed"});

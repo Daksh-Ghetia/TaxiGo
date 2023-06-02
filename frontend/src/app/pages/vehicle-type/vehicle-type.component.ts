@@ -58,12 +58,16 @@ export class VehicleTypeComponent implements OnInit {
     const vehicleAddForm = document.getElementById('addNewVehicleType') as HTMLFormElement;
     const formData = new FormData(vehicleAddForm);
     
-    this._vehicleTypeService.addVehicleType(formData).subscribe((response) => {
-      this.getVehicleType();
-      this.cancelAction();
-    }, (error) => {
-      this.customErrMsg = error.error.msg;
-      console.log(error);
+    this._vehicleTypeService.addVehicleType(formData).subscribe({
+      next: () => {
+        this.getVehicleType();
+        this.cancelAction();
+      },
+      error: (error) => {
+        this.customErrMsg = error.error.msg;
+        console.log(error);
+      },
+      complete: () => {}
     });
   }
 
@@ -74,10 +78,16 @@ export class VehicleTypeComponent implements OnInit {
 
     const vehicleAddForm = document.getElementById('addNewVehicleType') as HTMLFormElement;
     const formData = new FormData(vehicleAddForm);
-    this._vehicleTypeService.editVehicleType(this.updateId, formData).subscribe((response) => {
-      console.log(response);
-      this.getVehicleType();
-      this.cancelAction();
+    this._vehicleTypeService.editVehicleType(this.updateId, formData).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.getVehicleType();
+        this.cancelAction();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {}
     })
   }
 

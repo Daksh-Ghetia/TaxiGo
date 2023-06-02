@@ -126,23 +126,12 @@ async function findDriver(data) {
                             input: "$driver",
                             as: "driverInfoCheck",
                             cond: {
+                                
                                 $and: [
                                     {$eq: ["$$driverInfoCheck.driverStatus", true]},
-                                    {$eq: ["$$driverInfoCheck.driverRideStatus", 0]}
+                                    {$eq: ["$$driverInfoCheck.driverRideStatus", 0]},
+                                    {$eq: ["$$driverInfoCheck.driverCityId", "$rideCityId"]}
                                 ]                                
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                $addFields: {
-                    driver: {
-                        $filter: {
-                            input: "$driver",
-                            as: "driverInfo",
-                            cond: {
-                                $eq: ["$$driverInfo.driverCityId", "$rideCityId"]
                             }
                         }
                     }
@@ -170,14 +159,25 @@ async function findDriver(data) {
                 return;
             }
 
-            ride.driver.forEach(async(driverList) => {
+            for (const driverList of ride.driver) {
                 const driverData = await Driver.findOne({_id: new ObjectId(driverList)});
-
                 if (driverData && driverData.driverRideStatus == 0) {
-                    const driver = await Driver.findByIdAndUpdate(ride.driver[0]._id, { driverRideStatus: 1}, { new: true, runValidators: true });
-                    const rideUpdate = await Ride.findByIdAndUpdate(ride._id, {rideStatus : 2, rideDriverId: ride.driver[0]._id, rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
+                    const driver = await Driver.findByIdAndUpdate(driverList, { driverRideStatus: 1}, { new: true, runValidators: true });
+                    const rideUpdate = await Ride.findByIdAndUpdate(ride._id, {rideStatus : 2, rideDriverId: driverList, rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
+                    break;
                 }
-            });
+            }
+
+            // ride.driver.forEach(async(driverList) => {
+            //     const driverData = await Driver.findOne({_id: new ObjectId(driverList)});
+
+            //     if (driverData && driverData.driverRideStatus == 0) {
+            //         console.log(driverList);
+            //         const driver = await Driver.findByIdAndUpdate(driverList, { driverRideStatus: 1}, { new: true, runValidators: true });
+            //         const rideUpdate = await Ride.findByIdAndUpdate(ride._id, {rideStatus : 2, rideDriverId: driverList, rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
+            //         return;
+            //     }
+            // });
 
             
 

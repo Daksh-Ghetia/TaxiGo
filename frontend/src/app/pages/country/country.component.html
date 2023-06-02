@@ -23,17 +23,16 @@
 
                 <form [formGroup]="reactiveForm" class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-auto" *ngIf="(title === 'Search')">
                     <div class="form-group mb-0" [ngClass]="{ 'focused': focus === true }" >
-                        <label for="countryName" class="text-white mr-2">Search Country <span class="text-white ml-1">:</span> </label>
                         <div class="input-group input-group-alternative">
                             <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-search"></i></span>
                             </div>
-                            <input class="form-control" id="searchCountry" name="searchCountry" placeholder="Search" type="text" (focus)="focus = true"
+                            <input class="form-control" id="searchCountry" name="searchCountry" placeholder="Search Country" type="text" (focus)="focus = true"
                             (blur)="focus = false" formControlName="countrySearch" #searchInput>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <button class="btn btn-success" id="submit" type="submit" (click)="searchCountry(searchInput.value)">Search Country</button>
+                        <button class="btn btn-success" id="submit" type="submit" (click)="searchCountry(searchInput.value)">Search</button>
                         <button class="btn btn-danger" (click)="cancel()">Cancel</button>
                     </div>
                 </form>
