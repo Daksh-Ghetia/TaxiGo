@@ -33,7 +33,7 @@
                 <!-- Table body section -->
                 <tbody>
                   <tr *ngFor="let ride of rideDataList; let i = index" class="text-center text-capitalize">
-                    <ng-container *ngIf="ride.rideStatus == 0 || ride.rideStatus == 6">
+                    <ng-container *ngIf="ride.rideStatus == 0 || ride.rideStatus == 7">
                       <td class="text-wrap">{{ride._id}}</td>
                       <!-- <td class="text-wrap">{{ride.user._id}}</td> -->
                       <td>{{ride.user.userName}}</td>
@@ -42,7 +42,7 @@
                       <td>{{ride.vehicleType.vehicleName}} </td>
                       <td>
                         <span *ngIf="ride.rideStatus === 0"class="badge badge-dot mr-4"><i class="bg-gradient-danger"></i>{{ride.rideStatus | rideStatus}}</span>
-                        <span *ngIf="ride.rideStatus === 6"class="badge badge-dot mr-4"><i class="bg-success"></i>{{ride.rideStatus | rideStatus}}</span>
+                        <span *ngIf="ride.rideStatus === 7"class="badge badge-dot mr-4"><i class="bg-success"></i>{{ride.rideStatus | rideStatus}}</span>
                       </td>
                       <td>
                         <img src="assets/img/icons/fullRideInfo.png" alt="getFullInfo" srcset="" height="20px" width="20px" (click)="getFullRideInfo(content, i)">
@@ -117,7 +117,7 @@
               <td class="label-input">Vehicle type: </td>
               <td>{{ride.vehicleType.vehicleName}} </td>
             </tr>
-            <tr *ngIf="ride.rideStatus == 6 && ride.driver[0]._id">
+            <tr *ngIf="ride.rideStatus == 7 && ride.driver[0]._id">
               <td class="label-input">Driver Name: </td>
               <td>{{ride.driver[0].driverName}} </td>
             </tr>

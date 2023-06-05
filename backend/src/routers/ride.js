@@ -111,7 +111,7 @@ router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
             return res.status(404).send({msg: "Ride not found for update", status: "failed"})
         }
 
-        if (req.body.rideStatus == 6) {
+        if (req.body.rideStatus == 7) {
             await Driver.findByIdAndUpdate(ride.rideDriverId, {driverRideStatus: 0}, {new: true, runValidators: true});
         }
         

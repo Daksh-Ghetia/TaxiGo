@@ -19,11 +19,12 @@ function socket(server) {
                 const driver = await Driver.findByIdAndUpdate(data.driver._id, { driverRideStatus: 1}, { new: true, runValidators: true });
                 
                 /**Update ride status as assigned to a driver and waiting for driver response */
-                const ride = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus : 2, rideDriverId: data.driver._id,rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
-                
-                let currentlyTime = new Date().getSeconds();
-                console.log("create", currentlyTime);
-                
+                const ride = await Ride.findByIdAndUpdate(data.ride._id, {
+                    rideStatus : 3,
+                    rideDriverId: data.driver._id,
+                    rideDriverAssignType: data.rideDriverAssignType
+                }, { new: true, runValidators: true });
+                                
                 if (driver.length <= 0 || ride.length <= 0) {
                     throw new Error('Error occured in socket while assigning selected driver');
                 }
@@ -35,14 +36,17 @@ function socket(server) {
 
         socket.on('assignRandomDriver', async (data) => {
             try {
-                const updateRide = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus: 1, rideNoActionByDriverId: [], rideDriverAssignType: data.rideDriverAssignType}, {new: true, runValidators: true});
+                const updateRide = await Ride.findByIdAndUpdate(data.ride._id, {
+                    rideNoActionByDriverId: [],
+                    rideRejectedByDriverId: [],
+                    rideDriverAssignType: data.rideDriverAssignType
+                }, {new: true, runValidators: true});
 
                 if (updateRide.length == 0) {
                     return console.log("Error occured while updating ride with random driver selection");
                 }
 
-                const rides = await findDriver(data);
-                // socketEmit('watchData', rides);
+                await findDriver(data);
                 socketEmit('dataChange');
             } catch (error) {
                 console.log(error);
@@ -56,7 +60,7 @@ function socket(server) {
                 const driver = await Driver.findByIdAndUpdate(data.driver._id, {driverRideStatus: 2}, {new: true, runValidators: true});
 
                 /**Update ride status as assigned to a driver and waiting for driver response */
-                const ride = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus: 3}, {new: true, runValidators: true});
+                const ride = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus: 4}, {new: true, runValidators: true});
                 socketEmit('dataChange');
             } catch (error) {
                 console.log(error);
@@ -80,7 +84,7 @@ function socket(server) {
                 const ride = await Ride.findByIdAndUpdate(
                     data.ride._id, 
                     {
-                        rideStatus: 1,
+                        rideStatus: 3,
                         $push: { rideRejectedByDriverId: new ObjectId(data.driver._id)}
                     }, 
                     {new: true, runValidators: true}
@@ -159,31 +163,18 @@ async function findDriver(data) {
                 return;
             }
 
-            for (const driverList of ride.driver) {
+            for await (const driverList of ride.driver) {
                 const driverData = await Driver.findOne({_id: new ObjectId(driverList)});
                 if (driverData && driverData.driverRideStatus == 0) {
-                    const driver = await Driver.findByIdAndUpdate(driverList, { driverRideStatus: 1}, { new: true, runValidators: true });
-                    const rideUpdate = await Ride.findByIdAndUpdate(ride._id, {rideStatus : 2, rideDriverId: driverList, rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
+                    await Driver.findByIdAndUpdate(driverList, { driverRideStatus: 1}, { new: true, runValidators: true });
+                    await Ride.findByIdAndUpdate(ride._id, {
+                        rideStatus : 3,
+                        rideDriverId: driverList,
+                        rideDriverAssignType: data.rideDriverAssignType
+                    }, { new: true, runValidators: true });
                     break;
                 }
             }
-
-            // ride.driver.forEach(async(driverList) => {
-            //     const driverData = await Driver.findOne({_id: new ObjectId(driverList)});
-
-            //     if (driverData && driverData.driverRideStatus == 0) {
-            //         console.log(driverList);
-            //         const driver = await Driver.findByIdAndUpdate(driverList, { driverRideStatus: 1}, { new: true, runValidators: true });
-            //         const rideUpdate = await Ride.findByIdAndUpdate(ride._id, {rideStatus : 2, rideDriverId: driverList, rideDriverAssignType: data.rideDriverAssignType}, { new: true, runValidators: true });
-            //         return;
-            //     }
-            // });
-
-            
-
-            // if (driver.length <= 0 || rideUpdate.length <= 0) {
-                // throw new Error('Error occured in socket while assigning random driver');
-            // }
         });
 
         return rides;

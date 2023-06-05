@@ -15,18 +15,21 @@ export class RideStatusPipe implements PipeTransform {
         return 'Pending';
 
       case 2 :
+        return 'No driver Found';
+
+      case 3:
         return 'Assigning';
         
-      case 3 :
+      case 4 :
         return 'Accepted';
 
-      case 4 :
+      case 5 :
         return 'Arrived';
         
-      case 5 :
+      case 6 :
         return 'Started';
 
-      case 6 : 
+      case 7 : 
         return 'Completed';
     }
     return null;

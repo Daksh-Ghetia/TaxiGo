@@ -81,7 +81,7 @@ const ride = new Ride({
     rideDropLocation: 'Rajkot air port, rajkot, gujarat, India',
     rideIntermediateStops: ['Kotecha chowk bus stop, Kalawad Road, Nutan Nagar, Kotecha Nagar, Rajkot, Gujarat, India'],
     rideDateTime: new Date(),
-    rideStatus: 0,
+    rideStatus: 1,
     rideDriverId: null,
     rideDistance: 7.3,
     rideTime: 21,

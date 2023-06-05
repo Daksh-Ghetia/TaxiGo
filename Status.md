@@ -2,11 +2,12 @@
 
 0 = Cancelled
 1 = Pending
-2 = Assigning
-3 = Accepted
-4 = Arrived
-5 = Started
-6 = Completed
+2 = No driver Found
+3 = Assigning
+4 = Accepted
+5 = Arrived
+6 = Started
+7 = Completed
 
 ## Driver status
 

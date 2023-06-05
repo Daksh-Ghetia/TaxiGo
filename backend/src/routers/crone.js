@@ -8,11 +8,11 @@ const { ObjectId } = require('mongodb');
 
 let timeToAcceptRequest;
 
-cron.schedule('*/10 * * * * *', function () {
+cron.schedule('*/10 * * * * *', async function () {
     // let currenttSecond = new Date().getSeconds();
     // console.log(currenttSecond);
-    getDriverData();
-    // assignNewDriver();
+    await getDriverData();
+    await assignNewDriver();
 });
 
 /**Get the data necessary for the further execution */
@@ -30,34 +30,20 @@ getSettingData();
 async function getDriverData() {
     try {
         /**Get the data of the driver who are having request currently */
-        // let drivers = await Driver.find({"driverRideStatus": 1}).sort({updatedAt: 1});
-        let rides = await Ride.find({"rideStatus": 2}).sort({updatedAt: 1});
-        
-        // /**If no drivers are having  */
-        // if (drivers.length == 0) {
-        //     return
-        //     // return console.log("No driver in assigning state");
-        // }
+        let rides = await Ride.find({"rideStatus": 3}).sort({updatedAt: 1});
+
         /**If no rides are found  */
         if (rides.length == 0) {
-            return
-            // return console.log("No driver in assigning state");
+            return // console.log("No driver in assigning state");
         }        
 
         /**Update each and every driver and ride corresponding to it */
-        // drivers.forEach(async (driver) => {
-        //     freeDriver(driver);
-        // });
-
-        rides.forEach(async (ride) => {
-            
+        for await (const ride of rides) {
             let driver = await Driver.findOne({_id: new ObjectId(ride.rideDriverId)});
-            await freeDriver(driver,ride);
-
-            // if (driver._id == "64673ef3cf6558e6cb70bffc" && ride._id == "6466037fe7c5f27b1bc22692") {
-            //     console.log(driver,ride);
-            //} 
-        });
+            if (driver) {
+                await freeDriver(driver,ride);
+            }
+        }
     } catch (error) {
         console.log(error);
     }
@@ -70,16 +56,17 @@ async function freeDriver(driver,ride) {
             if ((Math.floor((new Date() - driver.updatedAt)/1000)) >= timeToAcceptRequest) {
                 driver.driverRideStatus = 0;
                 await driver.save();
-                // let ride = await Ride.findOne({rideDriverId: driver._id});
-                // if (ride) {
                 ride.rideNoActionByDriverId.push(driver._id);
-                ride.rideStatus = 1;
+                if (ride.rideDriverAssignType == 1) {
+                    ride.rideStatus = 1;
+                } else {
+                    ride.rideStatus = 2;
+                }
                 ride.rideDriverId = null;
                 await ride.save();
-                SocketIo.findDriver({ride: ride});
                 SocketIo.socketEmit('dataChange');
-                await assignNewDriver(ride._id);
-                // }
+                await SocketIo.findDriver({ride: ride});
+                // await assignNewDriver(ride._id);
             } else {
                 setImmediate(checkCondition);
             }
@@ -92,15 +79,13 @@ async function freeDriver(driver,ride) {
 
 /**Assign new driver */
 async function assignNewDriver() {
-    // const rides = await Ride.find({_id: ride_id});
-    const rides = await Ride.find({rideStatus: 1, rideDriverAssignType: 2, rideDriverId: null});
+    const rides = await Ride.find({"rideStatus": 2});
     if (rides.length == 0) {
-        return console.log("No ride with random driver assign");
+        return //console.log("No ride with random driver assign");
     }
 
-    for await (const ride of rides){
-        const data = await SocketIo.findDriver({ride: ride});
-        SocketIo.socketEmit('dataChange');
+    for await(const ride of rides) {
+        await SocketIo.findDriver({ride: ride});
     }
 }
 
