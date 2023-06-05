@@ -16,7 +16,7 @@ export class ConfirmedRideComponent implements OnInit {
   public fullRideData: any = [];
   public driverList: any = [];
   public selectedRowIndex: number;
-  public rideId: any;
+  public rideDetails: any;
   
   private modalRef: NgbModalRef;
 
@@ -71,6 +71,10 @@ export class ConfirmedRideComponent implements OnInit {
     this.modalRef = this._modalService.open(content, { size: 'lg', centered: true, scrollable: true });
     this.selectedRowIndex = undefined;
     this.fullRideData = [this.rideDataList[index]];
+    this.getAvailableDriver(ride);
+  }
+
+  getAvailableDriver(ride: any) {
     this._driverService.getDriverDetailsForRide(ride.rideServiceTypeId, ride.rideCityId).subscribe({
       next: (response) => {
         if (response.driver.length <= 0) {
@@ -90,7 +94,7 @@ export class ConfirmedRideComponent implements OnInit {
       return this._toastrServie.info("please select a driver to assign", "Driver not selected");
     }
     
-    this._webSocketService.emit('assignSelectedDriver', {driver: this.driverList[this.selectedRowIndex], rideDriverAssignType: 1, ride: this.rideId});
+    this._webSocketService.emit('assignSelectedDriver', {driver: this.driverList[this.selectedRowIndex], rideDriverAssignType: 1, ride: this.rideDetails});
     this.modalRef.close();
     this.getRideData();
   }
@@ -100,7 +104,7 @@ export class ConfirmedRideComponent implements OnInit {
         return this._toastrServie.info("Currently there are no drivers available for selection", "Driver not found");
       }
 
-      this._webSocketService.emit('assignRandomDriver', {rideDriverAssignType: 2, ride: this.rideId});
+      this._webSocketService.emit('assignRandomDriver', {rideDriverAssignType: 2, ride: this.rideDetails});
       this._toastrServie.success("Nearest driver assigning succesful", "");
       this.modalRef.close();
       this.getRideData();
@@ -110,31 +114,12 @@ export class ConfirmedRideComponent implements OnInit {
     this._webSocketService.listen('dataChange').subscribe({
       next: () => {
         this.getRideData();
+        this.getAvailableDriver(this.rideDetails);
       },
       error: (error) => {
         console.log(error);
       },
       complete: () => {}
-    })
-
-    this._webSocketService.listen('watchData').subscribe({
-      next: (data) => {
-        console.log(data);
-      },
-      error: (error) => {
-        console.log(error);
-      },
-      complete: () => {}
-    })
-
-    this._webSocketService.listen('cronData').subscribe({
-      next: (response) => {
-        console.log(response);
-      },
-      error: (error) => {
-        console.log(error);
-      },
-      complete: () => {},
     })
   }
 }

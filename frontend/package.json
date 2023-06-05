@@ -3,7 +3,7 @@
   "version": "1.5.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --ssl true --ssl-key key.pem --ssl-cert cert.pem",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -32,6 +32,7 @@
     "bootstrap": "4.6.1",
     "chart.js": "2.9.4",
     "clipboard": "2.0.10",
+    "firebase": "^9.22.1",
     "ngx-clipboard": "15.0.1",
     "ngx-pagination": "^6.0.3",
     "ngx-toastr": "^14.3.0",

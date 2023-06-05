@@ -9,8 +9,6 @@ const { ObjectId } = require('mongodb');
 let timeToAcceptRequest;
 
 cron.schedule('*/10 * * * * *', async function () {
-    // let currenttSecond = new Date().getSeconds();
-    // console.log(currenttSecond);
     await getDriverData();
     await assignNewDriver();
 });
@@ -66,7 +64,6 @@ async function freeDriver(driver,ride) {
                 await ride.save();
                 SocketIo.socketEmit('dataChange');
                 await SocketIo.findDriver({ride: ride});
-                // await assignNewDriver(ride._id);
             } else {
                 setImmediate(checkCondition);
             }

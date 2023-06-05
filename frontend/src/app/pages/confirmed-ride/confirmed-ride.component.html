@@ -48,7 +48,7 @@
                         <img src="assets/img/icons/fullRideInfo.png" alt="getFullInfo" srcset="" height="20px" width="20px" (click)="getFullRideInfo(content, i)">
                       </td>
                       <td>
-                        <button class="btn btn-info" [id]="ride._id" (click)="getDriverDetailsForRide(contentDriverInfo, ride, i); rideId = ride" *ngIf="ride.rideStatus != 3">
+                        <button class="btn btn-info" [id]="ride._id" (click)="getDriverDetailsForRide(contentDriverInfo, ride, i); rideDetails = ride" *ngIf="ride.rideStatus != 3">
                           <span *ngIf="ride.rideStatus == 1">Assign</span>
                           <span *ngIf="ride.rideStatus == 2">Re-assign</span>
                         </button>

@@ -21,6 +21,12 @@ export class RideHistoryComponent implements OnInit {
 
   private modalRef: NgbModalRef;
 
+  /**Map variables */
+  private map: google.maps.Map;
+  private directionsService = new google.maps.DirectionsService();
+  private directionsRenderer = new google.maps.DirectionsRenderer();
+  private wayPts: google.maps.DirectionsWaypoint[] = [];
+
   ngOnInit(): void {
     this.getRideData();
   }
@@ -41,7 +47,52 @@ export class RideHistoryComponent implements OnInit {
   }
 
   getFullRideInfo(content: any, index: number) {
-    this.modalRef = this._modalService.open(content, { centered: true, scrollable: true });
+    this.modalRef = this._modalService.open(content, { size: 'lg', centered: true, scrollable: true });
     this.fullRideData = [this.rideDataList[index]];
+    this.modalRef.shown.subscribe({
+      next: () => {
+        this.initMap();
+      }
+    })
+  }
+
+  initMap(latitude:number = 22.270956722802083, longitude: number = 70.7387507402433, zoomSize:number = 12) {
+    let location:any = {lat: Number(latitude), lng: Number(longitude)};
+      
+    console.log(this.fullRideData);
+    
+    this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+      center: location,
+      zoom: zoomSize
+    });
+    this.directionsRenderer.setMap(this.map);
+    this.showDirection();
+  }
+
+  showDirection() {
+
+    this.wayPts = [];
+    /**Push all the intermediate stops into the array */
+    for (let i = 0; i < this.fullRideData[0].rideIntermediateStops.length; i++) {
+      this.wayPts.push({
+        location: this.fullRideData[0].rideIntermediateStops[i],
+        stopover: true
+      })
+    }
+
+    this.directionsService.route({
+      origin: this.fullRideData[0].ridePickUpLocation,
+      destination: this.fullRideData[0].rideDropLocation,
+      waypoints: this.wayPts,
+      optimizeWaypoints: true,
+      travelMode: google.maps.TravelMode.DRIVING,
+    })
+    .then((response) => {
+      console.log(response);
+      this.directionsRenderer.setDirections(response)
+    })
+    .catch((error) => {
+      this.directionsRenderer.setDirections({routes: []});
+    });
   }
 }

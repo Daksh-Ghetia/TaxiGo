@@ -136,29 +136,33 @@
             </ng-container>
             <tr>
               <td class="label-input">Drop point: </td>
-                <td><li>{{ride.rideDropLocation}}</li> </td>
+              <td><li>{{ride.rideDropLocation}}</li> </td>
+            </tr>
+            <tr>
+              <td class="label-input">Directions: </td>
+              <div id="map" class="full"></div>
             </tr>
             <tr>
               <td class="label-input">Ride Date and Time: </td>
-                <td>{{ride.rideDateTime | date}} {{ride.rideDateTime | date: 'shortTime'}} </td>
+              <td>{{ride.rideDateTime | date}} {{ride.rideDateTime | date: 'shortTime'}} </td>
             </tr>
             <tr>
               <td class="label-input">Ride Distance: </td>
-                <td>{{ride.rideDistance}} km</td>
+              <td>{{ride.rideDistance}} km</td>
             </tr>
             <tr>
               <td class="label-input">Total travel time: </td>
-                <td>{{ride.rideTime | convertMinutesToHoursAndMinutes}}</td>
+              <td>{{ride.rideTime | convertMinutesToHoursAndMinutes}}</td>
             </tr>
             <tr>
               <td class="label-input">Estimated Fare: </td>
-                <td>{{ride.country.countryCurrencySymbol}} {{ride.rideFare}}</td>
+              <td>{{ride.country.countryCurrencySymbol}} {{ride.rideFare}}</td>
             </tr>
             <tr>
               <td class="label-input">Payment method: </td>
                 <td *ngIf="ride.ridePaymentMethod == 0">Cash </td>
                 <td *ngIf="ride.ridePaymentMethod == 1">Card </td>
-            </tr>
+            </tr>            
           </tbody>
         </table>
       </div>
