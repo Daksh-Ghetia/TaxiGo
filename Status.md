@@ -22,6 +22,12 @@
 2 = Assign nearest Driver
 
 
+## Twilio credentials
+Phone number: +13614703337
+Account SID: ACee4aff8103262da2f169b1155f93b9f6
+Auth Token:  bc73fb368adf7927c02e0ae455be6305
+
+
 publishable key             pk_test_51NBczjSGn5pa8TVPBB0vQzrD9IpK7pq7WojrB8Tho1vLboN7RGeYdNgejcuJrsLzdP6NsvZ5PDhTzjzwT7I7lXM400soCiyNNd
 Secret key                  sk_test_51NBczjSGn5pa8TVP59IJ7wibRFklV0SghBDZ4TuapBdWjBSvHKe9Lt5YWNJMldpMWZmqZt9ZIboSeF1SFJMIEQTd00KtW68gKD
 
@@ -29,3 +35,14 @@ Secret key                  sk_test_51NBczjSGn5pa8TVP59IJ7wibRFklV0SghBDZ4TuapBd
 succesful  4242424242424242
 failed     4000000000009995
 req auth   4000002500003155
+
+
+
+
+## To make site https in local
+https://mkcert.dev/
+
+in angular.json add projects -> argon-dashboard-angular -> server -> options
+"sslKey": "key.pem",
+"sslCert": "cert.pem",
+"ssl": true

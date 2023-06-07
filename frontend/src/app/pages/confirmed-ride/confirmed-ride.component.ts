@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { DriverService } from 'src/app/shared/driver.service';
+import { MessagingService } from 'src/app/shared/messaging.service';
 import { RideService } from 'src/app/shared/ride.service';
 import { WebSocketService } from 'src/app/shared/web-socket.service';
 
@@ -17,6 +18,7 @@ export class ConfirmedRideComponent implements OnInit {
   public driverList: any = [];
   public selectedRowIndex: number;
   public rideDetails: any;
+  public message: any;
   
   private modalRef: NgbModalRef;
 
@@ -25,12 +27,18 @@ export class ConfirmedRideComponent implements OnInit {
     private _driverService: DriverService,
     private _modalService: NgbModal,
     private _toastrServie: ToastrService,
-    private _webSocketService: WebSocketService
+    private _webSocketService: WebSocketService,
+    private _messagingService: MessagingService,
   ) { }
 
   ngOnInit(): void {
     this.getRideData();
     this.listenToSocket();
+
+    //Do not delete
+    // this._messagingService.requestPermission();
+    // this._messagingService.receiveMessaging();
+    // this.message = this._messagingService.currentMessage;
   }
 
   getRideData() {

@@ -3,6 +3,7 @@ const router = new express.Router();
 const Driver = require('../models/driver');
 const Ride = require('../models/ride');
 const { ObjectId } = require('mongodb');
+const SendMessage = require('./SMS');
 
 const app = express();
 let io;
@@ -61,6 +62,8 @@ function socket(server) {
 
                 /**Update ride status as assigned to a driver and waiting for driver response */
                 const ride = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus: 4}, {new: true, runValidators: true});
+                SMSBody = "Ride Confirmed, Congratulations " + driver.driverName + " you have been assigned to a new ride, and your customer pickup location is " +  ride.ridePickUpLocation + " And customer should be dropped at " + ride.rideDropLocation;
+                SendMessage.SendMessage(SMSBody);
                 socketEmit('dataChange');
             } catch (error) {
                 console.log(error);

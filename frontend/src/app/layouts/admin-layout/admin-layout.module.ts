@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ClipboardModule } from 'ngx-clipboard';
@@ -13,6 +13,7 @@ import { UserProfileComponent } from '../../pages/user-profile/user-profile.comp
 import { TablesComponent } from '../../pages/tables/tables.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
+import { MessagingService } from 'src/app/shared/messaging.service';
 
 @NgModule({
   imports: [
@@ -38,7 +39,11 @@ import { ToastrModule } from 'ngx-toastr';
     UserProfileComponent,
     TablesComponent,
     IconsComponent,
-    MapsComponent,    
+    MapsComponent,
+  ], 
+  providers: [
+    MessagingService,
+    AsyncPipe
   ]
 })
 

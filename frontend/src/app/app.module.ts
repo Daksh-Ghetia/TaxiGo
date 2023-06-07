@@ -23,11 +23,16 @@ import { CreateRideComponent } from './pages/create-ride/create-ride.component';
 import { ToastrModule } from 'ngx-toastr';
 import { VehicleTypeComponent } from './pages/vehicle-type/vehicle-type.component';
 import { ConfirmedRideComponent } from './pages/confirmed-ride/confirmed-ride.component';
-import { DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { ConvertMinutesToHoursAndMinutesPipe } from './shared/convert-minutes-to-hours-and-minutes.pipe';
 import { RideHistoryComponent } from './pages/ride-history/ride-history.component';
 import { RunningRequestComponent } from './pages/running-request/running-request.component';
 import { RideStatusPipe } from './shared/ride-status.pipe';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
+import { AngularFireModule } from '@angular/fire/compat';
+import { environment } from 'src/environments/environment';
+import { MessagingService } from './shared/messaging.service';
 
 @NgModule({
   imports: [
@@ -50,6 +55,9 @@ import { RideStatusPipe } from './shared/ride-status.pipe';
       timeOut: 3000,
       extendedTimeOut: 3000,
     }),
+    AngularFireAuthModule,
+    AngularFireMessagingModule,
+    AngularFireModule.initializeApp(environment.firebase)
   ],
   declarations: [
     AppComponent,
@@ -74,7 +82,9 @@ import { RideStatusPipe } from './shared/ride-status.pipe';
       provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor,
       multi: true,
     },
-    DatePipe
+    DatePipe,
+    MessagingService,
+    AsyncPipe
   ],
   bootstrap: [AppComponent]
 })

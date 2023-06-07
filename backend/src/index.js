@@ -37,7 +37,3 @@ socketIo.socket(server)
 server.listen(3000, () => {
     console.log("port up on 3000");
 })
-
-// app.listen(3000, () => {
-//     console.log("port up on 3000");
-// })
