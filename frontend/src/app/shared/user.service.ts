@@ -35,4 +35,9 @@ export class UserService {
     this._url = "http://localhost:3000/user/addPaymentDetails/" + encodeURIComponent(id);
     return this.http.patch(this._url, {});
   }
+
+  getCardDetails(id: string) : Observable <any> {
+    this._url = "http://localhost:3000/user/getCardsList/" + encodeURIComponent(id);
+    return this.http.get(this._url);
+  }
 }

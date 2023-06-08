@@ -15,6 +15,8 @@ export class UserComponent implements OnInit {
   public userForm: FormGroup;
   public countryList: any = [];
   public userDataList: any = [];
+  public cardDetails: any = [];
+  public customerDetails: any;
   public customErrMsg: string = '';
   public selectedCountryCode: string = '';
   public actionButton: string = 'Add';
@@ -286,6 +288,24 @@ export class UserComponent implements OnInit {
         } else {
           this._toasterService.success("Card added successfully", "Card Added");
         }
+      },
+      error: (error) => {
+        console.log(error);        
+      },
+      complete: () => {}
+    })
+  }
+
+  async getCardDetails(customerId: string) {
+    console.log(customerId);
+    this._userService.getCardDetails(customerId).subscribe({
+      next: (response) => {
+        if (response.cardsData.length != 0) {
+          this.customerDetails = response.customerData;
+          console.log(response.customerData);
+          
+          this.cardDetails = response.cardsData;
+        } else this.cardDetails = [];
       },
       error: (error) => {
         console.log(error);        

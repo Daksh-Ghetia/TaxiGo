@@ -250,4 +250,17 @@ router.patch('/user/addPaymentDetails/:id', auth, async (req,res) => {
     }
 })
 
+router.get('/user/getCardsList/:id', auth, async (req,res) => {
+    try {
+        if (req.params.id == "null") {
+            return res.status(200).send({msg: "Client does not have any cards", cardsData: [], status: "success"});
+        }
+        const customerData = await paymentGateway.getCustomerDetails(req.params.id);
+        const cardsData = await paymentGateway.getCardsList(req.params.id);
+        return res.status(200).send({msg: "Client card details accquired successfully", cardsData: cardsData, customerData: customerData, status: "success"});
+    } catch (error) {
+        return res.status(500).send({msg: "Server error while getting user cards details", status: "failed", error: error});
+    }
+})
+
 module.exports = router

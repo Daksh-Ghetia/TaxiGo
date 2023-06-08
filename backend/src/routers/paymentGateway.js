@@ -24,6 +24,15 @@ async function createIntent(userPaymentCustomerId) {
     }    
 }
 
+async function getCustomerDetails(customerId) {
+    try {
+        const customer = await stripe.customers.retrieve(customerId);        
+        return customer;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 async function getCardsList(customerId) {
     try {
         const paymentMethods = await stripe.paymentMethods.list({
@@ -32,13 +41,14 @@ async function getCardsList(customerId) {
         });
         return paymentMethods.data;
     } catch (error) {
-        
+        console.log(error);
     }
 }
 
 module.exports = {
     createCustomer: createCustomer,
     createIntent: createIntent,
+    getCustomerDetails: getCustomerDetails,
     getCardsList: getCardsList,
 }
 

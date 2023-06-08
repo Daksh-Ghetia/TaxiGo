@@ -181,7 +181,7 @@
                         <img *ngIf="!user.userProfile" src="http://localhost:3000/userImages/defaultImage.png" alt="User profile default" height="60px" >
                     </td>
                     <td>
-                      <img _ngcontent-tpf-c107="" src="assets/img/icons/common/credit-card.png" width="40px" height="40px" (click)="cardsInfo(content, user._id)">
+                      <img _ngcontent-tpf-c107="" src="assets/img/icons/common/credit-card.png" width="40px" height="40px" (click)="cardsInfo(content, user._id); getCardDetails(user.userPaymentCustomerId)">
                       <!-- &nbsp;&nbsp;&nbsp;
                       <img src="assets/img/icons/editVehicleServiceType.png" alt="editVehicleType" height="40px" width="40px"> -->
                     </td>
@@ -238,16 +238,34 @@
           <div id="payment-element">
             <!-- Elements will create form elements here -->
           </div>
+          <br>
           <button id="button" class="btn btn-info" (click)="addPaymentDetails()">Submit</button>
           <div id="error-message">
             <!-- Display error message to your customers here -->
           </div>
         </form>
+        <br>
+
+        <div class="scrollable-content">
+          <div *ngFor="let card of cardDetails">
+            <div class="card mr-1 my-2" style="width: 26rem;" id="">
+              <div class="card-body">
+                <h5 class="card-title text-capitalize" style="text-align: center;"></h5>
+                <div style="text-align: center;">
+                  <input type="radio" name="cardDefault" [value]="card.id" [checked]="card.id === customerDetails.invoice_settings.default_payment_method">
+                  XXXX-XXXX-{{card.card.last4}} 
+                  &nbsp;&nbsp;
+                  <i class="fa fa-trash" style="color: rgb(230, 39, 39);" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="modal-footer">
-          <button type="button" class="btn btn-info" >Save Updates</button>
-          <button type="button" class="btn btn-danger" >Delete Service</button>
+          <button type="button" class="btn btn-info" >Update default payment</button>
+          <!-- <button type="button" class="btn btn-danger" >Delete Service</button> -->
       </div>
   </ng-template>
 </div>
