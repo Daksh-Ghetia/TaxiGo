@@ -30,4 +30,9 @@ export class UserService {
     this._url = "http://localhost:3000/user/deleteUser/" + encodeURIComponent(id);
     return this.http.delete(this._url);
   }
+
+  addPaymentDetails(id: string) : Observable<any> {
+    this._url = "http://localhost:3000/user/addPaymentDetails/" + encodeURIComponent(id);
+    return this.http.patch(this._url, {});
+  }
 }

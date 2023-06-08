@@ -32,7 +32,7 @@ async function getDriverData() {
 
         /**If no rides are found  */
         if (rides.length == 0) {
-            return // console.log("No driver in assigning state");
+            return;
         }        
 
         /**Update each and every driver and ride corresponding to it */
@@ -52,16 +52,18 @@ async function freeDriver(driver,ride) {
    try {
         async function checkCondition() {
             if ((Math.floor((new Date() - driver.updatedAt)/1000)) >= timeToAcceptRequest) {
-                driver.driverRideStatus = 0;
-                await driver.save();
-                ride.rideNoActionByDriverId.push(driver._id);
-                if (ride.rideDriverAssignType == 1) {
-                    ride.rideStatus = 1;
-                } else {
+                let driverCurrent = await Driver.findById({_id: driver._id});
+                if (driverCurrent.driverRideStatus == 1) {
+                    driver.driverRideStatus = 0;
+                    await driver.save();
+                } else return;
+                let rideCurrent = await Ride.findById({_id: ride._id});
+                if (rideCurrent.rideStatus == 3) {
+                    ride.rideNoActionByDriverId.push(driver._id);
                     ride.rideStatus = 2;
-                }
-                ride.rideDriverId = null;
-                await ride.save();
+                    ride.rideDriverId = null;
+                    await ride.save();
+                } else return;
                 SocketIo.socketEmit('dataChange');
                 await SocketIo.findDriver({ride: ride});
             } else {
@@ -78,7 +80,7 @@ async function freeDriver(driver,ride) {
 async function assignNewDriver() {
     const rides = await Ride.find({"rideStatus": 2});
     if (rides.length == 0) {
-        return //console.log("No ride with random driver assign");
+        return;
     }
 
     for await(const ride of rides) {

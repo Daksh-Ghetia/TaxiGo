@@ -162,6 +162,9 @@
                     <th scope="col">
                       User Profile
                     </th>
+                    <th scope="col">
+                      Cards
+                    </th>
                     <th scope="col" >Action</th>
                   </tr>
                 </thead>
@@ -176,6 +179,11 @@
                     <td>
                         <img *ngIf="user.userProfile" src="http://localhost:3000/userImages/{{user.userProfile}}" alt="User profile" height="80px" >
                         <img *ngIf="!user.userProfile" src="http://localhost:3000/userImages/defaultImage.png" alt="User profile default" height="60px" >
+                    </td>
+                    <td>
+                      <img _ngcontent-tpf-c107="" src="assets/img/icons/common/credit-card.png" width="40px" height="40px" (click)="cardsInfo(content, user._id)">
+                      <!-- &nbsp;&nbsp;&nbsp;
+                      <img src="assets/img/icons/editVehicleServiceType.png" alt="editVehicleType" height="40px" width="40px"> -->
                     </td>
                     <td>
                       <button class="btn btn-info" [id]="user._id" (click)="fillDataForEdit(user)">Edit</button>
@@ -217,4 +225,29 @@
           </div>
         </div>
     </div>
+
+
+    <ng-template #content let-modal>
+      <div class="modal-header">
+          <h4>Cards</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="payment-form">
+          <div id="payment-element">
+            <!-- Elements will create form elements here -->
+          </div>
+          <button id="button" class="btn btn-info" (click)="addPaymentDetails()">Submit</button>
+          <div id="error-message">
+            <!-- Display error message to your customers here -->
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+          <button type="button" class="btn btn-info" >Save Updates</button>
+          <button type="button" class="btn btn-danger" >Delete Service</button>
+      </div>
+  </ng-template>
 </div>

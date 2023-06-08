@@ -28,6 +28,7 @@
     "@angular/router": "^14.2.0",
     "@ng-bootstrap/ng-bootstrap": "12.0.1",
     "@popperjs/core": "^2.11.4",
+    "@stripe/stripe-js": "^1.54.0",
     "@types/google-maps": "^3.2.3",
     "@types/socket.io-client": "^3.0.0",
     "bootstrap": "4.6.1",
@@ -41,6 +42,7 @@
     "nouislider": "15.5.1",
     "rxjs": "~7.5.0",
     "socket.io-client": "^4.1.2",
+    "stripe": "^12.8.0",
     "web-animations-js": "2.3.2",
     "zone.js": "~0.11.4"
   },

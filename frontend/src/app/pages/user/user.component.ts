@@ -3,6 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CountryService } from 'src/app/shared/country.service';
 import { UserService } from 'src/app/shared/user.service';
+import { loadStripe } from '@stripe/stripe-js';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-user',
@@ -18,6 +20,14 @@ export class UserComponent implements OnInit {
   public actionButton: string = 'Add';
   public sideButtonTitle: string = "Add"
   public focus : any;
+  public Stripe: any;  
+  
+  private modalRef: NgbModalRef;
+  private options: any;
+  private elements: any;
+  private paymentElement: any;
+  private clientSecret: any;
+  private userId: any;
 
   /**For sorting data */
   private sortedColumn: string = '';
@@ -28,12 +38,14 @@ export class UserComponent implements OnInit {
   constructor(
     private _countryService: CountryService,
     private _userService: UserService,
-    private _toaster: ToastrService,
+    private _toasterService: ToastrService,
+    private _modalService: NgbModal,
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.getUserData();
     this.fillCountryDropDown();
+    await this.loadStripe();
 
     this.userForm = new FormGroup({
       userName: new FormControl(null, [Validators.required, Validators.pattern(/^[a-zA-Z]+([ ][a-zA-Z]+)*$/)]),
@@ -71,7 +83,7 @@ export class UserComponent implements OnInit {
         if (response.user.length > 0) {
           this.userDataList = response.user;
         } else {
-          return this._toaster.info("No user found to display, please add new user to view data", "User not found");
+          return this._toasterService.info("No user found to display, please add new user to view data", "User not found");
         }
       },
       error: (error) => {
@@ -178,7 +190,7 @@ export class UserComponent implements OnInit {
           this.userDataList = response.user;
         } else {
           this.userDataList = [];
-          return this._toaster.info("No user found to display, please add new user to view data", "User not found");
+          return this._toasterService.info("No user found to display, please add new user to view data", "User not found");
         }
       },
       error: (error) => {
@@ -224,4 +236,65 @@ export class UserComponent implements OnInit {
     this.getUserData();
     this.cancelUser();
   }
+
+  cardsInfo(content: any, currentCustomerId: string) {
+    this.modalRef =  this._modalService.open(content, { centered: true });
+    console.log(currentCustomerId);
+    this.userId = currentCustomerId;
+    this.options = {
+      mode: 'setup',
+      currency: 'inr',
+      appearance: {}
+    };
+
+    this.elements = this.Stripe.elements(this.options);
+    this.paymentElement = this.elements.create('payment',  {
+      layout: {
+        type: 'accordion',
+        defaultCollapsed: false,
+        radios: true,
+        spacedAccordionItems: false
+      }
+    });
+    this.paymentElement.mount('#payment-element');
+  }
+
+  async addPaymentDetails() {
+    const {error: submitError} = await this.elements.submit();
+
+    if (submitError) {
+      console.log(submitError);      
+      return;
+    }
+
+    this._userService.addPaymentDetails(this.userId).subscribe({
+      next: async (response) => {
+        this.clientSecret = response.clientSecret;
+        const {error} = await this.Stripe.confirmSetup(
+          {
+            elements: this.elements,
+            clientSecret: this.clientSecret,
+            confirmParams: {
+              return_url: 'http://localhost:4200/#/users',
+            },
+          }
+        );
+    
+        if (error) {
+          console.log(error);
+          this._toasterService.error("Error occured while adding card", "Error occured");
+        } else {
+          this._toasterService.success("Card added successfully", "Card Added");
+        }
+      },
+      error: (error) => {
+        console.log(error);        
+      },
+      complete: () => {}
+    })
+  }
+
+  async loadStripe() {
+    this.Stripe = await loadStripe('pk_test_51NBdBuEF3TbQVrFuugu1BAMWKX2oAVuoC5bpR0io2v4gVjcknbVI6zFqHCYhwDVuWSSxuTxrBldguWrZuVXns8oz00M1WV7P5h');
+  }  
 }

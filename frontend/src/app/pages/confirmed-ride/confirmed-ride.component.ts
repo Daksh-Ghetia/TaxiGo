@@ -122,7 +122,9 @@ export class ConfirmedRideComponent implements OnInit {
     this._webSocketService.listen('dataChange').subscribe({
       next: () => {
         this.getRideData();
-        this.getAvailableDriver(this.rideDetails);
+        if (this._modalService.hasOpenModals()) {
+          this.getAvailableDriver(this.rideDetails);
+        }
       },
       error: (error) => {
         console.log(error);

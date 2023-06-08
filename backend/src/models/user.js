@@ -38,6 +38,10 @@ const userSchema = new mongoose.Schema({
     },
     userProfile: {
         type: String
+    },
+    userPaymentCustomerId: {
+        type: String,
+        default: null
     }
 }, {
     timestamps: true

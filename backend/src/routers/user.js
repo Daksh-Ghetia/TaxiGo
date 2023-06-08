@@ -3,6 +3,7 @@ const auth = require('../middleware/authentication');
 const User = require('../models/user.js');
 const { ObjectId } = require('mongodb');
 const multer = require('multer');
+const paymentGateway = require('./paymentGateway');
 const fs = require('fs');
 
 const router = new express.Router();
@@ -161,7 +162,7 @@ router.patch('/user/editUser/:id', auth, handleUpload, async(req,res) => {
         /**Check if the updates are applied for permissible  type only and if other update found return invalid updates*/
         const isValidOpertaion = updates.every((update) => allowedUpdates.includes(update));
         if (!isValidOpertaion) {
-            return res.status(400).send({msg: "Invalid updates while updating user", status: "failed"})
+            return res.status(400).send({msg: "Invalid updates while updating user", status: "failed"});
         }
 
         /**find the user to update and if not found return user type not found*/
@@ -223,6 +224,29 @@ router.delete('/user/deleteUser/:id', auth, async (req, res) => {
         res.status(200).send({user: user,msg: "User Deleted successfully", status: "success"});
     } catch (error) {
         res.status(500).send({error, msg: "Server error while deleting User", status: "failed"})
+    }
+})
+
+/**Router to add customer id for payment gateway */
+router.patch('/user/addPaymentDetails/:id', auth, async (req,res) => {
+    try {
+        const user = await User.findOne({_id: req.params.id});
+        if (!user) {
+            return res.status(404).send({msg: "User not found while updating payment method", status: "failed"});
+        }
+
+        let clientSecret;
+        if (user.userPaymentCustomerId == null) {
+            user.userPaymentCustomerId = await paymentGateway.createCustomer(user);
+            await user.save();
+            clientSecret = await paymentGateway.createIntent(user.userPaymentCustomerId);
+        } else {
+            clientSecret = await paymentGateway.createIntent(user.userPaymentCustomerId);
+        }
+
+        return res.status(200).send({msg: "Client Secret generated successfully", clientSecret: clientSecret, status: "success"});
+    } catch (error) {
+        return res.status(500).send({msg: "Server error while updating user payment details", status: "failed", error: error});
     }
 })
 
