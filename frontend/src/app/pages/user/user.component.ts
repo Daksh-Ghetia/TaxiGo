@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CountryService } from 'src/app/shared/country.service';
 import { UserService } from 'src/app/shared/user.service';
 import { loadStripe } from '@stripe/stripe-js';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-user',
@@ -22,13 +22,12 @@ export class UserComponent implements OnInit {
   public actionButton: string = 'Add';
   public sideButtonTitle: string = "Add"
   public focus : any;
-  public Stripe: any;  
+  public Stripe: any;
+  public selectedCardId: string;
   
-  private modalRef: NgbModalRef;
   private options: any;
   private elements: any;
   private paymentElement: any;
-  private clientSecret: any;
   private userId: any;
 
   /**For sorting data */
@@ -240,8 +239,7 @@ export class UserComponent implements OnInit {
   }
 
   cardsInfo(content: any, currentCustomerId: string) {
-    this.modalRef =  this._modalService.open(content, { centered: true });
-    console.log(currentCustomerId);
+    this._modalService.open(content, { centered: true });
     this.userId = currentCustomerId;
     this.options = {
       mode: 'setup',
@@ -261,6 +259,7 @@ export class UserComponent implements OnInit {
     this.paymentElement.mount('#payment-element');
   }
 
+  /**Add payment methods */
   async addPaymentDetails() {
     const {error: submitError} = await this.elements.submit();
 
@@ -271,19 +270,20 @@ export class UserComponent implements OnInit {
 
     this._userService.addPaymentDetails(this.userId).subscribe({
       next: async (response) => {
-        this.clientSecret = response.clientSecret;
+
+        /**Confirm the setup in the stripe */
         const {error} = await this.Stripe.confirmSetup(
           {
             elements: this.elements,
-            clientSecret: this.clientSecret,
+            clientSecret: response.clientSecret,
             confirmParams: {
               return_url: 'http://localhost:4200/#/users',
             },
           }
         );
     
+        /**If the error occured while confirming setup then display error */
         if (error) {
-          console.log(error);
           this._toasterService.error("Error occured while adding card", "Error occured");
         } else {
           this._toasterService.success("Card added successfully", "Card Added");
@@ -296,22 +296,54 @@ export class UserComponent implements OnInit {
     })
   }
 
+  /**Get all the cards of the user */
   async getCardDetails(customerId: string) {
-    console.log(customerId);
     this._userService.getCardDetails(customerId).subscribe({
       next: (response) => {
         if (response.cardsData.length != 0) {
           this.customerDetails = response.customerData;
-          console.log(response.customerData);
-          
           this.cardDetails = response.cardsData;
         } else this.cardDetails = [];
       },
       error: (error) => {
-        console.log(error);        
+        console.log(error);
       },
       complete: () => {}
     })
+  }
+
+  /**Set default card to user */
+  async setDefaultCard() {
+    this._userService.setDefaultCard(this.customerDetails.id, this.selectedCardId).subscribe({
+      next: (response) => {
+        console.log(response);
+        this._toasterService.success("Your default card payment has been updated successfully","Card Updated")
+      },
+      error: (error) => {
+        console.log(error);
+        this._toasterService.success("Error occured while updating default card","Card Updated failed");
+      },
+      complete: () => {}
+    })
+  }
+
+  /**Delete already added card */
+  async deleteCard(cardId: string) {
+    this._userService.deleteCard(cardId).subscribe({
+      next: (response) => {
+        this._toasterService.success("Your card has been deleted successfully", "Card deleted");
+        this.getCardDetails(this.customerDetails.id);
+      },
+      error: (error) => {
+        this._toasterService.error("Error occured while deleting card", "Error");
+      },
+      complete: () => {}
+    })
+  }
+
+  /**Change selected card */
+  selectCard(cardId: string) {
+    this.selectedCardId = cardId;
   }
 
   async loadStripe() {

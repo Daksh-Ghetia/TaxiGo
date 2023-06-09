@@ -100,3 +100,8 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+.scrollable-content {
+    max-height: 200px; 
+    overflow-y: auto;
+}

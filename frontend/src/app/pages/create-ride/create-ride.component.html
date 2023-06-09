@@ -132,14 +132,33 @@
                     <tr *ngIf="createRideForm.get('rideCustomerEmail').valid">
                         <td>Payment option:</td>
                         <td>
-                            <input type="radio" id="cash" value="cash" formControlName="ridePaymentMethod" >
+                            <input type="radio" id="cash" value="cash" formControlName="ridePaymentMethod" (change)="paymentMethodChange()">
                             <label for="cash">Cash</label>
-                            <input type="radio" id="card" value="card" class="ml-3" formControlName="ridePaymentMethod">
+                            <input type="radio" id="card" value="card" class="ml-3" formControlName="ridePaymentMethod" (change)="paymentMethodChange()">
                             <label for="card">Card</label>
                             <br>
                           <div>
                               <strong *ngIf="createRideForm.get('ridePaymentMethod').invalid && createRideForm.get('ridePaymentMethod').touched">Please select any one type of payment</strong>
                           </div>
+                        </td>
+                    </tr>
+
+                    <!-- <div class="mt-3"></div> -->
+                    <tr *ngIf="createRideForm.get('ridePaymentMethod').value == 'card'">
+                        <td></td>
+                        <td>
+                            <div class="scrollable-content">
+                                <ul>
+                                    <div *ngFor="let card of cardDetails">
+                                        <div style="width: 14rem;" class="mt-1">
+                                            <li>
+                                                <input type="radio" name="cardDefault" [value]="card.id" [checked]="card.id === customerDetails.invoice_settings.default_payment_method" (change)="selectCard(card.id)">
+                                                XXXX-XXXX-{{card.card.last4}}
+                                            </li>
+                                        </div>
+                                    </div>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                     <!-- Action Button -->

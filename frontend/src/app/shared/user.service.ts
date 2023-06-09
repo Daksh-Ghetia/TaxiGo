@@ -33,11 +33,21 @@ export class UserService {
 
   addPaymentDetails(id: string) : Observable<any> {
     this._url = "http://localhost:3000/user/addPaymentDetails/" + encodeURIComponent(id);
-    return this.http.patch(this._url, {});
+    return this.http.post(this._url, {});
   }
 
   getCardDetails(id: string) : Observable <any> {
     this._url = "http://localhost:3000/user/getCardsList/" + encodeURIComponent(id);
     return this.http.get(this._url);
+  }
+
+  setDefaultCard (customerId: string, defaultPaymentCardId: string) : Observable <any> {
+    this._url = "http://localhost:3000/user/setDefaultCard";
+    return this.http.patch(this._url, {customerId: customerId,defaultPaymentCardId: defaultPaymentCardId});
+  }
+
+  deleteCard (cardId: string) : Observable <any> {
+    this._url = "http://localhost:3000/user/deleteCard/" + encodeURIComponent(cardId);
+    return this.http.delete(this._url);
   }
 }

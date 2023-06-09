@@ -228,7 +228,7 @@ router.delete('/user/deleteUser/:id', auth, async (req, res) => {
 })
 
 /**Router to add customer id for payment gateway */
-router.patch('/user/addPaymentDetails/:id', auth, async (req,res) => {
+router.post('/user/addPaymentDetails/:id', auth, async (req,res) => {
     try {
         const user = await User.findOne({_id: req.params.id});
         if (!user) {
@@ -244,12 +244,13 @@ router.patch('/user/addPaymentDetails/:id', auth, async (req,res) => {
             clientSecret = await paymentGateway.createIntent(user.userPaymentCustomerId);
         }
 
-        return res.status(200).send({msg: "Client Secret generated successfully", clientSecret: clientSecret, status: "success"});
+        return res.status(200).send({msg: "Client Secret generated successfully", user: user,clientSecret: clientSecret, status: "success"});
     } catch (error) {
         return res.status(500).send({msg: "Server error while updating user payment details", status: "failed", error: error});
     }
 })
 
+/**Get list of all the cards */
 router.get('/user/getCardsList/:id', auth, async (req,res) => {
     try {
         if (req.params.id == "null") {
@@ -262,5 +263,26 @@ router.get('/user/getCardsList/:id', auth, async (req,res) => {
         return res.status(500).send({msg: "Server error while getting user cards details", status: "failed", error: error});
     }
 })
+
+/**Set default card for payment */
+router.patch('/user/setDefaultCard', auth, async (req,res) => {
+    try {
+        const customer = await paymentGateway.setDefaultCard(req.body.customerId, req.body.defaultPaymentCardId);
+        return res.status(200).send({msg: "Default card updated successfully", customer: customer, status: "success"});
+    } catch (error) {
+        return res.status(500).send({msg: "Server error while updating default card", status: "failed", error: error});
+    }
+})
+
+/**Delete a card */
+router.delete('/user/deleteCard/:id', auth, async (req,res) => {
+    try {
+        const deletedCard = await paymentGateway.deleteCard(req.params.id);
+        return res.status(200).send({msg: "Card Deleted successfully", deletedCard: deletedCard,status: "success"});
+    } catch (error) {
+        res.status(500).send({error, msg: "Server error while deleting card", status: "failed"});
+    }
+})
+
 
 module.exports = router

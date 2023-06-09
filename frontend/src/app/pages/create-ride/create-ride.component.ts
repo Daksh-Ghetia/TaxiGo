@@ -19,6 +19,8 @@ export class CreateRideComponent implements OnInit {
   public customErrMsg: string;
   public allowedStopsCount: Number;
   public serviceTypeList: any = [];
+  public cardDetails: any = [];
+  public customerDetails: any
 
   private user: any;
   private totalDistance: number = 0;
@@ -66,7 +68,7 @@ export class CreateRideComponent implements OnInit {
     /**Get data of user whenever the phone number field is of length 10 and valid*/
     this.createRideForm.get('rideCustomerPhone').valueChanges.subscribe(value => {
       if (value && this.createRideForm.get('rideCustomerPhone').valid) {
-        this.getUserData(value);
+        this.getUserData(value);        
       } else {
         this.createRideForm.get('rideCustomerName').reset();
         this.createRideForm.get('rideCustomerEmail').reset();
@@ -97,10 +99,10 @@ export class CreateRideComponent implements OnInit {
   getUserData(number: string) {
     this._userService.getUserData(number).subscribe({
       next: (response) =>  {
-
         if (response.user.length >0) {
           this.customErrMsg = "";
           this.user = response.user[0];
+          this.paymentMethodChange();
           this.createRideForm.patchValue({
             rideCustomerName: response.user[0].userName,
             rideCustomerEmail: response.user[0].userEmail,
@@ -353,5 +355,31 @@ export class CreateRideComponent implements OnInit {
       complete: () => {}
     })
 
+  }
+
+  paymentMethodChange() {
+    if (this.createRideForm.get('ridePaymentMethod').value == "card") {
+      if (this.user.userPaymentCustomerId != null) {
+        this._userService.getCardDetails(this.user.userPaymentCustomerId).subscribe({
+          next: (response) => {
+            if (response.cardsData.length != 0) {
+              this.customerDetails = response.customerData;
+              this.cardDetails = response.cardsData;
+            } else {
+              this.cardDetails = [];
+              this._toastrService.info("There are no cards to display currently");
+            }
+          },
+          error: (error) => {
+
+          },
+          complete: () => {}
+        })
+      }
+      else
+      {
+        this._toastrService.info("There are no cards to display currently");
+      }
+    }
   }
 }

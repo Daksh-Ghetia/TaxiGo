@@ -239,7 +239,7 @@
             <!-- Elements will create form elements here -->
           </div>
           <br>
-          <button id="button" class="btn btn-info" (click)="addPaymentDetails()">Submit</button>
+          <button id="button" class="btn btn-info" (click)="addPaymentDetails($event)">Submit</button>
           <div id="error-message">
             <!-- Display error message to your customers here -->
           </div>
@@ -252,20 +252,21 @@
               <div class="card-body">
                 <h5 class="card-title text-capitalize" style="text-align: center;"></h5>
                 <div style="text-align: center;">
-                  <input type="radio" name="cardDefault" [value]="card.id" [checked]="card.id === customerDetails.invoice_settings.default_payment_method">
+                  <input type="radio" name="cardDefault" [value]="card.id" [checked]="card.id === customerDetails.invoice_settings.default_payment_method" (change)="selectCard(card.id)">
                   XXXX-XXXX-{{card.card.last4}} 
                   &nbsp;&nbsp;
-                  <i class="fa fa-trash" style="color: rgb(230, 39, 39);" aria-hidden="true"></i>
+                  <i class="fa fa-trash" (click)="deleteCard(card.id)" style="color: rgb(230, 39, 39);" aria-hidden="true"></i>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <br>
+        <button type="button" class="btn btn-info" *ngIf="cardDetails.length != 0" (click)="setDefaultCard()">Update default payment</button>
       </div>
 
       <div class="modal-footer">
-          <button type="button" class="btn btn-info" >Update default payment</button>
-          <!-- <button type="button" class="btn btn-danger" >Delete Service</button> -->
       </div>
   </ng-template>
 </div>

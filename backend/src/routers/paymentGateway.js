@@ -33,6 +33,23 @@ async function getCustomerDetails(customerId) {
     }
 }
 
+async function setDefaultCard(customerId, defaultPaymentCardId) {
+  try {
+    const customer = await stripe.customers.update(
+      customerId, 
+      {
+        invoice_settings: {
+          default_payment_method : defaultPaymentCardId,
+        }
+      }
+    );
+
+    return customer;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function getCardsList(customerId) {
     try {
         const paymentMethods = await stripe.paymentMethods.list({
@@ -45,66 +62,20 @@ async function getCardsList(customerId) {
     }
 }
 
+async function deleteCard(cardId) {
+  try {
+    const deletedCard = await stripe.paymentMethods.detach(cardId);
+    return deleteCard;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
     createCustomer: createCustomer,
     createIntent: createIntent,
     getCustomerDetails: getCustomerDetails,
+    setDefaultCard: setDefaultCard,
     getCardsList: getCardsList,
+    deleteCard: deleteCard,
 }
-
-/*
-{
-    "object": "list",
-    "data": [
-      {
-        "id": "pm_1NGe6WEF3TbQVrFuJCm0Ycnp",
-        "object": "payment_method",
-        "billing_details": {
-          "address": {
-            "city": null,
-            "country": "IN",
-            "line1": null,
-            "line2": null,
-            "postal_code": null,
-            "state": null
-          },
-          "email": null,
-          "name": null,
-          "phone": null
-        },
-        "card": {
-          "brand": "visa",
-          "checks": {
-            "address_line1_check": null,
-            "address_postal_code_check": null,
-            "cvc_check": "pass"
-          },
-          "country": "US",
-          "exp_month": 4,
-          "exp_year": 2024,
-          "fingerprint": "6n3MA6zWUcxveoqJ",
-          "funding": "credit",
-          "generated_from": null,
-          "last4": "4242",
-          "networks": {
-            "available": [
-              "visa"
-            ],
-            "preferred": null
-          },
-          "three_d_secure_usage": {
-            "supported": true
-          },
-          "wallet": null
-        },
-        "created": 1686212521,
-        "customer": "cus_O2jDtRQFO02vYh",
-        "livemode": false,
-        "metadata": {},
-        "type": "card"
-      }
-    ],
-    "has_more": false,
-    "url": "/v1/payment_methods"
-  }
-*/

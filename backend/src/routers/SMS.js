@@ -5,7 +5,6 @@ const client = require("twilio")(accountSid, authToken);
 async function SendMessage(SMSBody) {
     try {
         const message = await client.messages.create({body: SMSBody,from: "+13614703337",to: "+917043327239"});
-        console.log(message.sid);
     } catch (error) {
         console.log("Error occured while sending message");
     }
