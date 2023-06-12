@@ -9,6 +9,11 @@
 6 = Started
 7 = Completed
 
+## Ride Payment status
+
+0 = cash
+1 = Card
+
 ## Driver status
 
 0 = Free
@@ -28,8 +33,14 @@ Account SID: ACee4aff8103262da2f169b1155f93b9f6
 Auth Token:  bc73fb368adf7927c02e0ae455be6305
 
 
-publishable key             pk_test_51NBczjSGn5pa8TVPBB0vQzrD9IpK7pq7WojrB8Tho1vLboN7RGeYdNgejcuJrsLzdP6NsvZ5PDhTzjzwT7I7lXM400soCiyNNd
-Secret key                  sk_test_51NBczjSGn5pa8TVP59IJ7wibRFklV0SghBDZ4TuapBdWjBSvHKe9Lt5YWNJMldpMWZmqZt9ZIboSeF1SFJMIEQTd00KtW68gKD
+## Mail credentials
+ClientId:      552509408536-g966403bdh7v11t99knt6h1jahen263f.apps.googleusercontent.com
+ClientSecret:  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
+
+
+## Stripe credentials
+publishable key             pk_test_51NBdBuEF3TbQVrFuugu1BAMWKX2oAVuoC5bpR0io2v4gVjcknbVI6zFqHCYhwDVuWSSxuTxrBldguWrZuVXns8oz00M1WV7P5h
+Secret key                  sk_test_51NBdBuEF3TbQVrFuWAcyfZdHSriE4EfN9w1N0p0c83vMGC2ec2MyyvDYq7qX3vHktNCi6m0mTJynwLIz9j8R0mJs00vH5GcJys
 
 
 succesful  4242424242424242

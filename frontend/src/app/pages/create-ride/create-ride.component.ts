@@ -63,6 +63,7 @@ export class CreateRideComponent implements OnInit {
       rideServiceTypeId: new FormControl(null, [Validators.required]),
       rideDateTime: new FormControl(null, [Validators.required]),
       ridePaymentMethod: new FormControl(null, [Validators.required]),
+      ridePaymentCardId: new FormControl(null, [])
     })
 
     /**Get data of user whenever the phone number field is of length 10 and valid*/
@@ -336,6 +337,17 @@ export class CreateRideComponent implements OnInit {
       'rideTime': this.totalTime,
       'rideFare': this.totalFare,
     };
+
+    if (this.createRideForm.get('ridePaymentMethod').value == 'card') {
+      if (this.createRideForm.get('ridePaymentCardId').value != null) {
+        createRideData['ridePaymentCardId'] = this.createRideForm.get('ridePaymentCardId').value;
+      } else {
+        return this._toastrService.info("Please select any one card available or else select cash","Payment information missing")
+      }
+
+    } else {
+      return this._toastrService.info("Please select any one card available or else select cash","Payment information missing")
+    }
     
     /**Add date and time for booking ride */
     (this.createRideForm.get('rideDateTime').value == 'bookNow') ? (createRideData["rideDateTime"] = new Date().toISOString()) : (createRideData["rideDateTime"] = (document.getElementById('scheduleDateTime') as HTMLInputElement).value);
@@ -354,32 +366,42 @@ export class CreateRideComponent implements OnInit {
       },
       complete: () => {}
     })
-
   }
 
   paymentMethodChange() {
     if (this.createRideForm.get('ridePaymentMethod').value == "card") {
+      /**Check if the user is having any payment method */
       if (this.user.userPaymentCustomerId != null) {
+        this.createRideForm.get('ridePaymentCardId').setValue(null);
         this._userService.getCardDetails(this.user.userPaymentCustomerId).subscribe({
           next: (response) => {
             if (response.cardsData.length != 0) {
               this.customerDetails = response.customerData;
               this.cardDetails = response.cardsData;
+
+              if (this.customerDetails.invoice_settings.default_payment_method != null) {
+                this.createRideForm.get('ridePaymentCardId').setValue(this.customerDetails.invoice_settings.default_payment_method);
+              }
             } else {
               this.cardDetails = [];
-              this._toastrService.info("There are no cards to display currently");
+              this.customerDetails = undefined;
+              this._toastrService.info("You do not have any registered card", "No card");
             }
           },
           error: (error) => {
-
+            this._toastrService.error("error occured while getting card information","Error");
           },
           complete: () => {}
         })
       }
       else
       {
+        this.cardDetails = [];
+        this.customerDetails = undefined;
         this._toastrService.info("There are no cards to display currently");
       }
+    } else{
+      this.createRideForm.get('ridePaymentCardId').setValue(null);
     }
   }
 }

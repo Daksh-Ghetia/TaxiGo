@@ -239,11 +239,11 @@ export class UserComponent implements OnInit {
   }
 
   cardsInfo(content: any, currentCustomerId: string) {
-    this._modalService.open(content, { centered: true });
+    this._modalService.open(content, { scrollable:true, centered: true });
     this.userId = currentCustomerId;
     this.options = {
       mode: 'setup',
-      currency: 'inr',
+      currency: 'usd',
       appearance: {}
     };
 

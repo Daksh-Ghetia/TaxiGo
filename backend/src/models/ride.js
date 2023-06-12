@@ -63,6 +63,10 @@ const rideSchema = new mongoose.Schema({
     ridePaymentMethod: {
         type: Number,
         default: 0
+    },
+    ridePaymentCardId: {
+        type: String,
+        default: null
     }
 }, {
     timestamps: true

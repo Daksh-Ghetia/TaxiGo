@@ -3,7 +3,9 @@ const auth = require('../middleware/authentication');
 const multer = require('multer');
 const Ride = require('../models/ride');
 const Driver = require('../models/driver');
+const User = require('../models/user');
 const SendMessage = require('./SMS');
+const paymentGateway = require('./paymentGateway');
 
 const router = new express.Router();
 
@@ -119,6 +121,8 @@ router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
         /**Free driver whenever the ride is completed and if the ride is started then send message of ride started */
         if (req.body.rideStatus == 7) {
             await Driver.findByIdAndUpdate(ride.rideDriverId, {driverRideStatus: 0}, {new: true, runValidators: true});
+            const user = await User.findOne({_id: ride.rideCustomerId});
+            await paymentGateway.deductPayment(user.userPaymentCustomerId, ride.ridePaymentCardId, ride.rideFare);
             SendMessage.SendMessage("Ride has been completed");
         } else if (req.body.rideStatus == 6) {
             SendMessage.SendMessage("Ride has been started");

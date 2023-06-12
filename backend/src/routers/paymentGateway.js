@@ -71,6 +71,27 @@ async function deleteCard(cardId) {
   }
 }
 
+async function deductPayment(customerId, paymentCardId, amountToDeduct) {
+  try {
+    payment_intent = await stripe.paymentIntents.create({
+      amount: amountToDeduct*100,
+      currency: 'usd',
+      customer: customerId,
+      payment_method: paymentCardId,
+      confirm: true
+    })
+
+    if (payment_intent.status == 'succeeded') {
+      console.log('Payment processed successfully.');
+    }
+    else {
+      console.log('Payment failed.');
+    }
+  } catch (error) {
+    console.log("error occured while paying", error);
+  }
+}
+
 module.exports = {
     createCustomer: createCustomer,
     createIntent: createIntent,
@@ -78,4 +99,5 @@ module.exports = {
     setDefaultCard: setDefaultCard,
     getCardsList: getCardsList,
     deleteCard: deleteCard,
+    deductPayment: deductPayment
 }

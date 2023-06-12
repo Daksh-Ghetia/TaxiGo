@@ -152,7 +152,7 @@
                                     <div *ngFor="let card of cardDetails">
                                         <div style="width: 14rem;" class="mt-1">
                                             <li>
-                                                <input type="radio" name="cardDefault" [value]="card.id" [checked]="card.id === customerDetails.invoice_settings.default_payment_method" (change)="selectCard(card.id)">
+                                                <input type="radio" formControlName="ridePaymentCardId" [value]="card.id" [checked]="card.id === customerDetails.invoice_settings.default_payment_method" >
                                                 XXXX-XXXX-{{card.card.last4}}
                                             </li>
                                         </div>
