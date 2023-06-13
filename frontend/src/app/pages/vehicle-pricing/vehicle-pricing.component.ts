@@ -30,6 +30,7 @@ export class VehiclePricingComponent implements OnInit {
   public currentSort: string = "";
   public currentSortDirection: string = '';
   private isAscending: boolean = true;
+  public p: any;
 
   ngOnInit(): void {
     this.fillCountryDropDown();

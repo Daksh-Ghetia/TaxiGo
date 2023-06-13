@@ -2,7 +2,6 @@ const express = require('express');
 const auth = require('../middleware/authentication');
 const multer = require('multer');
 const Setting = require('../models/setting');
-const SocketIo = require('./socket-io');
 const Cron = require('../routers/crone');
 
 const router = new express.Router();
@@ -19,7 +18,7 @@ router.get('/setting/getSettingDetails', auth, async (req, res) => {
         }
 
         /**If data found send the data */
-        res.status(200).send({setting: setting, msg: 'Setting data found', status: "success"})
+        res.status(200).send({msg: 'Setting data found', setting: setting, status: "success"})
     } catch (error) {
         res.status(500).send({msg: "Error occured while getting data of setting", status: "failed", error: error});
     }

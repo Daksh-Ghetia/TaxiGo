@@ -33,6 +33,7 @@ import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
 import { MessagingService } from './shared/messaging.service';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   imports: [
@@ -44,6 +45,7 @@ import { MessagingService } from './shared/messaging.service';
     RouterModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    NgxPaginationModule,
     ToastrModule.forRoot({
       tapToDismiss: true,
       closeButton: true,

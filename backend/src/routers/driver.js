@@ -118,6 +118,37 @@ router.get('/driver/getDriverDetails', auth, async (req, res) => {
             {
                 $unwind: '$city'
             },
+            {
+                $facet: {
+                    totalCount: [
+                        {
+                            $group: {
+                                _id: null,
+                                count: { $sum: 1 }
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 0,
+                                count: 1
+                            }
+                        }
+                    ],
+                    paginatedData: [
+                        { $skip: req.query.pagenumber* 10 },
+                        { $limit: 10 }
+                    ]
+                }
+            },
+            {
+                $unwind: '$totalCount'
+            },
+            {
+                $project: {
+                    totalCount: '$totalCount.count',
+                    paginatedData: 1
+                }
+            }
         ];
 
         /**Find all the driver data and if not found return no data to display*/
@@ -127,7 +158,7 @@ router.get('/driver/getDriverDetails', auth, async (req, res) => {
         }
 
         /**If data found send the data */
-        res.status(200).send({driver: driver, msg: 'Driver found', status: "success"});
+        res.status(200).send({driver: driver[0].paginatedData, totalRecord: driver[0].totalCount,msg: 'Driver found', status: "success"});
     } catch (error) {
         res.status(500).send({msg: "Error occured while getting data of driver", status: "failed", error: error});
     }

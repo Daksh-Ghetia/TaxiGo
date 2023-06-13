@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -24,7 +24,10 @@ export class DriverListComponent implements OnInit {
   public customErrMsg: string = '';
   public driverDataList: any = [];
   public sideButtonTitle: string = "Add";
+  public p: any;
   private modalRef: NgbModalRef;
+  public totalRecordLength: number;
+  
 
   /**For sorting data */
   private sortedColumn: string = '';
@@ -41,8 +44,11 @@ export class DriverListComponent implements OnInit {
     private _toastrService: ToastrService,
   ) { }
 
-  ngOnInit(): void {
+  ngAfterViewInit() {
     this.getDriverData();
+  }
+
+  ngOnInit(): void {
     this.fillCountryDropDown();
 
     this.driverForm = new FormGroup({
@@ -61,9 +67,14 @@ export class DriverListComponent implements OnInit {
     })
   }
 
-  getDriverData() {
-    this._driverService.getDriverData().subscribe({
+  getDriverData(pageNumber: number = 0) {
+    let data: string = "";
+    if (this.sideButtonTitle == "Add") {
+      data = (document.getElementById('searchDriver') as HTMLInputElement).value;
+    }
+    this._driverService.getDriverData(data, pageNumber).subscribe({
       next: (response) => {
+        this.totalRecordLength = response.totalRecord;
         this.driverDataList = response.driver;
       },
       error: (error) => {
@@ -222,6 +233,7 @@ export class DriverListComponent implements OnInit {
   searchDriver(data: string) {
     this._driverService.getDriverData(data).subscribe({
       next: (response) => {
+        this.totalRecordLength = response.totalRecord;
         this.driverDataList = response.driver;
         if (response.driver.length === 0) {
           this._toastrService.info("there are no drivers to display", "No drivers")

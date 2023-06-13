@@ -9,7 +9,9 @@ const REFRESH_TOKEN = '1//04FRfn4bI2VnUCgYIARAAGAQSNgF-L9Ir203Y4DxqKR-InuuXI6xOM
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 oAuth2Client.setCredentials({refresh_token: REFRESH_TOKEN})
 
-async function sendMail() {
+
+
+async function sendMail(mailRecipient, mailSubject, mailBodyText = "", mailBodyHTML="") {
     try {
         const accessToken = await oAuth2Client.getAccessToken();
 
@@ -27,27 +29,19 @@ async function sendMail() {
 
         const mailOptions = {
             from: 'Daksh Ghetia <dk.elluminati@gmail.com>',
-            to: 'spamspam2990@gmail.com',
-            subject: 'Testing mail using nodemailer',
-            text: "hello from daksh using nodemailer",
-            html: 'hello from <b>daksh</b> using nodemailer'
+            to: mailRecipient,
+            subject: mailSubject,
+            text: mailBodyText,
+            html: mailBodyHTML
         };
 
         const result = await transport.sendMail(mailOptions);
-
-        console.log(result);
         return result
     } catch (error) {
         console.log("error occure while sending mail");
-        console.log(error);
         return error;
     }
 }
-
-sendMail().then(result => {console.log('Email sent');})
-.catch((error) => {
-    console.log(error);
-})
 
 module.exports = {
     sendMail: sendMail
