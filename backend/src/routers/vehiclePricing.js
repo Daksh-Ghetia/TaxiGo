@@ -50,6 +50,37 @@ router.get('/vehiclePricing/getVehiclePricing', auth, async (req,res) => {
                     "city.cityName": 1,
                     "vehicleType.vehicleName": 1
                 }
+            },
+            {
+                $facet: {
+                    totalCount: [
+                        {
+                            $group: {
+                                _id: null,
+                                count: { $sum: 1 }
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 0,
+                                count: 1
+                            }
+                        }
+                    ],
+                    paginatedData: [
+                        { $skip: req.query.pageNumber* 10 },
+                        { $limit: 10 }
+                    ]
+                }
+            },
+            {
+                $unwind: '$totalCount'
+            },
+            {
+                $project: {
+                    totalCount: '$totalCount.count',
+                    paginatedData: 1
+                }
             }
         ];
         
@@ -59,8 +90,7 @@ router.get('/vehiclePricing/getVehiclePricing', auth, async (req,res) => {
                     "city._id": new ObjectId(req.query.cityId)
                 }
             });
-        }       
-        
+        }
         /**Find the vehicle pricing data if not found send not found message*/
         let vehiclePricing = await VehiclePricing.aggregate(pipeline);
         if (vehiclePricing.length === 0) {
@@ -68,7 +98,7 @@ router.get('/vehiclePricing/getVehiclePricing', auth, async (req,res) => {
         }
 
         /**If data found send successs message */
-        res.status(200).send({vehiclePricing: vehiclePricing, msg: 'Vehicle pricing found', status: "success"})
+        res.status(200).send({vehiclePricing: vehiclePricing[0].paginatedData, totalRecord: vehiclePricing[0].totalCount, msg: 'Vehicle pricing found', status: "success"})
     } catch (error) {
         res.status(500).send({msg: "Error occured while getting data of vehicle pricing", status: "failed", error: error});
     }

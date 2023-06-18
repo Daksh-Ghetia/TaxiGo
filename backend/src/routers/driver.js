@@ -158,7 +158,7 @@ router.get('/driver/getDriverDetails', auth, async (req, res) => {
         }
 
         /**If data found send the data */
-        res.status(200).send({driver: driver[0].paginatedData, totalRecord: driver[0].totalCount,msg: 'Driver found', status: "success"});
+        res.status(200).send({driver: driver[0].paginatedData, totalRecord: driver[0].totalCount, msg: 'Driver found', status: "success"});
     } catch (error) {
         res.status(500).send({msg: "Error occured while getting data of driver", status: "failed", error: error});
     }

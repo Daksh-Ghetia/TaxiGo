@@ -191,7 +191,7 @@
 
                 <!-- Table body section -->
                 <tbody>
-                  <tr *ngFor="let driver of driverDataList  | paginate: { itemsPerPage: 10, currentPage: p, totalItems: totalRecordLength }" class="text-center text-capitalize">
+                  <tr *ngFor="let driver of driverDataList | paginate: { itemsPerPage: 10, currentPage: p, totalItems: totalRecordLength }" class="text-center text-capitalize">
                     
                     <td>{{driver.driverName}}</td>
                     <td>{{driver.driverEmail}}</td>

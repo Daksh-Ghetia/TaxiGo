@@ -29,7 +29,7 @@ router.patch('/setting/editSetting/:id', auth, upload.none(), async(req,res) => 
     try {
         /**Parse the body and store the keys of sent data */
         let updates = Object.keys(req.body);
-        const allowedUpdates = ["timeToAcceptRequest", "stopsInBetweenDestination"];
+        const allowedUpdates = ["timeToAcceptRequest", "stopsInBetweenDestination", "stripePublicKey", "stripeSecretKey", "messagingSID", "messagingAuthToken", "mailClientID", "mailClientSecret"];
 
         /**Check if the updates are applied for permissible  type only and if other update found return invalid updates*/
         const isValidOpertaion = updates.every((update) => allowedUpdates.includes(update));

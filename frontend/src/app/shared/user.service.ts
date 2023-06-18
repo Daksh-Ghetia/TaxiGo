@@ -11,8 +11,8 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getUserData(data: string = '') : Observable <any> {
-    this._url = "http://localhost:3000/user/getUserDetails?data=" + encodeURIComponent(data);
+  getUserData(data: string = '', pageNumber = 0) : Observable <any> {
+    this._url = "http://localhost:3000/user/getUserDetails?data=" + encodeURIComponent(data) + "&pageNumber=" + pageNumber;
     return this.http.get(this._url);
   }
 

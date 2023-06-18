@@ -101,8 +101,39 @@ router.get('/user/getUserDetails', auth, async (req, res) => {
             {
                 $unwind: '$country'
             },
+            {
+                $facet: {
+                    totalCount: [
+                        {
+                            $group: {
+                                _id: null,
+                                count: { $sum: 1 }
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 0,
+                                count: 1
+                            }
+                        }
+                    ],
+                    paginatedData: [
+                        { $skip: req.query.pageNumber* 10 },
+                        { $limit: 10 }
+                    ]
+                }
+            },
+            {
+                $unwind: '$totalCount'
+            },
+            {
+                $project: {
+                    totalCount: '$totalCount.count',
+                    paginatedData: 1
+                }
+            }
         ];
-
+        
         /**Find all the user data and if not found return no data to display*/
         let user = await User.aggregate(pipeline);
         if (!user) {
@@ -110,7 +141,7 @@ router.get('/user/getUserDetails', auth, async (req, res) => {
         }
 
         /**If data found send the data */
-        res.status(200).send({user: user, msg: 'User found', status: "success"})
+        res.status(200).send({user: user[0].paginatedData, totalRecord: user[0].totalCount, msg: 'User found', status: "success"})
     } catch (error) {
         res.status(500).send({msg: "Error occured while getting data of Users", status: "failed", error: error});
     }

@@ -8,6 +8,30 @@ const settingSchema = new mongoose.Schema({
     stopsInBetweenDestination: {
         type: Number,
         required: [true, 'Stops inbetween two destination is required'],
+    },
+    stripePublicKey: {
+        type: String,
+        required: [true, "Stripe public key is required"],
+    },
+    stripeSecretKey: {
+        type: String,
+        required: [true, "Stripe secret key is required"],
+    },
+    messagingSID: {
+        type: String,
+        required: [true, "SID is required for messaging"]
+    },
+    messagingAuthToken: {
+        type: String,
+        required: [true, "Authentication token is required for messaging"]
+    },
+    mailClientID: {
+        type: String,
+        required: [true, "Client ID is required for mail"]
+    },
+    mailClientSecret: {
+        type: String,
+        required: [true, "Client secret is required for mail"]
     }
 }, {
     timestamps: true

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { SettingService } from 'src/app/shared/setting.service';
 
 @Component({
@@ -15,7 +16,10 @@ export class SettingComponent implements OnInit {
   public stopCountList: any = [1,2,3,4,5];
   private id: string;
 
-  constructor(private _settingService: SettingService) { }
+  constructor(
+    private _settingService: SettingService,
+    private _toastrService: ToastrService
+  ) { }
 
   ngOnInit(): void {
 
@@ -23,7 +27,13 @@ export class SettingComponent implements OnInit {
 
     this.settingForm = new FormGroup({
       timeToAcceptRequest: new FormControl(null, [Validators.required]),
-      stopsInBetweenDestination: new FormControl(null, [Validators.required])
+      stopsInBetweenDestination: new FormControl(null, [Validators.required]),
+      stripePublicKey: new FormControl(null, [Validators.required]),
+      stripeSecretKey: new FormControl(null, [Validators.required]),
+      messagingSID: new FormControl(null, [Validators.required]),
+      messagingAuthToken: new FormControl(null, [Validators.required]),
+      mailClientID: new FormControl(null, [Validators.required]),
+      mailClientSecret: new FormControl(null, [Validators.required])
     })
   }
 
@@ -34,9 +44,16 @@ export class SettingComponent implements OnInit {
         this.settingForm.patchValue({
           timeToAcceptRequest: response.setting[0].timeToAcceptRequest,
           stopsInBetweenDestination: response.setting[0].stopsInBetweenDestination,
+          stripePublicKey: response.setting[0].stripePublicKey,
+          stripeSecretKey: response.setting[0].stripeSecretKey,
+          messagingSID: response.setting[0].messagingSID,
+          messagingAuthToken: response.setting[0].messagingAuthToken,
+          mailClientID: response.setting[0].mailClientID,
+          mailClientSecret: response.setting[0].mailClientSecret
         });
       },
       error: (error) => {
+        this._toastrService.error("Error while getting the data");
         this.customErrMsg = error.error.message
       },
       complete: () => {}
@@ -52,14 +69,17 @@ export class SettingComponent implements OnInit {
         this.settingForm.patchValue({
           timeToAcceptRequest: response.setting.timeToAcceptRequest,
           stopsInBetweenDestination: response.setting.stopsInBetweenDestination,
+          stripePublicKey: response.setting.stripePublicKey,
+          stripeSecretKey: response.setting.stripeSecretKey,
+          messagingSID: response.setting.messagingSID,
+          messagingAuthToken: response.setting.messagingAuthToken,
+          mailClientID: response.setting.mailClientID,
+          mailClientSecret: response.setting.mailClientSecret
         });
-        this.customErrMsg = "Data updated successfully";
-
-        setTimeout(() => {
-          this.customErrMsg = '';
-        }, 5000);
+        this._toastrService.success("Data has been updated successfully");
       },
       error: (error) => {
+        this._toastrService.error("Error while updating the data","");
         this.customErrMsg = error.error.msg;
       },
       complete: () => {}

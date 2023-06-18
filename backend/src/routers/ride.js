@@ -17,11 +17,11 @@ router.get('/ride/getRideDetails', auth, async (req, res) => {
         let pipeline = [
             {
                 $lookup: {
-                             from: 'users',
-                             as: 'user',
-                             localField: 'rideCustomerId',
-                             foreignField: '_id'
-                         }
+                    from: 'users',
+                    as: 'user',
+                    localField: 'rideCustomerId',
+                    foreignField: '_id'
+                }
             },
             {
                 $lookup: {
@@ -31,13 +31,6 @@ router.get('/ride/getRideDetails', auth, async (req, res) => {
                     foreignField: '_id'
                 }
             },
-            // {
-            //     $match: {
-            //         $or: [
-            //             {}
-            //         ]
-            //     }
-            // },
             {
                 $lookup: {
                     from: 'vehicletypes',

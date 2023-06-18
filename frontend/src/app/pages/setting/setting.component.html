@@ -12,7 +12,7 @@
         <form id="setting" [formGroup]="settingForm">
             <table>
                 <!-- Time to accept request -->
-                <div class="mt-9"></div>
+                <div class="mt-9"><b>Cron Settings</b></div>
                 <tr>
                     <td class="">Time to accept request:</td>
                     <td>
@@ -46,13 +46,92 @@
                 <tr>
                     <td></td>
                     <td>
-                        <button class="btn btn-success" id="submit" type="submit" (click)="updateSetting()">Update Setting</button>
+                        <button class="btn btn-success" id="submit" type="submit" (click)="updateSetting()">Update cron setting</button>
                     </td>
                 </tr>
-                <!-- Error Message -->
+                <!-- Stripe setting -->
+                <div class="mt-5"><b>Strpe Settings</b></div>
+                <tr>
+                    <td>public key</td>
+                    <td>
+                        <input class="setting-input" style="width: 60rem;" name="stripePublicKey" type="text" formControlName="stripePublicKey" id="stripePublicKey">
+                        <div>
+                            <strong *ngIf="settingForm.get('stripePublicKey').invalid && settingForm.get('stripePublicKey').touched">Please enter a valid public key for stripe</strong>
+                        </div>
+                    </td>
+                </tr>
+                <br>
+                <tr>
+                    <td>Secret key</td>
+                    <td>
+                        <input class="setting-input" style="width: 60rem;" name="stripeSecretKey" type="text" formControlName="stripeSecretKey" id="stripeSecretKey">
+                        <div>
+                            <strong *ngIf="settingForm.get('stripeSecretKey').invalid && settingForm.get('stripeSecretKey').touched">Please enter a valid secret key for stripe</strong>
+                        </div>
+                    </td>
+                </tr>
+                <br>
                 <tr>
                     <td></td>
-                    <td>{{customErrMsg}} </td>
+                    <td>
+                        <button class="btn btn-success" id="submit" type="submit" (click)="updateSetting()">Update stripe setting</button>
+                    </td>
+                </tr>
+                <!-- SMS setting -->
+                <div class="mt-5"><b>SMS Settings</b></div>
+                <tr>
+                    <td>Account SID</td>
+                    <td>
+                        <input class="setting-input" name="messagingSID" type="text" formControlName="messagingSID" id="messagingSID">
+                        <div>
+                            <strong *ngIf="settingForm.get('messagingSID').invalid && settingForm.get('messagingSID').touched">Please enter a valid SID for messaging</strong>
+                        </div>
+                    </td>
+                </tr>
+                <br>
+                <tr>
+                    <td>Authentication token</td>
+                    <td>
+                        <input class="setting-input" name="messagingAuthToken" type="text" formControlName="messagingAuthToken" id="messagingAuthToken">
+                        <div>
+                            <strong *ngIf="settingForm.get('messagingAuthToken').invalid && settingForm.get('messagingAuthToken').touched">Please enter a valid authentication token for messaging</strong>
+                        </div>
+                    </td>
+                </tr>
+                <br>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button class="btn btn-success" id="submit" type="submit" (click)="updateSetting()">Update SMS setting</button>
+                    </td>
+                </tr>
+                <!-- Mail setting -->
+                <div class="mt-5"><b>Mail Settings</b></div>
+                <tr>
+                    <td>Client ID:</td>
+                    <td>
+                        <input class="setting-input" style="width: 36rem;" name="mailClientID" type="text" formControlName="mailClientID" id="mailClientID">
+                        <div>
+                            <strong *ngIf="settingForm.get('mailClientID').invalid && settingForm.get('mailClientID').touched">Please enter a valid Client ID for mail</strong>
+                        </div>
+                    </td>
+                </tr>
+                <br>
+                <tr>
+                    <td>Client Secret: </td>
+                    <td>
+                        <input class="setting-input" name="mailClientSecret" type="text" formControlName="mailClientSecret" id="mailClientSecret">
+                        <div>
+                            <strong *ngIf="settingForm.get('mailClientSecret').invalid && settingForm.get('mailClientSecret').touched">Please enter a valid client secret for mail</strong>
+                        </div>
+                    </td>
+                </tr>
+                <br>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button class="btn btn-success" id="submit" type="submit" (click)="updateSetting()">Update mail setting</button>
+                    </td>
                 </tr>
             </table>
         </form>

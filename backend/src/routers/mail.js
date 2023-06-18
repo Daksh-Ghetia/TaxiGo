@@ -9,8 +9,6 @@ const REFRESH_TOKEN = '1//04FRfn4bI2VnUCgYIARAAGAQSNgF-L9Ir203Y4DxqKR-InuuXI6xOM
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 oAuth2Client.setCredentials({refresh_token: REFRESH_TOKEN})
 
-
-
 async function sendMail(mailRecipient, mailSubject, mailBodyText = "", mailBodyHTML="") {
     try {
         const accessToken = await oAuth2Client.getAccessToken();

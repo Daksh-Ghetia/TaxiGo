@@ -19,6 +19,7 @@ export class ConfirmedRideComponent implements OnInit {
   public selectedRowIndex: number;
   public rideDetails: any;
   public message: any;
+  public p: number;
   
   private modalRef: NgbModalRef;
 

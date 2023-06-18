@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -24,8 +24,8 @@ export class DriverListComponent implements OnInit {
   public customErrMsg: string = '';
   public driverDataList: any = [];
   public sideButtonTitle: string = "Add";
-  public p: any;
   private modalRef: NgbModalRef;
+  public p: any;
   public totalRecordLength: number;
   
 

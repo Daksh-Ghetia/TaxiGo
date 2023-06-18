@@ -13,6 +13,7 @@ export class RunningRequestComponent implements OnInit {
 
   public rideDataList: any = [];
   public fullRideData: any = [];
+  public p: number;
 
   private modalRef: NgbModalRef;
 

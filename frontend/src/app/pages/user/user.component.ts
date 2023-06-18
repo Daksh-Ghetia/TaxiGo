@@ -24,6 +24,8 @@ export class UserComponent implements OnInit {
   public focus : any;
   public Stripe: any;
   public selectedCardId: string;
+  public p: any = 1;
+  public totalRecordLength: number;
   
   private options: any;
   private elements: any;
@@ -44,7 +46,7 @@ export class UserComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.getUserData();
+    // this.getUserData();
     this.fillCountryDropDown();
     await this.loadStripe();
 
@@ -55,8 +57,12 @@ export class UserComponent implements OnInit {
       userCountryId: new FormControl(null, [Validators.required]),
       userCountryCode: new FormControl(null, []),
       userProfile: new FormControl(null, []),
-      userSearch: new FormControl(null, [])
+      userSearch: new FormControl("", [])
     })
+  }
+
+  ngAfterViewInit() {
+    this.getUserData();
   }
 
   fillCountryDropDown() {
@@ -79,10 +85,15 @@ export class UserComponent implements OnInit {
   }
 
   getUserData() {
-    this._userService.getUserData().subscribe({
-      next: (response) => {        
+    let data: string = "";
+    if (this.sideButtonTitle == "Add") {
+      data = (document.getElementById('searchUser') as HTMLInputElement).value;
+    }
+    this._userService.getUserData(data, this.p-1).subscribe({
+      next: (response) => {
         if (response.user.length > 0) {
           this.userDataList = response.user;
+          this.totalRecordLength = response.totalRecord;
         } else {
           return this._toasterService.info("No user found to display, please add new user to view data", "User not found");
         }
@@ -189,6 +200,7 @@ export class UserComponent implements OnInit {
       next: (response) => {
         if (response.user.length > 0) {
           this.userDataList = response.user;
+          this.totalRecordLength = response.totalRecord;
         } else {
           this.userDataList = [];
           return this._toasterService.info("No user found to display, please add new user to view data", "User not found");

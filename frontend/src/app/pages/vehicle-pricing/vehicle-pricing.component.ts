@@ -30,7 +30,8 @@ export class VehiclePricingComponent implements OnInit {
   public currentSort: string = "";
   public currentSortDirection: string = '';
   private isAscending: boolean = true;
-  public p: any;
+  public p: any = 1;
+  public totalRecordLength: number;
 
   ngOnInit(): void {
     this.fillCountryDropDown();
@@ -144,8 +145,9 @@ export class VehiclePricingComponent implements OnInit {
   }
 
   getVehiclePricing() {
-    this._vehiclePricingService.getVehiclePricing().subscribe({
+    this._vehiclePricingService.getVehiclePricing("", this.p-1).subscribe({
       next: (response) => {
+        this.totalRecordLength = response.totalRecord;
         this.vehiclePricingList = response.vehiclePricing;
       },
       error: (error) => {

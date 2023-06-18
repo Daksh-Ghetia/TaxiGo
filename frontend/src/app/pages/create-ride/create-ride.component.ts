@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CityService } from 'src/app/shared/city.service';
 import { ConvertMinutesToHoursAndMinutesPipe } from 'src/app/shared/convert-minutes-to-hours-and-minutes.pipe';
@@ -61,6 +61,7 @@ export class CreateRideComponent implements OnInit {
       rideDropLocation: new FormControl(null, [Validators.required]),
       rideIntermediateStops: new FormArray([]),
       rideServiceTypeId: new FormControl(null, [Validators.required]),
+      rideScheduleTime: new FormControl(null, []),
       rideDateTime: new FormControl(null, [Validators.required]),
       ridePaymentMethod: new FormControl(null, [Validators.required]),
       ridePaymentCardId: new FormControl(null, [])
@@ -180,6 +181,7 @@ export class CreateRideComponent implements OnInit {
     this.createRideForm.reset();
     this.serviceTypeList = [];
     (this.createRideForm.get('rideIntermediateStops') as FormArray).clear();
+    this.directionsRenderer.setDirections({ routes: []});
   }
 
   /**Load the map */
@@ -402,6 +404,16 @@ export class CreateRideComponent implements OnInit {
       }
     } else{
       this.createRideForm.get('ridePaymentCardId').setValue(null);
+    }
+  }
+
+  handleDateChange(event: Event) {
+    const selectedDate = new Date((event.target as HTMLInputElement).value);
+    const currentDate = new Date();
+
+    if (selectedDate < currentDate) {
+      this._toastrService.info("Please select date and time in the future","");
+      this.createRideForm.patchValue({rideScheduleTime: currentDate});
     }
   }
 }

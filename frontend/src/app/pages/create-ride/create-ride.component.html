@@ -120,7 +120,7 @@
                             <input type="radio" id="scheduleBooking" value="schedule" class="ml-3" formControlName="rideDateTime">
                             <label for="scheduleBooking">Schedule ride</label>
                             <br>
-                            <input class="date-input" *ngIf="createRideForm.get('rideDateTime').value === 'schedule'" type="datetime-local" id="scheduleDateTime" name="scheduleDateTime">
+                            <input class="date-input" *ngIf="createRideForm.get('rideDateTime').value === 'schedule'" type="datetime-local" id="scheduleDateTime" name="scheduleDateTime" formControlName="rideScheduleTime" (change)="handleDateChange($event)">
 
                           <div>
                               <strong *ngIf="createRideForm.get('rideDateTime').invalid && createRideForm.get('rideDateTime').touched">Please select time to book ride</strong>
