@@ -3,6 +3,26 @@
         <div class="header-body d-flex align-items-end justify-content-between">
             <h1 class="text-white">Confirmed Ride</h1>
         </div>
+
+
+        <div class="row">
+          <div class="col-xl-12">
+              <form class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-auto" >
+                <div class="form-group mb-0" [ngClass]="{ 'focused': focus === true }" >
+                  <label for="vehicleName" class="text-white mr-2">Search Driver <span class="text-white ml-1">:</span> </label>
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input class="form-control" id="searchRide" name="searchRide" placeholder="Search" type="text" (focus)="focus = true" (blur)="focus = false" >
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <button class="btn btn-success" id="submit" type="submit">Search Ride</button>
+                </div>
+              </form>
+          </div>
+      </div>
     </div>
 </div>
 

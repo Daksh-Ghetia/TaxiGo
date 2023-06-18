@@ -20,6 +20,7 @@ export class ConfirmedRideComponent implements OnInit {
   public rideDetails: any;
   public message: any;
   public p: number;
+  public focus:any;
   
   private modalRef: NgbModalRef;
 
