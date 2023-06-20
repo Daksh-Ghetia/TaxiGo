@@ -32,7 +32,7 @@ export class RideHistoryComponent implements OnInit {
   }
 
   getRideData() {
-    this._rideService.getRideData().subscribe({
+    this._rideService.getRideData([0,7]).subscribe({
       next: (response) => {
         if (response.ride.length <= 0) {
           return this._toastrService.info("Currently there are no rides to display", "")

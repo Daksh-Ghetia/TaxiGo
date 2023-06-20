@@ -59,3 +59,5 @@ getToken(messaging, { vapidKey: 'BL3dOkvdnJBW9Xvd9aFS7_ImSn2Z3X_XlqEq_tuvzoCplGv
   console.log('An error occurred while retrieving token. ', err);
   // ...
 });
+
+// navigator.serviceWorker.register();

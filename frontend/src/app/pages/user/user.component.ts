@@ -111,8 +111,8 @@ export class UserComponent implements OnInit {
       return
     }
 
-    const userForm = (document.getElementById('user') as HTMLFormElement)
-    const userFormData = new FormData(userForm) ;
+    const userForm = (document.getElementById('user') as HTMLFormElement);
+    const userFormData = new FormData(userForm);
 
     if (this.actionButton == "Edit") {
       return this.editUser(userFormData);
@@ -201,6 +201,7 @@ export class UserComponent implements OnInit {
         if (response.user.length > 0) {
           this.userDataList = response.user;
           this.totalRecordLength = response.totalRecord;
+          this.p = 1
         } else {
           this.userDataList = [];
           return this._toasterService.info("No user found to display, please add new user to view data", "User not found");

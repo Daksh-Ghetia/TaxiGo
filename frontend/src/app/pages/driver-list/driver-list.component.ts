@@ -134,7 +134,7 @@ export class DriverListComponent implements OnInit {
     }
 
     const driverForm = (document.getElementById('driver') as HTMLFormElement)
-    const driverFormData = new FormData(driverForm) ;
+    const driverFormData = new FormData(driverForm);
 
     if (this.actionButton == "Edit") {
       return this.editDriver(driverFormData);

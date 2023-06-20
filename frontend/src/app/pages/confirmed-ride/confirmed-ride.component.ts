@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { DriverService } from 'src/app/shared/driver.service';
 import { MessagingService } from 'src/app/shared/messaging.service';
 import { RideService } from 'src/app/shared/ride.service';
+import { VehicleTypeService } from 'src/app/shared/vehicle-type.service';
 import { WebSocketService } from 'src/app/shared/web-socket.service';
 
 @Component({
@@ -16,11 +18,13 @@ export class ConfirmedRideComponent implements OnInit {
   public rideDataList: any = [];
   public fullRideData: any = [];
   public driverList: any = [];
+  public vehicleTypeList: any = [];
   public selectedRowIndex: number;
   public rideDetails: any;
   public message: any;
   public p: number;
   public focus:any;
+  public confirmRideFilter: FormGroup;
   
   private modalRef: NgbModalRef;
 
@@ -31,11 +35,21 @@ export class ConfirmedRideComponent implements OnInit {
     private _toastrServie: ToastrService,
     private _webSocketService: WebSocketService,
     private _messagingService: MessagingService,
+    private _vehicleTypeService: VehicleTypeService
   ) { }
 
   ngOnInit(): void {
-    this.getRideData();
+    // this.getRideData();
     this.listenToSocket();
+    this.getVehicalTypeList();
+    
+    this.confirmRideFilter = new FormGroup({
+      rideSearchData: new FormControl(null, []),
+      rideStatus: new FormControl(null, []),
+      rideVehicleType: new FormControl(null, []),
+      rideFromDate: new FormControl(null, []),
+      rideToDate : new FormControl(null, []),
+    })
 
     //Do not delete
     // this._messagingService.requestPermission();
@@ -43,14 +57,40 @@ export class ConfirmedRideComponent implements OnInit {
     // this.message = this._messagingService.currentMessage;
   }
 
+  ngAfterViewInit() {
+    this.getRideData();
+  }
+
   getRideData() {
-    this._rideService.getRideData().subscribe({
+    const confirmRideData = {
+      rideSearchData: this.confirmRideFilter.get('rideSearchData').value || "null",
+      rideStatus: this.confirmRideFilter.get('rideStatus').value || "null",
+      rideVehicleType: this.confirmRideFilter.get('rideVehicleType').value || "null",
+      rideFromDate: this.confirmRideFilter.get('rideFromDate').value || "null",
+      rideToDate: this.confirmRideFilter.get('rideToDate').value || "null"
+    }
+    this._rideService.getRideData([1,2,3],confirmRideData).subscribe({
       next: (response) => {
         this.rideDataList = response.ride;
       },
       error: (error) => {
         console.log(error);
       },
+      complete: () => {}
+    })
+  }
+
+  cancelSearch() {
+    this.confirmRideFilter.reset();
+    this.getRideData();
+  }
+
+  getVehicalTypeList() {
+    this._vehicleTypeService.getVehicleType().subscribe({
+      next: (response) => {
+        this.vehicleTypeList = response.vehicle;
+      },
+      error: (error) => {console.log(error);},
       complete: () => {}
     })
   }
@@ -109,16 +149,16 @@ export class ConfirmedRideComponent implements OnInit {
     this.getRideData();
   }
 
-   assignRandomDriver() {
-      if (this.driverList.length == 0) {
-        return this._toastrServie.info("Currently there are no drivers available for selection", "Driver not found");
-      }
+  assignRandomDriver() {
+    if (this.driverList.length == 0) {
+      return this._toastrServie.info("Currently there are no drivers available for selection", "Driver not found");
+    }
 
-      this._webSocketService.emit('assignRandomDriver', {rideDriverAssignType: 2, ride: this.rideDetails});
-      this._toastrServie.success("Nearest driver assigning succesful", "");
-      this.modalRef.close();
-      this.getRideData();
-   }
+    this._webSocketService.emit('assignRandomDriver', {rideDriverAssignType: 2, ride: this.rideDetails});
+    this._toastrServie.success("Nearest driver assigning succesful", "");
+    this.modalRef.close();
+    this.getRideData();
+  }
 
   listenToSocket() {
     this._webSocketService.listen('dataChange').subscribe({

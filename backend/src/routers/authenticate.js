@@ -41,7 +41,6 @@ router.post('/admin/login', async (req,res) => {
         const token = await admin.generateAuthToken();
         res.send({admin, token, msg: 'Authentication successful'})
     } catch (error) {
-        // res.status(400).send("Error occured" + error)
         res.status(200).send({msg: 'Authentication failed', error: error})
     }
 })

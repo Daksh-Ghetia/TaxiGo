@@ -6,15 +6,27 @@ const Driver = require('../models/driver');
 const User = require('../models/user');
 const SendMessage = require('./SMS');
 const paymentGateway = require('./paymentGateway');
+const mongoose = require('mongoose');
 
 const router = new express.Router();
 
 const upload = multer();
 
 /**Get ride data */
-router.get('/ride/getRideDetails', auth, async (req, res) => {
+router.post('/ride/getRideDetails', auth, upload.none(),async (req, res) => {
     try {
-        let pipeline = [
+        let rideStatusMatchQuery;
+        let rideFilterQuery;
+
+        if (req.body.rideStatus && Array.isArray(req.body.rideStatus)) {
+            rideStatusMatchQuery = {
+                $match: {
+                    rideStatus: { $in: req.body.rideStatus}
+                }
+            }
+        }
+
+        let lookupPipeline = [
             {
                 $lookup: {
                     from: 'users',
@@ -55,6 +67,58 @@ router.get('/ride/getRideDetails', auth, async (req, res) => {
             }
         ]
 
+        if (req.body.rideFilter) {
+            let { rideSearchData, rideStatus, rideVehicleType, rideFromDate, rideToDate } = req.body.rideFilter;
+            let filterConditions = [];
+            
+            if (rideSearchData && rideSearchData !== "null") {
+                if (mongoose.Types.ObjectId.isValid(rideSearchData)) {
+                    filterConditions.push({
+                        _id: new mongoose.Types.ObjectId(rideSearchData),
+                    })
+                } else {
+                    rideSearchData = rideSearchData.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+                    rideSearchData = new RegExp(rideSearchData, "i");
+                    filterConditions.push({
+                        $or: [
+                            {"user.userName": rideSearchData},
+                            {"user.userPhone": rideSearchData},
+                            {"ridePickUpLocation": rideSearchData},
+                            {"rideDropLocation": rideSearchData}
+                        ]
+                    })
+                }
+            }
+
+            if (rideStatus && rideStatus !== "null") {
+                filterConditions.push({rideStatus: +rideStatus})
+            }
+
+            if (rideVehicleType && mongoose.Types.ObjectId.isValid(rideVehicleType)) {
+                filterConditions.push({rideServiceTypeId: new mongoose.Types.ObjectId(rideVehicleType)});
+            }
+
+            if (rideFromDate != "null") {
+                filterConditions.push({ rideDateTime: { $gte: new Date(rideFromDate)}});
+            }
+
+            if (rideToDate != "null") {
+                filterConditions.push({ rideDateTime: { $lte: new Date(rideToDate)}});
+            }
+
+            if (filterConditions.length > 0) {
+                rideFilterQuery = {
+                    $and: filterConditions,
+                };
+            }
+        }
+
+        let pipeline = [
+            ...(rideStatusMatchQuery ? [rideStatusMatchQuery] : []),
+            ...lookupPipeline,
+            ...(rideFilterQuery ? [{ $match: rideFilterQuery}] : [])
+        ]
+
         /**Find all the ride data and if not found return no data to display*/
         let ride = await Ride.aggregate(pipeline);
         if (!ride) {
@@ -64,6 +128,7 @@ router.get('/ride/getRideDetails', auth, async (req, res) => {
         /**If data found send the data */
         res.status(200).send({ride: ride, msg: 'ride found', status: "success"})
     } catch (error) {
+        console.log(error);
         res.status(500).send({msg: "Error occured while getting data of ride", status: "failed", error: error});
     }
 })

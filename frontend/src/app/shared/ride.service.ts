@@ -11,9 +11,12 @@ export class RideService {
 
   constructor(private http: HttpClient) { }
 
-  getRideData() : Observable <any> {
+  getRideData(rideStatus = [], rideFilter = null) : Observable <any> {
     this._url = "http://localhost:3000/ride/getRideDetails";
-    return this.http.get(this._url);
+    return this.http.post(this._url, {
+      rideStatus: rideStatus,
+      rideFilter: rideFilter
+    });
   }
 
   addNewRide(data: any) : Observable <any> {

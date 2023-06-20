@@ -7,18 +7,71 @@
 
         <div class="row">
           <div class="col-xl-12">
-              <form class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-auto" >
+              <form id="confirmRideFilter" [formGroup]="confirmRideFilter" class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-auto" >
                 <div class="form-group mb-0" [ngClass]="{ 'focused': focus === true }" >
-                  <label for="vehicleName" class="text-white mr-2">Search Driver <span class="text-white ml-1">:</span> </label>
+                  <!-- <label for="vehicleName" class="text-white mr-2">Search Ride <span class="text-white ml-1">:</span> </label> -->
                   <div class="input-group input-group-alternative">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fas fa-search"></i></span>
                     </div>
-                    <input class="form-control" id="searchRide" name="searchRide" placeholder="Search" type="text" (focus)="focus = true" (blur)="focus = false" >
+                    <input class="form-control" formControlName="rideSearchData" id="searchRide" name="rideSearchData" placeholder="Search" type="text" (focus)="focus = true" (blur)="focus = false" >
                   </div>
                 </div>
+
+                <div class="form-group mb-0 ml-2" [ngClass]="{ 'focused': focus === true }" >
+                  <!-- <label for="vehicleName" class="text-white mr-2">Search Ride <span class="text-white ml-1">:</span> </label> -->
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fa fa-filter"></i></span>
+                    </div>
+
+                    <select class="form-control ride" formControlName="rideStatus" name="rideStatus" id="rideStatus">
+                      <option disabled selected hidden [value]="null" >Ride Status</option>
+                      <option [value]="1" >Pending</option>
+                      <option [value]="3" >Assigning</option>
+                      <option [value]="2" >No driver found</option>
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="form-group mb-0 ml-2" [ngClass]="{ 'focused': focus === true }" >
+                  <!-- <label for="vehicleName" class="text-white mr-2">Search Ride <span class="text-white ml-1">:</span> </label> -->
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fa fa-filter"></i></span>
+                    </div>
+
+                    <select class="form-control ride" formControlName="rideVehicleType" name="rideVehicleType" id="rideVehicleType">
+                      <option disabled selected hidden [value]="null" >Vehicle type</option>
+                      <option [value]="vehicleType._id" *ngFor="let vehicleType of vehicleTypeList"> {{vehicleType.vehicleName}} </option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="form-group mb-0 ml-2" [ngClass]="{ 'focused': focus === true }" >
+                  <label for="vehicleName" class="text-white mr-2">From<span class="text-white ml-1">:</span> </label>
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-filter"></i></span>
+                    </div>
+                    <input class="form-control ride" formControlName="rideFromDate" id="rideFromDate" name="rideFromDate" type="date">
+                  </div>
+                </div>
+
+                <div class="form-group mb-0 ml-1" [ngClass]="{ 'focused': focus === true }" >
+                  <label for="vehicleName" class="text-white mr-2">To<span class="text-white ml-1">:</span> </label>
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-filter"></i></span>
+                    </div>
+                    <input class="form-control ride" formControlName="rideToDate" id="rideToDate" name="rideToDate" type="date">
+                  </div>
+                </div>
+
                 <div class="col-md-3">
-                  <button class="btn btn-success" id="submit" type="submit">Search Ride</button>
+                  <button class="btn btn-success" id="submit" type="button" (click)="getRideData()">Search Ride</button>
+                  <button class="btn btn-danger" (click)="cancelSearch()">Cancel</button>
                 </div>
               </form>
           </div>

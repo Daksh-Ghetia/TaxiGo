@@ -30,7 +30,7 @@ export class RunningRequestComponent implements OnInit {
   }
 
   getRideData() {
-    this._rideService.getRideData().subscribe({
+    this._rideService.getRideData([3,4,5,6]).subscribe({
       next: (response) => {
         this.rideDataList = response.ride;
       },
