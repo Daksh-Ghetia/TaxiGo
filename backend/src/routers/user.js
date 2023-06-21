@@ -136,7 +136,7 @@ router.get('/user/getUserDetails', auth, async (req, res) => {
         
         /**Find all the user data and if not found return no data to display*/
         let user = await User.aggregate(pipeline);
-        if (!user) {
+        if (user.length == 0) {
             return res.status(404).send({msg: "No user to display", status: "failed"});
         }
 
@@ -172,11 +172,11 @@ router.post('/user/addUser', auth, handleUpload, async (req,res) => {
         if (error.errors && error.errors.userEmail) {
             res.status(400).send({msg: error.errors.userEmail.message, status: "failed", error: error});
         } else if (error.errors && error.errors.userPhone) {
-            res.status(400).send({message: error.errors.userPhone.message, status: "failed", error: error});
+            res.status(400).send({msg: error.errors.userPhone.message, status: "failed", error: error});
         } else if (error.keyValue && error.keyValue.userEmail) {
-            res.status(400).send({message: "Email is already registered", status: "failed", error: error})
+            res.status(400).send({msg: "Email is already registered", status: "failed", error: error})
         } else if (error.keyValue && error.keyValue.userPhone) {
-            res.status(400).send({message: 'phone number is already registered', status: "failed", error: error})
+            res.status(400).send({msg: 'phone number is already registered', status: "failed", error: error})
         } else {
             res.status(500).send({msg: "Server error while adding User", status: "failed", error: error});
         }
@@ -225,11 +225,11 @@ router.patch('/user/editUser/:id', auth, handleUpload, async(req,res) => {
         if (error.errors && error.errors.userEmail) {
             res.status(400).send({msg: error.errors.userEmail.message, status: "failed", error: error});
         } else if (error.errors && error.errors.userPhone.message) {
-            res.status(400).send({message: error.errors.userPhone.message, status: "failed", error: error});
+            res.status(400).send({msg: error.errors.userPhone.message, status: "failed", error: error});
         } else if (error.keyValue && error.keyValue.userEmail) {
-            res.status(400).send({message: "Email is already registered", status: "failed", error: error})
+            res.status(400).send({msg: "Email is already registered", status: "failed", error: error})
         } else if (error.keyValue && error.keyValue.userPhone) {
-            res.status(400).send({message: 'phone number is already registered', status: "failed", error: error})
+            res.status(400).send({msg: 'phone number is already registered', status: "failed", error: error})
         } else {
             res.status(500).send({msg: "Server error while updating User", status: "failed", error: error});
         }

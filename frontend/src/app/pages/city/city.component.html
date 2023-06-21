@@ -20,7 +20,7 @@
                         <div class="col-md-4" >
                             <div class="form-group">
                                 <label for="cityName" class="text-white">City Name <span class="text-white ml-1">:</span> </label>
-                                <input type="text" class="city-Input " formControlName="cityName" name="cityName" id="cityName" placeholder="City name">
+                                <input type="text" class="city-Input " formControlName="cityName" name="cityName" id="cityName" placeholder="City name" [readOnly]="reactiveForm.get('countryId').value == null">
                                 <div>
                                     <strong class="pl-7" *ngIf="reactiveForm.get('cityName').invalid && reactiveForm.get('cityName').touched">City Name is required</strong>
                                 </div>

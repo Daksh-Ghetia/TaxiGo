@@ -24,7 +24,7 @@ export class ConfirmedRideComponent implements OnInit {
   public message: any;
   public p: number;
   public focus:any;
-  public confirmRideFilter: FormGroup;
+  public rideFilter: FormGroup;
   
   private modalRef: NgbModalRef;
 
@@ -43,7 +43,7 @@ export class ConfirmedRideComponent implements OnInit {
     this.listenToSocket();
     this.getVehicalTypeList();
     
-    this.confirmRideFilter = new FormGroup({
+    this.rideFilter = new FormGroup({
       rideSearchData: new FormControl(null, []),
       rideStatus: new FormControl(null, []),
       rideVehicleType: new FormControl(null, []),
@@ -62,14 +62,14 @@ export class ConfirmedRideComponent implements OnInit {
   }
 
   getRideData() {
-    const confirmRideData = {
-      rideSearchData: this.confirmRideFilter.get('rideSearchData').value || "null",
-      rideStatus: this.confirmRideFilter.get('rideStatus').value || "null",
-      rideVehicleType: this.confirmRideFilter.get('rideVehicleType').value || "null",
-      rideFromDate: this.confirmRideFilter.get('rideFromDate').value || "null",
-      rideToDate: this.confirmRideFilter.get('rideToDate').value || "null"
+    const rideFilterData = {
+      rideSearchData: this.rideFilter.get('rideSearchData').value || "null",
+      rideStatus: this.rideFilter.get('rideStatus').value || "null",
+      rideVehicleType: this.rideFilter.get('rideVehicleType').value || "null",
+      rideFromDate: this.rideFilter.get('rideFromDate').value || "null",
+      rideToDate: this.rideFilter.get('rideToDate').value || "null"
     }
-    this._rideService.getRideData([1,2,3],confirmRideData).subscribe({
+    this._rideService.getRideData([1,2,3],rideFilterData).subscribe({
       next: (response) => {
         this.rideDataList = response.ride;
       },
@@ -81,7 +81,7 @@ export class ConfirmedRideComponent implements OnInit {
   }
 
   cancelSearch() {
-    this.confirmRideFilter.reset();
+    this.rideFilter.reset();
     this.getRideData();
   }
 
@@ -155,7 +155,7 @@ export class ConfirmedRideComponent implements OnInit {
     }
 
     this._webSocketService.emit('assignRandomDriver', {rideDriverAssignType: 2, ride: this.rideDetails});
-    this._toastrServie.success("Nearest driver assigning succesful", "");
+    // this._toastrServie.success("Nearest driver assigning succesful", "");
     this.modalRef.close();
     this.getRideData();
   }
@@ -172,6 +172,15 @@ export class ConfirmedRideComponent implements OnInit {
         console.log(error);
       },
       complete: () => {}
+    })
+
+    this._webSocketService.listen('driverAssigned').subscribe({
+      next: () => {
+        this._toastrServie.success("Driver Assigned successfully");
+      },
+      error: () => {
+        this._toastrServie.error("Error occured while assigning driver");
+      }
     })
   }
 }

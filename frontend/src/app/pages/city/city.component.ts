@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { CityService } from 'src/app/shared/city.service';
 import { CountryService } from 'src/app/shared/country.service';
 
@@ -24,7 +25,11 @@ export class CityComponent implements OnInit {
   private infoWindow = new google.maps.InfoWindow();
   public polygon: google.maps.Polygon;
 
-  constructor(private _countryService: CountryService, private _cityService: CityService) { }
+  constructor(
+    private _countryService: CountryService, 
+    private _cityService: CityService,
+    private _toastrService: ToastrService
+  ) { }
 
   ngOnInit(): void {
     this.fillCountryDropDown();
@@ -41,10 +46,13 @@ export class CityComponent implements OnInit {
   fillCountryDropDown() {
     this._countryService.getCountry().subscribe({
       next: (response) => {
+        if (response.country.length == 0) {
+          return this._toastrService.warning("Please add countries inorder to add cities","No countries");
+        }
         this.countryList = response.country;
       },
       error: (error) => {
-
+        this._toastrService.error(error.error.msg || "Error occured while getting country data");
       },
       complete: () => {}
     })
@@ -97,7 +105,7 @@ export class CityComponent implements OnInit {
   }
 
   handleCountryChange(countryId: string = "") {    
-    const selectedCountry = this.countryList.find(country => countryId === country._id)    
+    const selectedCountry = this.countryList.find(country => countryId === country._id)
     this._countryService.getSingleCountryData(selectedCountry.countryName).subscribe({
       next: (response) => {
         this.autocomplete.setComponentRestrictions({'country': [response[0].cca2]});
@@ -125,6 +133,7 @@ export class CityComponent implements OnInit {
         }
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while getting city data")
         console.log(error);
       },
       complete: () => {}
@@ -153,9 +162,11 @@ export class CityComponent implements OnInit {
         this.polygon.setMap(null);
         this.getCity();
         this.resetMap();
+        this._toastrService.success("City Added successfully");
       },
       error: (error) => {
-        console.log(error);        
+        this._toastrService.error(error.error.msg || "Error occured while adding city")
+        console.log(error);
       }
     })
   }

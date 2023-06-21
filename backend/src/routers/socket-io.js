@@ -30,6 +30,7 @@ function socket(server) {
                     throw new Error('Error occured in socket while assigning selected driver');
                 }
                 socketEmit('dataChange');
+                socketEmit('driverAssigned');
             } catch (error) {
                 console.log(error);
             }
@@ -49,6 +50,7 @@ function socket(server) {
 
                 await findDriver(data);
                 socketEmit('dataChange');
+                socketEmit('driverAssigned');
             } catch (error) {
                 console.log(error);
             }

@@ -25,7 +25,7 @@ export class DriverListComponent implements OnInit {
   public driverDataList: any = [];
   public sideButtonTitle: string = "Add";
   private modalRef: NgbModalRef;
-  public p: any;
+  public p: any = 1;
   public totalRecordLength: number;
   
 
@@ -43,10 +43,6 @@ export class DriverListComponent implements OnInit {
     private _modalService: NgbModal,
     private _toastrService: ToastrService,
   ) { }
-
-  ngAfterViewInit() {
-    this.getDriverData();
-  }
 
   ngOnInit(): void {
     this.fillCountryDropDown();
@@ -67,17 +63,24 @@ export class DriverListComponent implements OnInit {
     })
   }
 
-  getDriverData(pageNumber: number = 0) {
+  ngAfterViewInit() {
+    this.getDriverData();
+  }
+
+  getDriverData() {
     let data: string = "";
     if (this.sideButtonTitle == "Add") {
-      data = (document.getElementById('searchDriver') as HTMLInputElement).value;
+      setTimeout(() => {
+        data = (document.getElementById('searchDriver') as HTMLInputElement).value;
+      }, 10);
     }
-    this._driverService.getDriverData(data, pageNumber).subscribe({
+    this._driverService.getDriverData(data, this.p-1).subscribe({
       next: (response) => {
         this.totalRecordLength = response.totalRecord;
         this.driverDataList = response.driver;
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while getting data", "");
         console.log(error);
       },
       complete: () => {}
@@ -87,9 +90,13 @@ export class DriverListComponent implements OnInit {
   fillCountryDropDown() {
     this._countryService.getCountry().subscribe({
       next: (response) => {
+        if (response.country.length == 0) {
+          return this._toastrService.info("Please add new countries", "No countries found");
+        }
         this.countryList = response.country;
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg, "Error occured while getting country data");
         console.log(error);        
       },
       complete: () => {}
@@ -99,10 +106,14 @@ export class DriverListComponent implements OnInit {
   fillCityDropDown(countryName: string) {
     this._cityService.getCityList(countryName).subscribe({
       next: (response) => {
+        if (response.city.length == 0) {
+          return this._toastrService.info("Please add cities for the country selected", "No cities");
+        }
         this.cityList = response.city;
       },
       error: (error) => {
         console.log(error);        
+        return this._toastrService.error(error.error.msg, "Error occured while getting city data");
       },
       complete: () => {}
     })
@@ -111,6 +122,9 @@ export class DriverListComponent implements OnInit {
   fillVehicleDropDown(cityId: string) {
     this._vehiclePricingService.getVehiclePricing(cityId).subscribe({
       next: (response) => {
+        if (response.vehiclePricing.length == 0) {
+          return this._toastrService.error("No vehicle type found.");
+        }
         this.serviceList = response.vehiclePricing;
       },
       error: (error) => {
@@ -130,6 +144,7 @@ export class DriverListComponent implements OnInit {
   addDriver() {
     if (this.driverForm.invalid == true) {
       this.driverForm.markAllAsTouched();
+      this._toastrService.warning("please enter valid information for adding new driver", "Invalid information");
       return
     }
 
@@ -144,9 +159,11 @@ export class DriverListComponent implements OnInit {
       next: (response) => {
         this.getDriverData();
         this.cancelDriver();
+        this._toastrService.success("Driver added successfully");
       },
       error: (error) => {
-        this.customErrMsg = error.error.message;
+        this._toastrService.error(error.error.msg, "Error occured while adding driver");
+        this.customErrMsg = error.error.msg;
       },
       complete: () => {}
     })
@@ -158,9 +175,11 @@ export class DriverListComponent implements OnInit {
       next: (response) => {
         this.getDriverData();
         this.cancelDriver();
+        this._toastrService.success("Driver updated successfully", "");
       },
       error: (error) => {
-        this.customErrMsg = error.error.message;
+        this._toastrService.error(error.error.msg, "Error occured while updating driver");
+        this.customErrMsg = error.error.msg;
         console.log(error);
       },
       complete: () => {}
@@ -174,9 +193,11 @@ export class DriverListComponent implements OnInit {
       next: (response) => {
         this.getDriverData();
         this.cancelDriver();
+        this._toastrService.success("Driver status updated successfully", "");
       },
       error: (error) => {
-        this.customErrMsg = error.error.message;
+        this._toastrService.error(error.error.msg, "Error occured while updating driver status");
+        this.customErrMsg = error.error.msg;
         console.log(error);
       },
       complete: () => {}
@@ -190,15 +211,16 @@ export class DriverListComponent implements OnInit {
     if (choice == false) {
       return;
     }
-    
+
     this._driverService.deleteDriver(id).subscribe({
       next: (response) => {
         this.getDriverData();
         this.cancelDriver();
+        this._toastrService.success("Driver deleted successfully", "");
       },
       error: (error) => {
-        this.customErrMsg = error.error.message;
-        console.log(error);        
+        this._toastrService.error(error.error.msg, "Error occured while deleting user");
+        this.customErrMsg = error.error.msg;
       },
       complete: () => {}
     })
@@ -233,14 +255,17 @@ export class DriverListComponent implements OnInit {
   searchDriver(data: string) {
     this._driverService.getDriverData(data).subscribe({
       next: (response) => {
+        if (response.driver.length === 0) {
+          return this._toastrService.info("there are no drivers to display", "No drivers")
+        }
         this.totalRecordLength = response.totalRecord;
         this.driverDataList = response.driver;
-        if (response.driver.length === 0) {
-          this._toastrService.info("there are no drivers to display", "No drivers")
-        }
+        this.p = 1
+        this._toastrService.success("Data found successfully", "");
       },
       error: (error) => {
-        console.log(error);        
+        this._toastrService.error(error.error.msg || "Error occured while getting data", "");
+        console.log(error);
       },
       complete: () => {}
     })
@@ -315,13 +340,22 @@ export class DriverListComponent implements OnInit {
     this._driverService.editDriver(driverId, driverFormData).subscribe({
       next: (response) => {
         this.modalRef.close();
-        this.getDriverData();        
+        this.getDriverData();
+        this._toastrService.success("Driver service type updated successfully");
       },
       error: (error) => {
-        console.log(error);        
+        this._toastrService.error("Error occured while updating service type", "");
+        console.log(error);
       },
       complete: () => {}
     })
     
+  }
+
+  scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 }

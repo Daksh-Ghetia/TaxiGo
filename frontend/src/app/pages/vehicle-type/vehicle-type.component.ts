@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { VehicleTypeService } from 'src/app/shared/vehicle-type.service';
 
 @Component({
@@ -9,7 +10,10 @@ import { VehicleTypeService } from 'src/app/shared/vehicle-type.service';
 })
 export class VehicleTypeComponent implements OnInit {
 
-  constructor(private _vehicleTypeService: VehicleTypeService) { }
+  constructor(
+    private _vehicleTypeService: VehicleTypeService,
+    private _toastrService: ToastrService
+  ) { }
 
   title: string = "Add";
   reactiveForm: FormGroup;
@@ -29,15 +33,24 @@ export class VehicleTypeComponent implements OnInit {
   /**Get the details of all the vehicles */
   getVehicleType() {
     /**Call the service and subscribe to the data change */
-    this._vehicleTypeService.getVehicleType().subscribe((response) => {      
-      this.vehicles = response.vehicle;
+    this._vehicleTypeService.getVehicleType().subscribe({
+      next: (response) => {      
+        if (response.vehicle.legth == 0) {
+          return this._toastrService.info("No vehicle type to display")
+        }
+        this.vehicles = response.vehicle;
+      },
+      error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while getting data");
+      }
     })
   }
 
   /**Delete the vehicle type*/
   deleteVehicleType(id: string) {
     /**Call the service for deleting the vehicle type */
-    this._vehicleTypeService.deleteVehicleType(id).subscribe((response) => {
+    this._vehicleTypeService.deleteVehicleType(id).subscribe(
+      (response) => {
       this.getVehicleType();
     })
   }
@@ -52,6 +65,7 @@ export class VehicleTypeComponent implements OnInit {
     if (this.reactiveForm.invalid === true) {
       this.reactiveForm.get('vehicleName').markAsDirty();
       this.reactiveForm.get('vehicleIcon').markAsTouched();
+      this._toastrService.warning("Please enter valid details", "Invalid details");
       return console.log("Invalid form details");
     }
     
@@ -64,6 +78,7 @@ export class VehicleTypeComponent implements OnInit {
         this.cancelAction();
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while adding vehicle type");
         this.customErrMsg = error.error.msg;
         console.log(error);
       },
@@ -73,6 +88,7 @@ export class VehicleTypeComponent implements OnInit {
 
   editVehicleType() {
     if (this.updateId === "" || this.reactiveForm.get('vehicleName').value == "") {
+      this._toastrService.warning("Please enter valid details", "Invalid details");
       return console.log("invalidUpdata");
     }    
 
@@ -80,11 +96,11 @@ export class VehicleTypeComponent implements OnInit {
     const formData = new FormData(vehicleAddForm);
     this._vehicleTypeService.editVehicleType(this.updateId, formData).subscribe({
       next: (response) => {
-        console.log(response);
         this.getVehicleType();
         this.cancelAction();
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while updating vehicle type");
         console.log(error);
       },
       complete: () => {}
@@ -117,6 +133,5 @@ export class VehicleTypeComponent implements OnInit {
       top: 0,
       behavior: 'smooth'
     });
-  }
-  
+  }  
 }

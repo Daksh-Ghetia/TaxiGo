@@ -109,6 +109,7 @@ export class CreateRideComponent implements OnInit {
             rideCustomerName: response.user[0].userName,
             rideCustomerEmail: response.user[0].userEmail,
           })
+          this._toastrService.success("User found");
         } else {
           this.createRideForm.get('rideCustomerName').reset();
           this.createRideForm.get('rideCustomerEmail').reset();

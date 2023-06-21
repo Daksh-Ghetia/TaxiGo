@@ -250,7 +250,7 @@
                     <td>{{vehiclePricing.pricePerUnitTime}}</td>
                     <td>{{vehiclePricing.maxSpace}}</td>
                     <td >
-                      <button class="btn btn-info" [id]="vehiclePricing._id" (click)="fillDataForEdit(vehiclePricing)">Edit</button>
+                      <button class="btn btn-info" [id]="vehiclePricing._id" (click)="fillDataForEdit(vehiclePricing); scrollToTop();">Edit</button>
                       <button class="btn btn-danger" [id]="vehiclePricing._id" (click)="deleteVehiclePricing($event.target.id)">Delete</button>
                     </td>
                   </tr>

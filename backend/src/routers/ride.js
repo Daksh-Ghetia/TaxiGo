@@ -121,7 +121,7 @@ router.post('/ride/getRideDetails', auth, upload.none(),async (req, res) => {
 
         /**Find all the ride data and if not found return no data to display*/
         let ride = await Ride.aggregate(pipeline);
-        if (!ride) {
+        if (ride.length == 0) {
             return res.status(404).send({msg: "No ride to display", status: "failed"});
         }
 

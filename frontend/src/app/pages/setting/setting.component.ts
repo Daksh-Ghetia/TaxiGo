@@ -11,7 +11,6 @@ import { SettingService } from 'src/app/shared/setting.service';
 export class SettingComponent implements OnInit {
 
   public settingForm: FormGroup;
-  public customErrMsg: string = '';
   public timeCountList: any = [10,20,30,45,60,90,120];
   public stopCountList: any = [1,2,3,4,5];
   private id: string;
@@ -53,8 +52,7 @@ export class SettingComponent implements OnInit {
         });
       },
       error: (error) => {
-        this._toastrService.error("Error while getting the data");
-        this.customErrMsg = error.error.message
+        this._toastrService.error(error.error.msg || "Error while getting the data");
       },
       complete: () => {}
     })
@@ -80,7 +78,6 @@ export class SettingComponent implements OnInit {
       },
       error: (error) => {
         this._toastrService.error("Error while updating the data","");
-        this.customErrMsg = error.error.msg;
       },
       complete: () => {}
     })

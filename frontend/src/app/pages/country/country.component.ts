@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { CountryService } from 'src/app/shared/country.service';
 
 @Component({
@@ -19,7 +20,10 @@ export class CountryComponent implements OnInit {
   public customErrMsg: string;
   public focus : any;
 
-  constructor(private _countryService : CountryService) { }
+  constructor(
+    private _countryService : CountryService,
+    private _toastrService: ToastrService
+  ) { }
 
   ngOnInit(): void {
     this.getCountryDropDownData();
@@ -75,9 +79,9 @@ export class CountryComponent implements OnInit {
     this._countryService.getCountry().subscribe({
       next: (response) => {
         this.countryList = response.country;
-        console.log(this.countryList);
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while getting the data");
         this.customErrMsg = error.error.msg;
       },
       complete: () => {}
@@ -87,6 +91,7 @@ export class CountryComponent implements OnInit {
   addCountryData() {
     if (this.reactiveForm.invalid === true) {
       this.customErrMsg = "Please select a country to add."
+      this._toastrService.warning("Please select a country to add.");
       return;
     }
 
@@ -101,6 +106,7 @@ export class CountryComponent implements OnInit {
       formData.append('countryFlag', this.selectedCountry.flags.png);
       formData.append('countryIcon', this.selectedCountry.flag);
     } else {
+      this._toastrService.error("Can not add country due to insufficient data");
       return this.customErrMsg = "Can not add country due to insufficient data";
     }
 
@@ -110,6 +116,7 @@ export class CountryComponent implements OnInit {
         this.cancel();
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while adding country");
         this.customErrMsg = error.error.msg;
       },
       complete: () => {}

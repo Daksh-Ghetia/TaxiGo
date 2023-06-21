@@ -153,13 +153,14 @@ router.get('/driver/getDriverDetails', auth, async (req, res) => {
 
         /**Find all the driver data and if not found return no data to display*/
         let driver = await Driver.aggregate(pipeline);
-        if (!driver) {
+        if (driver.length <= 0) {
             return res.status(404).send({msg: "No driver to display", status: "failed"});
         }
-
+        
         /**If data found send the data */
         res.status(200).send({driver: driver[0].paginatedData, totalRecord: driver[0].totalCount, msg: 'Driver found', status: "success"});
     } catch (error) {
+        console.log(error);
         res.status(500).send({msg: "Error occured while getting data of driver", status: "failed", error: error});
     }
 })
@@ -190,11 +191,11 @@ router.post('/driver/addDriver', auth, handleUpload, async (req,res) => {
         if (error.errors && error.errors.driverEmail) {
             res.status(400).send({msg: error.errors.driverEmail.message, status: "failed", error: error});
         } else if (error.errors && error.errors.driverPhone) {
-            res.status(400).send({message: error.errors.driverPhone.message, status: "failed", error: error});
+            res.status(400).send({msg: error.errors.driverPhone.message, status: "failed", error: error});
         } else if (error.keyValue && error.keyValue.driverEmail) {
-            res.status(400).send({message: "Email is already registered", status: "failed", error: error})
+            res.status(400).send({msg: "Email is already registered", status: "failed", error: error})
         } else if (error.keyValue && error.keyValue.driverPhone) {
-            res.status(400).send({message: 'phone number is already registered', status: "failed", error: error})
+            res.status(400).send({msg: 'phone number is already registered', status: "failed", error: error})
         } else {
             res.status(500).send({msg: "Server error while adding Driver", status: "failed", error: error});
         }
@@ -247,11 +248,11 @@ router.patch('/driver/editDriver/:id', auth, handleUpload, async(req,res) => {
         if (error.errors && error.errors.driverEmail) {
             res.status(400).send({msg: error.errors.driverEmail.message, status: "failed", error: error});
         } else if (error.errors && error.errors.driverPhone) {
-            res.status(400).send({message: error.errors.driverPhone.message, status: "failed", error: error});
+            res.status(400).send({msg: error.errors.driverPhone.message, status: "failed", error: error});
         } else if (error.keyValue && error.keyValue.driverEmail) {
-            res.status(400).send({message: "Email is already registered", status: "failed", error: error})
+            res.status(400).send({msg: "Email is already registered", status: "failed", error: error})
         } else if (error.keyValue && error.keyValue.driverPhone) {
-            res.status(400).send({message: 'phone number is already registered', status: "failed", error: error})
+            res.status(400).send({msg: 'phone number is already registered', status: "failed", error: error})
         } else {
             res.status(500).send({msg: "Server error while adding Driver", status: "failed", error: error});
         }

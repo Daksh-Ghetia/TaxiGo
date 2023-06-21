@@ -41,12 +41,11 @@ export class UserComponent implements OnInit {
   constructor(
     private _countryService: CountryService,
     private _userService: UserService,
-    private _toasterService: ToastrService,
+    private _toastrService: ToastrService,
     private _modalService: NgbModal,
   ) { }
 
   async ngOnInit() {
-    // this.getUserData();
     this.fillCountryDropDown();
     await this.loadStripe();
 
@@ -68,9 +67,13 @@ export class UserComponent implements OnInit {
   fillCountryDropDown() {
     this._countryService.getCountry().subscribe({
       next: (response) => {
+        if (response.country.length == 0) {
+          return this._toastrService.warning("No countries to display");
+        }
         this.countryList = response.country;
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while getting country data")
         console.log(error);        
       },
       complete: () => {}
@@ -87,7 +90,9 @@ export class UserComponent implements OnInit {
   getUserData() {
     let data: string = "";
     if (this.sideButtonTitle == "Add") {
-      data = (document.getElementById('searchUser') as HTMLInputElement).value;
+      setTimeout(() => {
+        data = (document.getElementById('searchUser') as HTMLInputElement).value;
+      }, 10);
     }
     this._userService.getUserData(data, this.p-1).subscribe({
       next: (response) => {
@@ -95,11 +100,12 @@ export class UserComponent implements OnInit {
           this.userDataList = response.user;
           this.totalRecordLength = response.totalRecord;
         } else {
-          return this._toasterService.info("No user found to display, please add new user to view data", "User not found");
+          this._toastrService.info("No user found to display, please add new user to view data", "User not found");
         }
       },
       error: (error) => {
-        console.log(error);        
+        this._toastrService.error(error.error.msg || "Error occured while getting user data");
+        console.log(error);
       },
       complete: () => {}
     })
@@ -108,7 +114,7 @@ export class UserComponent implements OnInit {
   addUser() {
     if (this.userForm.invalid == true) {
       this.userForm.markAllAsTouched();
-      return
+      return this._toastrService.warning("Invalid details to add user", "");
     }
 
     const userForm = (document.getElementById('user') as HTMLFormElement);
@@ -116,15 +122,17 @@ export class UserComponent implements OnInit {
 
     if (this.actionButton == "Edit") {
       return this.editUser(userFormData);
-    }    
+    }
 
     this._userService.addNewUser(userFormData).subscribe({
       next: (response) => {
         this.getUserData();
         this.cancelUser();
+        this._toastrService.success("User added successfully");
       },
       error: (error) => {
-        this.customErrMsg = error.error.message;
+        this._toastrService.error(error.error.msg || "Error occured while adding new user");
+        this.customErrMsg = error.error.msg;
       },
       complete: () => {}
     })
@@ -138,9 +146,6 @@ export class UserComponent implements OnInit {
   }
 
   fillDataForEdit(data: any) {
-    this.sideButtonTitle = "Search";
-    this.actionButton = "Edit";
-
     setTimeout(() => {
       this.selectedCountryCode = data.driverCountryCode;
       this.userForm.patchValue({
@@ -153,6 +158,8 @@ export class UserComponent implements OnInit {
       (document.getElementById('editUserId') as HTMLElement).textContent = data._id;
     }, 100);
     
+    this.sideButtonTitle = "Search";
+    this.actionButton = "Edit";
   }
 
   editUser(editFormData: any) {
@@ -161,9 +168,11 @@ export class UserComponent implements OnInit {
       next: (response) => {
         this.getUserData();
         this.cancelUser();
+        this._toastrService.success("User updated sucessfully");
       },
       error: (error) => {
-        this.customErrMsg = error.error.message;
+        this._toastrService.error(error.error.msg || "Error occured while updating user");
+        this.customErrMsg = error.error.msg;
         console.log(error);        
       },
       complete: () => {}
@@ -181,9 +190,11 @@ export class UserComponent implements OnInit {
       next: (response) => {
         this.getUserData();
         this.cancelUser();
+        this._toastrService.success("User deleted successfully");
       },
       error: (error) => {
-        this.customErrMsg = error.error.message;
+        this._toastrService.error(error.error.msg || "Error occured while deleting user");
+        this.customErrMsg = error.error.msg;
         console.log(error);        
       },
       complete: () => {}
@@ -202,12 +213,14 @@ export class UserComponent implements OnInit {
           this.userDataList = response.user;
           this.totalRecordLength = response.totalRecord;
           this.p = 1
+          this._toastrService.success("Data found successfully");
         } else {
           this.userDataList = [];
-          return this._toasterService.info("No user found to display, please add new user to view data", "User not found");
+          return this._toastrService.info("No user found to display, please add new user to view data", "User not found");
         }
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while searching for data");
         console.log(error);        
       },
       complete: () => {}
@@ -297,9 +310,9 @@ export class UserComponent implements OnInit {
     
         /**If the error occured while confirming setup then display error */
         if (error) {
-          this._toasterService.error("Error occured while adding card", "Error occured");
+          this._toastrService.error("Error occured while adding card", "Error occured");
         } else {
-          this._toasterService.success("Card added successfully", "Card Added");
+          this._toastrService.success("Card added successfully", "Card Added");
         }
       },
       error: (error) => {
@@ -330,11 +343,11 @@ export class UserComponent implements OnInit {
     this._userService.setDefaultCard(this.customerDetails.id, this.selectedCardId).subscribe({
       next: (response) => {
         console.log(response);
-        this._toasterService.success("Your default card payment has been updated successfully","Card Updated")
+        this._toastrService.success("Your default card payment has been updated successfully","Card Updated")
       },
       error: (error) => {
         console.log(error);
-        this._toasterService.success("Error occured while updating default card","Card Updated failed");
+        this._toastrService.error("Error occured while updating default card","Card Updated failed");
       },
       complete: () => {}
     })
@@ -344,11 +357,11 @@ export class UserComponent implements OnInit {
   async deleteCard(cardId: string) {
     this._userService.deleteCard(cardId).subscribe({
       next: (response) => {
-        this._toasterService.success("Your card has been deleted successfully", "Card deleted");
         this.getCardDetails(this.customerDetails.id);
+        this._toastrService.success("Your card has been deleted successfully", "Card deleted");
       },
       error: (error) => {
-        this._toasterService.error("Error occured while deleting card", "Error");
+        this._toastrService.error("Error occured while deleting card", "Error");
       },
       complete: () => {}
     })
@@ -361,5 +374,12 @@ export class UserComponent implements OnInit {
 
   async loadStripe() {
     this.Stripe = await loadStripe('pk_test_51NBdBuEF3TbQVrFuugu1BAMWKX2oAVuoC5bpR0io2v4gVjcknbVI6zFqHCYhwDVuWSSxuTxrBldguWrZuVXns8oz00M1WV7P5h');
-  }  
+  }
+
+  scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
 }

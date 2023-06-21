@@ -4,10 +4,9 @@
             <h1 class="text-white">Confirmed Ride</h1>
         </div>
 
-
         <div class="row">
           <div class="col-xl-12">
-              <form id="confirmRideFilter" [formGroup]="confirmRideFilter" class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-auto" >
+              <form [formGroup]="rideFilter" class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-auto" >
                 <div class="form-group mb-0" [ngClass]="{ 'focused': focus === true }" >
                   <!-- <label for="vehicleName" class="text-white mr-2">Search Ride <span class="text-white ml-1">:</span> </label> -->
                   <div class="input-group input-group-alternative">
@@ -33,7 +32,6 @@
                     </select>
                   </div>
                 </div>
-
 
                 <div class="form-group mb-0 ml-2" [ngClass]="{ 'focused': focus === true }" >
                   <!-- <label for="vehicleName" class="text-white mr-2">Search Ride <span class="text-white ml-1">:</span> </label> -->
@@ -75,7 +73,7 @@
                 </div>
               </form>
           </div>
-      </div>
+        </div>
     </div>
 </div>
 

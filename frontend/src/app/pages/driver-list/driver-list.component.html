@@ -225,7 +225,7 @@
                         <img *ngIf="!driver.driverProfile" src="http://localhost:3000/driverImages/defaultImage.png" alt="Driver profile default" height="60px" >
                     </td>
                     <td>
-                      <button class="btn btn-info"  (click)="fillDataForEdit(driver)">Edit</button>
+                      <button class="btn btn-info"  (click)="fillDataForEdit(driver); scrollToTop()">Edit</button>
                       <button class="btn btn-danger" [id]="driver._id" (click)="deleteDriver($event.target.id)">Delete</button>
                     </td>
                   </tr>
@@ -238,7 +238,7 @@
             <div class="card-footer py-4">
               <nav aria-label="...">
                 <ul class="pagination justify-content-center mb-0">
-                  <pagination-controls (pageChange)="p = $event; getDriverData($event-1)"></pagination-controls>
+                  <pagination-controls (pageChange)="p = $event; getDriverData()"></pagination-controls>
                   <!-- <li class="page-item disabled">
                     <a class="page-link" href="javascript:void(0)" tabindex="-1">
                       <i class="fas fa-angle-left"></i>

@@ -186,7 +186,7 @@
                       <img src="assets/img/icons/editVehicleServiceType.png" alt="editVehicleType" height="40px" width="40px"> -->
                     </td>
                     <td>
-                      <button class="btn btn-info" [id]="user._id" (click)="fillDataForEdit(user)">Edit</button>
+                      <button class="btn btn-info" [id]="user._id" (click)="fillDataForEdit(user); scrollToTop()">Edit</button>
                       <button class="btn btn-danger" [id]="user._id" (click)="deleteUser($event.target.id)">Delete</button>
                     </td>
                   </tr>

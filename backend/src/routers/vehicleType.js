@@ -75,7 +75,7 @@ router.get('/vehicle/getVehicleDetails', auth, async (req, res) => {
     try {
         /**Find all the vehicle data and if not found return data to display*/
         let vehicle = await VehicleType.find({});
-        if (!vehicle) {
+        if (vehicle.length == 0) {
             return res.status(404).send({msg: "No vehicle type to display", status: "failed"});
         }
 

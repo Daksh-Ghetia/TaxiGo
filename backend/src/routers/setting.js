@@ -13,7 +13,7 @@ router.get('/setting/getSettingDetails', auth, async (req, res) => {
     try {
         /**Find all the setting data and if not found return no data to display*/
         let setting = await Setting.find({});
-        if (!setting) {
+        if (setting.length == 0) {
             return res.status(404).send({msg: "No setting data to display", status: "failed"});
         }
 

@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { RideService } from 'src/app/shared/ride.service';
+import { VehicleTypeService } from 'src/app/shared/vehicle-type.service';
+import { saveAs } from 'file-saver';
+import * as Papa from 'papaparse';
 
 @Component({
   selector: 'app-ride-history',
@@ -13,11 +17,15 @@ export class RideHistoryComponent implements OnInit {
   constructor(
     private _rideService: RideService,
     private _toastrService: ToastrService,
-    private _modalService: NgbModal
+    private _modalService: NgbModal,
+    private _vehicleTypeService: VehicleTypeService
   ) { }
 
   public rideDataList: any = [];
   public fullRideData: any = [];
+  public vehicleTypeList: any = [];
+  public rideFilter: FormGroup;
+  public focus:any;
 
   private modalRef: NgbModalRef;
 
@@ -28,11 +36,28 @@ export class RideHistoryComponent implements OnInit {
   private wayPts: google.maps.DirectionsWaypoint[] = [];
 
   ngOnInit(): void {
+    this.rideFilter = new FormGroup({
+      rideSearchData: new FormControl(null, []),
+      rideStatus: new FormControl(null, []),
+      rideVehicleType: new FormControl(null, []),
+      rideFromDate: new FormControl(null, []),
+      rideToDate : new FormControl(null, []),
+    })
+  }
+
+  ngAfterViewInit() {
     this.getRideData();
   }
 
   getRideData() {
-    this._rideService.getRideData([0,7]).subscribe({
+    const rideFilterData = {
+      rideSearchData: this.rideFilter.get('rideSearchData').value || "null",
+      rideStatus: this.rideFilter.get('rideStatus').value || "null",
+      rideVehicleType: this.rideFilter.get('rideVehicleType').value || "null",
+      rideFromDate: this.rideFilter.get('rideFromDate').value || "null",
+      rideToDate: this.rideFilter.get('rideToDate').value || "null"
+    }
+    this._rideService.getRideData([0,7],rideFilterData).subscribe({
       next: (response) => {
         if (response.ride.length <= 0) {
           return this._toastrService.info("Currently there are no rides to display", "")
@@ -42,6 +67,21 @@ export class RideHistoryComponent implements OnInit {
       error: (error) => {
         console.log(error);
       },
+      complete: () => {}
+    })
+  }
+
+  cancelSearch() {
+    this.rideFilter.reset();
+    this.getRideData();
+  }
+
+  getVehicalTypeList() {
+    this._vehicleTypeService.getVehicleType().subscribe({
+      next: (response) => {
+        this.vehicleTypeList = response.vehicle;
+      },
+      error: (error) => {console.log(error);},
       complete: () => {}
     })
   }
@@ -94,5 +134,34 @@ export class RideHistoryComponent implements OnInit {
     .catch((error) => {
       this.directionsRenderer.setDirections({routes: []});
     });
+  }
+
+  downloadData() {
+    const rideFilterData = {
+      rideSearchData: this.rideFilter.get('rideSearchData').value || "null",
+      rideStatus: this.rideFilter.get('rideStatus').value || "null",
+      rideVehicleType: this.rideFilter.get('rideVehicleType').value || "null",
+      rideFromDate: this.rideFilter.get('rideFromDate').value || "null",
+      rideToDate: this.rideFilter.get('rideToDate').value || "null"
+    }
+    this._rideService.getRideData(null, rideFilterData).subscribe({
+      next: (response) => {
+        if (response.ride.length <= 0) {
+          return this._toastrService.info("Currently there are no rides to download", "");
+        }
+
+        const stringifiedArray = response.ride.map((item: any) => {
+          for (const key in item) {
+            if (typeof item[key] === 'object') {
+              item[key] = JSON.stringify(item[key]);
+            }
+          }
+          return item;
+        });
+        const csv = Papa.unparse(stringifiedArray);
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+        saveAs(blob, 'tableData.csv');
+      }
+    })
   }
 }

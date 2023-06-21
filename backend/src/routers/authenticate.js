@@ -39,9 +39,9 @@ router.post('/admin/login', async (req,res) => {
             return res.status(200).send({msg: "User not found"})
         }
         const token = await admin.generateAuthToken();
-        res.send({admin, token, msg: 'Authentication successful'})
+        res.status(200).send({admin, token, msg: 'Authentication successful'})
     } catch (error) {
-        res.status(200).send({msg: 'Authentication failed', error: error})
+        res.status(500).send({msg: 'Authentication failed', error: error})
     }
 })
 
