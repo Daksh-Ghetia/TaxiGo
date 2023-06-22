@@ -109,7 +109,7 @@ router.post('/vehiclePricing/addVehiclePricing', auth, upload.none(), async (req
         /**Check if the vehicle type is registered  inside country and city or not, if registered don't save the data and revert back*/
         let checkClone = await VehiclePricing.find({countryId: req.body.countryId, cityId: req.body.cityId, vehicleTypeId: req.body.vehicleTypeId})
         if (checkClone.length > 0) {
-            return res.status(400).send({msg: "Vehicle type is already registered for city ", status: "failed"});
+            return res.status(400).send({msg: "Vehicle pricing for this type is already registered for city ", status: "failed"});
         }
 
         /**Create a new instance of type vehiclePricing and save it to database*/

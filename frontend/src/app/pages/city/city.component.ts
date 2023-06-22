@@ -104,7 +104,7 @@ export class CityComponent implements OnInit {
     this.initAutoComplete();
   }
 
-  handleCountryChange(countryId: string = "") {    
+  handleCountryChange(countryId: string = "") {
     const selectedCountry = this.countryList.find(country => countryId === country._id)
     this._countryService.getSingleCountryData(selectedCountry.countryName).subscribe({
       next: (response) => {
@@ -202,21 +202,21 @@ export class CityComponent implements OnInit {
       }      
 
       /**When user click on the map
-       * if the map is inside the polygon then execute the following sequence
+       * if the click is inside the polygon then execute the following sequence
        * else set the polygon as noneditable and also close any open infoWindow
        */
       if (google.maps.geometry.poly.containsLocation(event.latLng, poly)) {
         /**Make the polygon editable and set editable polygon value to current polygon*/
         poly.setEditable(true);
         this.editablePolygon = poly;
-        this.handleCountryChange(city.countryId);
+        
 
         /**get the bounds of curent polygon and get the center point   */
         const bounds = new google.maps.LatLngBounds();
         city.cityLatLng.forEach((point) => bounds.extend(point));
         const center = bounds.getCenter();
 
-        /**Set the content of the infowindow that should be displayed */        
+        /**Set the content of the infowindow that should be displayed */
         const content = `
           <div class="info-window-content">
             <label for="countryName" class="info-window-label">Country Name <span class="info-window-colon">:</span></label>
@@ -307,20 +307,13 @@ export class CityComponent implements OnInit {
 
           /**Delete */
           document.getElementById("cancelCity").addEventListener("click", () => {
-          //   let cityId =  (document.getElementById('cityId') as HTMLInputElement).value;
-          //   this._cityService.deleteCity(cityId).subscribe({
-          //     next: (response) => {
-          //       this.resetMap();
-          //       this.getCity();
-          //     }
-          //   })
             this.resetMap();
           });
 
           this.autocomplete = new google.maps.places.Autocomplete(document.getElementById('cityNameEdit') as HTMLInputElement, {
             types: ['(cities)']
           })
-          
+          this.handleCountryChange(city.countryId);
           document.getElementById('editCity').addEventListener("click", () => {
             let cityId =  (document.getElementById('cityId') as HTMLInputElement).value;
 
@@ -335,6 +328,7 @@ export class CityComponent implements OnInit {
                 this.resetMap();
               },
               error: (error) => {
+                this._toastrService.error(error.error.msg || "Error occured while updating city");
                 console.log(error);
               },
               complete: () => {}

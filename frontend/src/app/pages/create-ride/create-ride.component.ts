@@ -113,9 +113,11 @@ export class CreateRideComponent implements OnInit {
         } else {
           this.createRideForm.get('rideCustomerName').reset();
           this.createRideForm.get('rideCustomerEmail').reset();
-          this._toastrService.error('User is not allowed to book a ride', "");
         }
       },
+      error: (error) => {
+        this._toastrService.error('User is not allowed to book a ride', "");
+      }
     })
   }
 

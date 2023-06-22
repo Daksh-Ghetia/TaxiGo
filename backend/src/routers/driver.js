@@ -4,6 +4,7 @@ const auth = require('../middleware/authentication');
 const { ObjectId } = require('mongodb');
 const multer = require('multer');
 const fs = require('fs');
+const mail = require('./mail');
 
 const router = new express.Router();
 
@@ -160,7 +161,6 @@ router.get('/driver/getDriverDetails', auth, async (req, res) => {
         /**If data found send the data */
         res.status(200).send({driver: driver[0].paginatedData, totalRecord: driver[0].totalCount, msg: 'Driver found', status: "success"});
     } catch (error) {
-        console.log(error);
         res.status(500).send({msg: "Error occured while getting data of driver", status: "failed", error: error});
     }
 })
@@ -178,6 +178,7 @@ router.post('/driver/addDriver', auth, handleUpload, async (req,res) => {
         }
         await driver.save()
 
+        mail.sendMail(driver.driverEmail, "Registration successfull", `Congratulations ${driver.driverName}, you have successfully registered for TaxiGo as a driver, you will be assigned with a service by the admin shortly.`);
         /**Revert back to the admin stating driver added successfully */
         return res.status(200).send({driver: driver, msg: "Driver added successfully", status: "success"});
     } catch (error) {
@@ -187,7 +188,6 @@ router.post('/driver/addDriver', auth, handleUpload, async (req,res) => {
             }
         }
 
-        console.log(error);
         if (error.errors && error.errors.driverEmail) {
             res.status(400).send({msg: error.errors.driverEmail.message, status: "failed", error: error});
         } else if (error.errors && error.errors.driverPhone) {

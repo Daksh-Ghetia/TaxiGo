@@ -5,6 +5,7 @@ const { ObjectId } = require('mongodb');
 const multer = require('multer');
 const paymentGateway = require('./paymentGateway');
 const fs = require('fs');
+const mail = require('./mail');
 
 const router = new express.Router();
 
@@ -35,10 +36,6 @@ const upload = multer({
 const handleUpload = async(req, res, next) => {
     try {
         upload(req, res, (error) => {
-            if (!req.file) {
-                return next();
-            }
-
             /**If error thrown by multer then catch it and display it over here 
              * Else if the error is defined by developer then show that error
             */
@@ -46,6 +43,10 @@ const handleUpload = async(req, res, next) => {
                 return res.status(500).send({msg: "File size greater than 10MB", status: "failed" ,error: error});
             } else if (error) {
                 return res.status(500).send({msg: "Only .jpg, .jpeg, .png allowed", status: "failed", error: error});
+            }
+
+            if (!req.file) {
+                return next();
             }
 
             /**Update the updated name of file to the body */
@@ -158,8 +159,9 @@ router.post('/user/addUser', auth, handleUpload, async (req,res) => {
         if (!user) {
             return res.status(404).send({msg: "No data found while adding user", status: "failed"})
         }
-        await user.save()
+        await user.save();
 
+        mail.sendMail(user.userEmail, "Registration successfull", `Congratulations ${user.userName}, you have successfully registered for TaxiGo`);
         /**Revert back to the user stating user added successfully */
         return res.status(200).send({user: user, msg: "User added successfully", status: "success"});
     } catch (error) {

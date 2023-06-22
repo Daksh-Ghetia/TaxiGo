@@ -35,12 +35,12 @@
 </div>
 <div class="container-fluid mt--7">
     <!-- Form -->
-    <div class="col-xl-12">
-        <form id="user" [formGroup]="userForm" *ngIf="sideButtonTitle == 'Search' ">
-            <table>
+    <div class="col-xl-12 ">
+        <form class="formBackground" id="user" [formGroup]="userForm" *ngIf="sideButtonTitle == 'Search' ">
+            <table class="m-3">
                 <!-- UserName -->
                 <tr>
-                    <td class="label-input text-white">User Name:</td>
+                    <td class="label-input">User Name:</td>
                     <td>
                         <input class="user-input" formControlName="userName" type="text" name="userName" id="userName" placeholder="User Name">
                         <br>

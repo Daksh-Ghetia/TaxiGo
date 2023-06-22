@@ -65,6 +65,9 @@ router.post('/city/AddNewCity', auth, upload.none(), async (req,res) => {
         /**Revert back to the user stating city added successfully */
         return res.status(200).send({city: city, msg: "City Added successfuly", status: "success"});
     } catch (error) {
+        if (error.keyValue && error.keyValue.cityName) {
+            return res.status(400).send({msg: 'City name is already registered', status: "failed", error: error});
+        }
         res.status(500).send({msg: "Server error while adding city", status: "failed", error: error});
     }
 })
@@ -94,6 +97,9 @@ router.patch('/city/editCity/:id', auth, upload.none(), async (req,res) => {
 
         res.status(200).send({msg: "City edit success", city, status: "success"});
     } catch (error) {
+        if (error.keyValue && error.keyValue.cityName) {
+            return res.status(400).send({msg: 'City name is already registered', status: "failed", error: error});
+        }
         res.status(500).send({msg: "Error occured while updating the city", error: error,status: "failed"});
     }
 })

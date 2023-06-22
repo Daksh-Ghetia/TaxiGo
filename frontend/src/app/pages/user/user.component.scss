@@ -47,4 +47,11 @@
 .scrollable-content {
     max-height: 200px; 
     overflow-y: auto;
-  }
+}
+
+.formBackground {
+    border: 1px solid rgba(0, 0, 0, .05);
+    border-radius: .375rem;
+    background-color: #fff;
+    background-clip: border-box;
+}

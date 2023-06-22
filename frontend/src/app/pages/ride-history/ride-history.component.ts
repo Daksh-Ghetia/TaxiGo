@@ -26,6 +26,8 @@ export class RideHistoryComponent implements OnInit {
   public vehicleTypeList: any = [];
   public rideFilter: FormGroup;
   public focus:any;
+  public p: number;
+  public totalRecordLength: number;
 
   private modalRef: NgbModalRef;
 
@@ -47,6 +49,7 @@ export class RideHistoryComponent implements OnInit {
 
   ngAfterViewInit() {
     this.getRideData();
+    this.getVehicalTypeList();
   }
 
   getRideData() {
@@ -63,6 +66,7 @@ export class RideHistoryComponent implements OnInit {
           return this._toastrService.info("Currently there are no rides to display", "")
         }
         this.rideDataList = response.ride;
+        this.totalRecordLength = response.ride.length;
       },
       error: (error) => {
         console.log(error);

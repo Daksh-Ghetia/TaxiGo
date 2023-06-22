@@ -9,12 +9,13 @@
 <div class="container-fluid mt--7">
     <!-- Form -->
     <div class="col-xl-12">
-        <div class="row">
-            <form id="createRide" [formGroup]="createRideForm">
+        <div class="row formBackground">
+            <h3 class="col-12 mt-3 ml-3">Create Ride</h3>
+            <form class="mt-3 mb-3 ml-3" id="createRide" [formGroup]="createRideForm">
                 <table col-xl-9>
                     <!-- Create Ride -->
                     <tr>
-                        <td class="label-input text-white">Phone number:</td>
+                        <td class="label-input">Phone number:</td>
                         <td>
                             <input class="createRide-input" formControlName="rideCustomerPhone" type="number" name="rideCustomerPhone" id="rideCustomerPhone" placeholder="10 digit phone number" onKeyPress="if(this.value.length==10) return false;">
                             <br>
@@ -75,7 +76,7 @@
                                 <strong *ngIf="createRideForm.get('rideIntermediateStops')['controls'][i].invalid && createRideForm.get('rideIntermediateStops')['controls'][i].touched">Please add a stop</strong>
                             </td>
                         </tr>
-                    </ng-container>                    
+                    </ng-container>
                     <!-- Drop Locatin -->
                     <div class="mt-3"></div>
                     <tr>
@@ -148,16 +149,16 @@
                         <td></td>
                         <td>
                             <div class="scrollable-content">
-                                <ul>
+                                <!-- <ul> -->
                                     <div *ngFor="let card of cardDetails">
                                         <div style="width: 14rem;" class="mt-1">
-                                            <li>
+                                            <!-- <li> -->
                                                 <input type="radio" formControlName="ridePaymentCardId" [value]="card.id" [checked]="card.id === customerDetails.invoice_settings.default_payment_method" >
                                                 XXXX-XXXX-{{card.card.last4}}
-                                            </li>
+                                            <!-- </li> -->
                                         </div>
                                     </div>
-                                </ul>
+                                <!-- </ul> -->
                             </div>
                         </td>
                     </tr>
@@ -172,10 +173,10 @@
                     </tr>
                 </table>
             </form>
-            <div class="col-4">
-                <div class="border border mt-3 ml-9 text-center full" id="map"></div>
+            <div class="col-4 mt-3">
+                <div class="border border ml-9 text-center full" id="map"></div>
                 <br><br>
-                <table class=" ml-9 full" *ngIf="createRideForm.get('ridePickUpLocation').valid">
+                <table class=" ml-9 mb-3 full" *ngIf="createRideForm.get('ridePickUpLocation').valid">
                     <tr>
                         <td class="label-info">Estimate distance: </td>
                         <td class="info-data" id="distance"></td>

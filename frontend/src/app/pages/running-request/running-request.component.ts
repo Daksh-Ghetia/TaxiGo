@@ -14,6 +14,7 @@ export class RunningRequestComponent implements OnInit {
   public rideDataList: any = [];
   public fullRideData: any = [];
   public p: number;
+  public totalRecordLength: number;
 
   private modalRef: NgbModalRef;
 
@@ -32,9 +33,14 @@ export class RunningRequestComponent implements OnInit {
   getRideData() {
     this._rideService.getRideData([3,4,5,6]).subscribe({
       next: (response) => {
+        if (response.ride.length == 0) {
+          return this._toastrService.error("No rides to display");
+        }
         this.rideDataList = response.ride;
+        this.totalRecordLength = response.ride.length;
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while getting data");
         console.log(error);
       },
       complete: () => {}
@@ -51,14 +57,12 @@ export class RunningRequestComponent implements OnInit {
     this.getRideData();
   }
 
-  rejectRequest(ride: any) {
-    console.log(ride);
-    
+  rejectRequest(ride: any) {    
     if (ride.rideDriverAssignType == 1) {
       let confirmation = confirm('Are you sure you want to reject the ride');
       if (confirmation) {
         this._webSocketService.emit('driverRejectRequestSelected', {driver: {_id: ride.rideDriverId}, ride: {_id: ride._id}});
-        this.getRideData();        
+        this.getRideData();
       }
     } else {
       let confirmation = confirm('Are you sure you want to reject the ride');
@@ -69,20 +73,21 @@ export class RunningRequestComponent implements OnInit {
     }
   }
 
-  clickCheck() {
-    console.log("click working");
-  }
-
   listenToSocket() {
     this._webSocketService.listen('dataChange').subscribe({
       next: () => {
-        // console.log(response);
         this.getRideData();
       },
       error: (error) => {
         console.log(error);        
       },
       complete: () => {}
+    })
+
+    this._webSocketService.listen('driverAcceptRequest').subscribe({
+      next: () => {
+        this._toastrService.success("Congratulations driver accepted the request")
+      }
     })
   }
 }

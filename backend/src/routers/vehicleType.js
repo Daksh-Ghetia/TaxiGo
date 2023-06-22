@@ -32,8 +32,7 @@ const upload = multer({
 /**Function to handle the file upload */
 const handleUpload = async(req, res, next) => {
     try {
-        
-        upload(req, res, (error) => {            
+        upload(req, res, (error) => {
             /**If error thrown by multer then catch it and display it over here 
              * Else if the error is defined by developer then show that error
             */

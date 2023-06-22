@@ -67,6 +67,7 @@ function socket(server) {
                 SMSBody = "Ride Confirmed, Congratulations " + driver.driverName + " you have been assigned to a new ride, and your customer pickup location is " +  ride.ridePickUpLocation + " And customer should be dropped at " + ride.rideDropLocation;
                 SendMessage.SendMessage(SMSBody);
                 socketEmit('dataChange');
+                socketEmit('driverAcceptRequest');
             } catch (error) {
                 console.log(error);
             }

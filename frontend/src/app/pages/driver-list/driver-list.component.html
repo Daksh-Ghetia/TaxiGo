@@ -38,11 +38,11 @@
 <div class="container-fluid mt--7">
     <!-- Form -->
     <div class="col-xl-12">
-        <form id="driver" [formGroup]="driverForm" *ngIf="sideButtonTitle == 'Search' ">
-            <table>
+        <form class="formBackground" id="driver" [formGroup]="driverForm" *ngIf="sideButtonTitle == 'Search' ">
+            <table class="m-3">
                 <!-- Driver Name -->
                 <tr>
-                    <td class="label-input text-white">Driver Name:</td>
+                    <td class="label-input">Driver Name:</td>
                     <td>
                         <input class="driver-input" formControlName="driverName" type="text" name="driverName" id="driverName" placeholder="Driver Name">
                         <br>

@@ -25,6 +25,7 @@ export class ConfirmedRideComponent implements OnInit {
   public p: number;
   public focus:any;
   public rideFilter: FormGroup;
+  public totalRecordLength: number;
   
   private modalRef: NgbModalRef;
 
@@ -32,7 +33,7 @@ export class ConfirmedRideComponent implements OnInit {
     private _rideService: RideService,
     private _driverService: DriverService,
     private _modalService: NgbModal,
-    private _toastrServie: ToastrService,
+    private _toastrService: ToastrService,
     private _webSocketService: WebSocketService,
     private _messagingService: MessagingService,
     private _vehicleTypeService: VehicleTypeService
@@ -71,9 +72,14 @@ export class ConfirmedRideComponent implements OnInit {
     }
     this._rideService.getRideData([1,2,3],rideFilterData).subscribe({
       next: (response) => {
+        if (response.ride.length == 0) {
+          return this._toastrService.error("No ride to display");
+        }
         this.rideDataList = response.ride;
+        this.totalRecordLength = response.ride.length;
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while getting data");
         console.log(error);
       },
       complete: () => {}
@@ -128,7 +134,7 @@ export class ConfirmedRideComponent implements OnInit {
     this._driverService.getDriverDetailsForRide(ride.rideServiceTypeId, ride.rideCityId).subscribe({
       next: (response) => {
         if (response.driver.length <= 0) {
-          this._toastrServie.info("There are no drivers providing the facilities required by the customer", "Driver not found")
+          this._toastrService.info("There are no drivers providing the facilities required by the customer", "Driver not found")
         }
         this.driverList =  response.driver;
       },
@@ -141,7 +147,7 @@ export class ConfirmedRideComponent implements OnInit {
 
   assignSelectedDriver() {
     if (this.selectedRowIndex === undefined) {
-      return this._toastrServie.info("please select a driver to assign", "Driver not selected");
+      return this._toastrService.info("please select a driver to assign", "Driver not selected");
     }
     
     this._webSocketService.emit('assignSelectedDriver', {driver: this.driverList[this.selectedRowIndex], rideDriverAssignType: 1, ride: this.rideDetails});
@@ -151,11 +157,11 @@ export class ConfirmedRideComponent implements OnInit {
 
   assignRandomDriver() {
     if (this.driverList.length == 0) {
-      return this._toastrServie.info("Currently there are no drivers available for selection", "Driver not found");
+      return this._toastrService.info("Currently there are no drivers available for selection", "Driver not found");
     }
 
     this._webSocketService.emit('assignRandomDriver', {rideDriverAssignType: 2, ride: this.rideDetails});
-    // this._toastrServie.success("Nearest driver assigning succesful", "");
+    // this._toastrService.success("Nearest driver assigning succesful", "");
     this.modalRef.close();
     this.getRideData();
   }
@@ -176,10 +182,16 @@ export class ConfirmedRideComponent implements OnInit {
 
     this._webSocketService.listen('driverAssigned').subscribe({
       next: () => {
-        this._toastrServie.success("Driver Assigned successfully");
+        this._toastrService.success("Driver Assigned successfully");
       },
       error: () => {
-        this._toastrServie.error("Error occured while assigning driver");
+        this._toastrService.error("Error occured while assigning driver");
+      }
+    })
+
+    this._webSocketService.listen('driverAcceptRequest').subscribe({
+      next: () => {
+        this._toastrService.success("Congratulations driver accepted the request");
       }
     })
   }

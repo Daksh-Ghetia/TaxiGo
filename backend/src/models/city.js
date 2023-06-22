@@ -8,6 +8,7 @@ const citySchema = new mongoose.Schema({
     cityName: {
         type: String,
         required: true,
+        unique: [true, "City Name cannot be duplicate"],
         trim: true
     },
     cityLatLng: {

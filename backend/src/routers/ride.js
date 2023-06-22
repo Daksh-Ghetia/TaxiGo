@@ -7,6 +7,7 @@ const User = require('../models/user');
 const SendMessage = require('./SMS');
 const paymentGateway = require('./paymentGateway');
 const mongoose = require('mongoose');
+const mail = require('./mail');
 
 const router = new express.Router();
 
@@ -128,7 +129,6 @@ router.post('/ride/getRideDetails', auth, upload.none(),async (req, res) => {
         /**If data found send the data */
         res.status(200).send({ride: ride, msg: 'ride found', status: "success"})
     } catch (error) {
-        console.log(error);
         res.status(500).send({msg: "Error occured while getting data of ride", status: "failed", error: error});
     }
 })
@@ -182,6 +182,13 @@ router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
             const user = await User.findOne({_id: ride.rideCustomerId});
             await paymentGateway.deductPayment(user.userPaymentCustomerId, ride.ridePaymentCardId, ride.rideFare);
             SendMessage.SendMessage("Ride has been completed");
+            let msg = `Congratulations ${user.userName}, your ride has been completed successfully. Total charge for the ride is ${ride.rideFare},`
+            if (ride.ridePaymentMethod == 0) {
+                msg+= ` And your payment method is cash. Future reference id for ride is ${ride._id}`
+            } else {
+                msg+= ` And your payment method is card, payment id is ${ride.ridePaymentCardId}. Future reference id for ride is ${ride._id}`
+            }
+            mail.sendMail(user.userEmail, "Ride receipt", "Ride completed", msg);
         } else if (req.body.rideStatus == 6) {
             SendMessage.SendMessage("Ride has been started");
         }
