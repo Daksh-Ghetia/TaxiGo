@@ -23,7 +23,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="vehicleName" class="text-white">Upload image <span class="text-white ml-1">:</span> </label>
-                            <input type="file" formControlName="vehicleIcon" class="vehicle-Input ml-2" name="vehicleIcon" id="vehicleIcon" placeholder="Vehicle Type image">
+                            <input type="file" formControlName="vehicleIcon" class="vehicle-Input ml-2" name="vehicleIcon" id="vehicleIcon"  placeholder="Vehicle Type image" accept="image/png, image/jpeg, image/jpg">
                             <div>
                               <small *ngIf="!reactiveForm.get('vehicleIcon').valid && reactiveForm.get('vehicleIcon').touched">Vehicle Icon is required</small>
                             </div>

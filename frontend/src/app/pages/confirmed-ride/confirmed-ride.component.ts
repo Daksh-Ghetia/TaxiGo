@@ -94,6 +94,9 @@ export class ConfirmedRideComponent implements OnInit {
   getVehicalTypeList() {
     this._vehicleTypeService.getVehicleType().subscribe({
       next: (response) => {
+        if (response.vehicle.length == 0) {
+          return this._toastrService.info("No vehicle type to display for filter. Add new vehicle type to display");
+        }
         this.vehicleTypeList = response.vehicle;
       },
       error: (error) => {console.log(error);},
@@ -108,10 +111,11 @@ export class ConfirmedRideComponent implements OnInit {
       
       this._rideService.updateRide(id, rideData).subscribe({
         next: (response) => {
-          this.getRideData();        
+          this.getRideData();
+          this._toastrService.error("Ride has been cancelled successfully.");
         },
         error: (error) => {
-          console.log(error);        
+          this._toastrService.error("Error occured while canceling the ride");
         },
         complete: () => {}
       })
@@ -139,7 +143,7 @@ export class ConfirmedRideComponent implements OnInit {
         this.driverList =  response.driver;
       },
       error: (error) => {
-        console.log(error);
+        this._toastrService.error(error.error.msg || "Error occured while getting available driver list.");
       },
       complete: () => {}
     })

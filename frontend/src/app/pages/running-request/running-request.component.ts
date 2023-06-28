@@ -34,7 +34,7 @@ export class RunningRequestComponent implements OnInit {
     this._rideService.getRideData([3,4,5,6]).subscribe({
       next: (response) => {
         if (response.ride.length == 0) {
-          return this._toastrService.error("No rides to display");
+          return this._toastrService.info("No rides to display");
         }
         this.rideDataList = response.ride;
         this.totalRecordLength = response.ride.length;
@@ -59,14 +59,12 @@ export class RunningRequestComponent implements OnInit {
 
   rejectRequest(ride: any) {    
     if (ride.rideDriverAssignType == 1) {
-      let confirmation = confirm('Are you sure you want to reject the ride');
-      if (confirmation) {
+      if (confirm('Are you sure you want to reject the ride')) {
         this._webSocketService.emit('driverRejectRequestSelected', {driver: {_id: ride.rideDriverId}, ride: {_id: ride._id}});
         this.getRideData();
       }
     } else {
-      let confirmation = confirm('Are you sure you want to reject the ride');
-      if (confirmation) {
+      if (confirm('Are you sure you want to reject the ride')) {
         this._webSocketService.emit('driverRejectRequestNearest', {driver: {_id: ride.rideDriverId}, ride: {_id: ride._id}});
         this.getRideData();
       }

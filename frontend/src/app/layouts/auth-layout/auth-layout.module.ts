@@ -13,6 +13,7 @@ import { ToastrModule } from 'ngx-toastr';
     CommonModule,
     RouterModule.forChild(AuthLayoutRoutes),
     FormsModule,
+    ReactiveFormsModule,
     ToastrModule.forRoot({
       tapToDismiss: true,
       closeButton: true,

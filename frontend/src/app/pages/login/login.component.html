@@ -37,22 +37,29 @@
           <!-- <div class="text-center text-muted mb-4">
             <small>Or sign in with credentials</small>
           </div> -->
-          <form role="form">
+          <form role="form" [formGroup]="loginForm">
             <div class="form-group mb-3">
               <div class="input-group input-group-alternative">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                 </div>
-                <input class="form-control" id="email" placeholder="Email" type="email">
+                <input class="form-control" formControlName="email" id="email" placeholder="Email" type="email">
               </div>
+            </div>
+            <div>
+              <strong *ngIf="loginForm.get('email').invalid && loginForm.get('email').touched && (loginForm.get('email').value == null || loginForm.get('email').value == '')">Please enter user email</strong>
+              <strong *ngIf="loginForm.get('email').invalid && loginForm.get('email').errors.email">Please enter a valid email</strong>
             </div>
             <div class="form-group">
               <div class="input-group input-group-alternative">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                 </div>
-                <input class="form-control" id="password" placeholder="Password" type="password">
+                <input class="form-control" formControlName="pass" id="password" placeholder="Password" type="password">
               </div>
+            </div>
+            <div>
+              <strong *ngIf="loginForm.get('pass').invalid && loginForm.get('pass').touched && (loginForm.get('pass').value == null || loginForm.get('pass').value == '')">Please enter user password </strong>
             </div>
             <div class="text-center">
               <label for="message" id="msg"></label>
@@ -66,7 +73,7 @@
             </div> -->
             <div class="text-center">
               <!-- (click)="onLogin()" --> 
-              <button type="button" (click)="Authenticate()" class="btn btn-primary my-4">Sign in</button>
+              <button type="button" (click)="Authenticate()" class="btn btn-primary my-4" [disabled]="loginForm.invalid" >Sign in</button>
             </div>
           </form>
         </div>

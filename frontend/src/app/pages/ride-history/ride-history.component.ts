@@ -69,7 +69,7 @@ export class RideHistoryComponent implements OnInit {
         this.totalRecordLength = response.ride.length;
       },
       error: (error) => {
-        console.log(error);
+        this._toastrService.error(error.error.msg || "Error occured while getting ride data.");
       },
       complete: () => {}
     })
@@ -83,6 +83,9 @@ export class RideHistoryComponent implements OnInit {
   getVehicalTypeList() {
     this._vehicleTypeService.getVehicleType().subscribe({
       next: (response) => {
+        if (response.vehicle.length == 0) {
+          return this._toastrService.info("Please add vehicle type in order to display");
+        }
         this.vehicleTypeList = response.vehicle;
       },
       error: (error) => {console.log(error);},

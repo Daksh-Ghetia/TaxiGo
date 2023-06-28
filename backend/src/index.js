@@ -12,7 +12,6 @@ const rideRouter = require('./routers/ride');
 const socketIo = require('./routers/socket-io');
 const cron = require('./routers/crone');
 const settingRouter = require('./routers/setting');
-const mailer = require('./routers/mail');
 
 const app = express();
 app.use(cors());

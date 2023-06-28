@@ -55,3 +55,10 @@
     background-color: #fff;
     background-clip: border-box;
 }
+
+/**Disable the increment and decrement counter on the number field*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

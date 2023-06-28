@@ -90,7 +90,7 @@
                     
                     <td>
                         <input class="countryCodeInput" type="text" formControlName="userCountryCode" name="userCountryCode" [(ngModel)]="selectedCountryCode" id="userCountryCode" placeholder="" disabled>
-                        <input class="user-input" formControlName="userPhone" type="phone" maxlength="10" name="userPhone" id="userPhone" placeholder="User phone" style="width: 19rem;">
+                        <input class="user-input" formControlName="userPhone" type="number" maxlength="10" name="userPhone" id="userPhone" placeholder="User phone" onKeyPress="if(this.value.length==10) return false;" style="width: 19rem;" >
                         <br>
                         <div>
                             <strong *ngIf="userForm.get('userPhone').invalid && userForm.get('userPhone').touched && (userForm.get('userPhone').value == null || userForm.get('userPhone').value == '')">Please enter user phone number</strong>
@@ -105,7 +105,7 @@
                     <td>User Profile:</td>
                     
                     <td>
-                        <input class="user-input" formControlName="userProfile" type="file" name="userProfile" id="userProfile" placeholder="User profile pic" >
+                        <input class="user-input" formControlName="userProfile" type="file" name="userProfile" id="userProfile" accept="image/png, image/jpeg, image/jpg" placeholder="User profile pic" >
                     </td>
                 </tr>
 

@@ -43,11 +43,14 @@ export class CountryComponent implements OnInit {
   getCountryDropDownData() {
     this._countryService.getCountryList().subscribe({
       next: (response) => {
-          this.countryDropDownData = response;
-          this.countryDropDownData.sort((a, b) => (a.name.common > b.name.common) ? 1 : -1)
+        if (response.length == 0) {
+          this._toastrService.info("No countries to display for adding");
+        }
+        this.countryDropDownData = response;
+        this.countryDropDownData.sort((a, b) => (a.name.common > b.name.common) ? 1 : -1)
       },
       error: (error) => {
-        console.log(error);        
+        this._toastrService.error("Error occured while getting country list for drop down");
       }
     })
   }
@@ -78,6 +81,9 @@ export class CountryComponent implements OnInit {
   getCountry() {
     this._countryService.getCountry().subscribe({
       next: (response) => {
+        if (response.country.length == 0) {
+          return this._toastrService.info("Currently there are no countries to display please add new country", "No countries Found");
+        }
         this.countryList = response.country;
       },
       error: (error) => {
@@ -114,6 +120,7 @@ export class CountryComponent implements OnInit {
       next: (response) => {
         this.getCountry();
         this.cancel();
+        this._toastrService.success("Country added successfully", "Success");
       },
       error: (error) => {
         this._toastrService.error(error.error.msg || "Error occured while adding country");
@@ -127,6 +134,7 @@ export class CountryComponent implements OnInit {
     this.reactiveForm.reset();
     this.reactiveForm.get('countrySelect').markAsPristine()
     this.customErrMsg = "";
+    this.getCountry();
   }
 
   deleteCountry(id: string){
@@ -134,8 +142,10 @@ export class CountryComponent implements OnInit {
       next: (response) => {
           this.getCountry();
           this.cancel();
+          this._toastrService.success("Country Deleted successfully");
       },
       error: (error) => {
+        this._toastrService.error(error.error.mag || "Error occured while deleting country");
         this.customErrMsg = error.error.msg;
       },
       complete: () => {}
@@ -163,9 +173,13 @@ export class CountryComponent implements OnInit {
 
     this._countryService.getCountry(data).subscribe({
       next: (response) => {
+        if (response.country.length == 0) {
+          return this._toastrService.info("No data found");
+        }
         this.countryList = response.country;
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while searching the country");
         this.customErrMsg = error.error.msg;
       },
       complete: () => {}

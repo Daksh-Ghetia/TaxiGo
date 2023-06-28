@@ -47,7 +47,7 @@ export class CityComponent implements OnInit {
     this._countryService.getCountry().subscribe({
       next: (response) => {
         if (response.country.length == 0) {
-          return this._toastrService.warning("Please add countries inorder to add cities","No countries");
+          return this._toastrService.warning("Please add countries in order to add cities","No countries");
         }
         this.countryList = response.country;
       },
@@ -120,7 +120,9 @@ export class CityComponent implements OnInit {
   getCity() {
     this._cityService.getCityList().subscribe({
       next: (response) => {
-        
+        if (response.city.length == 0) {
+          return this._toastrService.info("There are no cities to display currently please add new one to display","No cities");
+        }        
         this.cityList = response.city;
         for (let index = 0; index < this.createdPolygonList.length; index++) {
           const element = this.createdPolygonList[index];
@@ -171,10 +173,11 @@ export class CityComponent implements OnInit {
     })
   }
 
-  resetMap() {    
+  resetMap() {
     this.customErrMsg = "";
     this.reactiveForm.reset();
     this.infoWindow.close();
+    this.marker.setPosition(null);
     if (this.editablePolygon) {
       this.editablePolygon.setEditable(false)
       this.editablePolygon = null;      
@@ -219,10 +222,10 @@ export class CityComponent implements OnInit {
         /**Set the content of the infowindow that should be displayed */
         const content = `
           <div class="info-window-content">
+          <form>
             <label for="countryName" class="info-window-label">Country Name <span class="info-window-colon">:</span></label>
-            <input type="text" class="infoCity-Input" name="countryName" id="countryEdit" value=${city.country[0].countryName} placeholder="Country Name" disabled>
+            <input type="text" class="infoCity-Input" name="countryName" id="countryEdit" value="${city.country[0].countryName}" placeholder="Country Name" disabled>
             <br>
-
             <label for="cityNameEdit" class="info-window-label">City Name <span class="info-window-colon">:</span></label>
             <input type="text" class="infoCity-Input" name="cityNameEdit" value=${city.cityName} id="cityNameEdit" placeholder="City name">
             <br>
@@ -231,6 +234,7 @@ export class CityComponent implements OnInit {
 
             <button class="btn btn-success editButton" id="editCity">Update City</button>
             <button class="btn btn-danger editButton" id="cancelCity">Cancel</button>
+            </form>
           </div>
         `;
 
@@ -326,6 +330,7 @@ export class CityComponent implements OnInit {
               next: (response) => {
                 this.getCity();
                 this.resetMap();
+                this._toastrService.success("City has been edited successfull","Edit successfull");
               },
               error: (error) => {
                 this._toastrService.error(error.error.msg || "Error occured while updating city");
@@ -371,6 +376,12 @@ export class CityComponent implements OnInit {
   initAutoComplete(){
     this.autocomplete = new google.maps.places.Autocomplete(document.getElementById('cityName') as HTMLInputElement, {
       types: ['(cities)']
+    })
+
+    this.autocomplete.addListener("place_changed", () => {
+      let location = this.autocomplete?.getPlace()?.geometry?.location;
+      this.marker.setPosition(location);
+      this.map.panTo(location);
     })
   }
 }

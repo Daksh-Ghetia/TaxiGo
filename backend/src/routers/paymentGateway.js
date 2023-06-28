@@ -1,4 +1,11 @@
-const stripe = require("stripe")("sk_test_51NBdBuEF3TbQVrFuWAcyfZdHSriE4EfN9w1N0p0c83vMGC2ec2MyyvDYq7qX3vHktNCi6m0mTJynwLIz9j8R0mJs00vH5GcJys");
+const Setting = require('../models/setting');
+let stripe;
+
+async function getSettingData() {
+  let {stripeSecretKey} = await Setting.findOne();
+  stripe = require("stripe")(stripeSecretKey);
+}
+getSettingData();
 
 async function createCustomer(user) {
     try {
@@ -99,5 +106,6 @@ module.exports = {
     setDefaultCard: setDefaultCard,
     getCardsList: getCardsList,
     deleteCard: deleteCard,
-    deductPayment: deductPayment
+    deductPayment: deductPayment,
+    getSettingData: getSettingData
 }

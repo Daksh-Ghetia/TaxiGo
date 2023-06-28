@@ -3,6 +3,7 @@ const auth = require('../middleware/authentication');
 const multer = require('multer');
 const Setting = require('../models/setting');
 const Cron = require('../routers/crone');
+const PaymentGateway = require('../routers/paymentGateway');
 
 const router = new express.Router();
 
@@ -11,8 +12,8 @@ const upload = multer()
 /**Get setting data */
 router.get('/setting/getSettingDetails', auth, async (req, res) => {
     try {
-        /**Find all the setting data and if not found return no data to display*/
-        let setting = await Setting.find({});
+        /**Find all the setting data and if not found return no data to display*/        
+        let setting = await Setting.findOne();
         if (setting.length == 0) {
             return res.status(404).send({msg: "No setting data to display", status: "failed"});
         }
@@ -22,12 +23,14 @@ router.get('/setting/getSettingDetails', auth, async (req, res) => {
     } catch (error) {
         res.status(500).send({msg: "Error occured while getting data of setting", status: "failed", error: error});
     }
+    
 })
 
 /**Update the Setting */
 router.patch('/setting/editSetting/:id', auth, upload.none(), async(req,res) => {
     try {
         /**Parse the body and store the keys of sent data */
+        // console.log(req.body);
         let updates = Object.keys(req.body);
         const allowedUpdates = ["timeToAcceptRequest", "stopsInBetweenDestination", "stripePublicKey", "stripeSecretKey", "messagingSID", "messagingAuthToken", "mailClientID", "mailClientSecret"];
 
@@ -47,6 +50,8 @@ router.patch('/setting/editSetting/:id', auth, upload.none(), async(req,res) => 
         updates.forEach((update) => setting[update] = req.body[update])
         await setting.save();
         Cron.getSettingData();
+        PaymentGateway.getSettingData();
+
         return res.status(200).send({msg: "Edit success", setting: setting, status: "success"});
 
     } catch (error) {

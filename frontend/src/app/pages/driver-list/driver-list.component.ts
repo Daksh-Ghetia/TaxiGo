@@ -198,7 +198,6 @@ export class DriverListComponent implements OnInit {
       error: (error) => {
         this._toastrService.error(error.error.msg, "Error occured while updating driver status");
         this.customErrMsg = error.error.msg;
-        console.log(error);
       },
       complete: () => {}
     })
@@ -206,24 +205,20 @@ export class DriverListComponent implements OnInit {
   }
 
   deleteDriver(id: string) {
-    let choice  = confirm('are you sure you want to delete Driver')
-
-    if (choice == false) {
-      return;
+    if (confirm('are you sure you want to delete Driver')) {
+      this._driverService.deleteDriver(id).subscribe({
+        next: (response) => {
+          this.getDriverData();
+          this.cancelDriver();
+          this._toastrService.success("Driver deleted successfully", "");
+        },
+        error: (error) => {
+          this._toastrService.error(error.error.msg, "Error occured while deleting user");
+          this.customErrMsg = error.error.msg;
+        },
+        complete: () => {}
+      })
     }
-
-    this._driverService.deleteDriver(id).subscribe({
-      next: (response) => {
-        this.getDriverData();
-        this.cancelDriver();
-        this._toastrService.success("Driver deleted successfully", "");
-      },
-      error: (error) => {
-        this._toastrService.error(error.error.msg, "Error occured while deleting user");
-        this.customErrMsg = error.error.msg;
-      },
-      complete: () => {}
-    })
   }
 
   fillDataForEdit(data: any) {
@@ -344,8 +339,7 @@ export class DriverListComponent implements OnInit {
         this._toastrService.success("Driver service type updated successfully");
       },
       error: (error) => {
-        this._toastrService.error("Error occured while updating service type", "");
-        console.log(error);
+        this._toastrService.error(error.error.msg || "Error occured while updating service type", "");
       },
       complete: () => {}
     })

@@ -76,11 +76,11 @@ export class VehicleTypeComponent implements OnInit {
       next: () => {
         this.getVehicleType();
         this.cancelAction();
+        this._toastrService.success("New vehicle type added successfully");
       },
       error: (error) => {
         this._toastrService.error(error.error.msg || "Error occured while adding vehicle type");
         this.customErrMsg = error.error.msg;
-        console.log(error);
       },
       complete: () => {}
     });
@@ -98,10 +98,10 @@ export class VehicleTypeComponent implements OnInit {
       next: (response) => {
         this.getVehicleType();
         this.cancelAction();
+        this._toastrService.success("Vehicle type added successfully");
       },
       error: (error) => {
         this._toastrService.error(error.error.msg || "Error occured while updating vehicle type");
-        console.log(error);
       },
       complete: () => {}
     })

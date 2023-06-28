@@ -68,13 +68,12 @@ export class UserComponent implements OnInit {
     this._countryService.getCountry().subscribe({
       next: (response) => {
         if (response.country.length == 0) {
-          return this._toastrService.warning("No countries to display");
+          return this._toastrService.warning("Please add new countries to display","No countries to display");
         }
         this.countryList = response.country;
       },
       error: (error) => {
         this._toastrService.error(error.error.msg || "Error occured while getting country data")
-        console.log(error);        
       },
       complete: () => {}
     })
@@ -96,12 +95,11 @@ export class UserComponent implements OnInit {
     }
     this._userService.getUserData(data, this.p-1).subscribe({
       next: (response) => {
-        if (response.user.length > 0) {
-          this.userDataList = response.user;
-          this.totalRecordLength = response.totalRecord;
-        } else {
-          this._toastrService.info("No user found to display, please add new user to view data", "User not found");
+        if (response.user.length == 0) {
+          return this._toastrService.info("No user found to display, please add new user to use data", "User not found");
         }
+        this.userDataList = response.user;
+        this.totalRecordLength = response.totalRecord;
       },
       error: (error) => {
         this._toastrService.error(error.error.msg || "Error occured while getting user data");
@@ -180,25 +178,20 @@ export class UserComponent implements OnInit {
   }
 
   deleteUser(id: string) {
-    let choice  = confirm('are you sure you want to delete user')
-
-    if (choice == false) {
-      return;
+    if (confirm('are you sure you want to delete user')) {
+      this._userService.deleteUser(id).subscribe({
+        next: (response) => {
+          this.getUserData();
+          this.cancelUser();
+          this._toastrService.success("User deleted successfully");
+        },
+        error: (error) => {
+          this._toastrService.error(error.error.msg || "Error occured while deleting user");
+          this.customErrMsg = error.error.msg;
+        },
+        complete: () => {}
+      })
     }
-    
-    this._userService.deleteUser(id).subscribe({
-      next: (response) => {
-        this.getUserData();
-        this.cancelUser();
-        this._toastrService.success("User deleted successfully");
-      },
-      error: (error) => {
-        this._toastrService.error(error.error.msg || "Error occured while deleting user");
-        this.customErrMsg = error.error.msg;
-        console.log(error);        
-      },
-      complete: () => {}
-    })
   }
 
   searchUser() {
@@ -209,15 +202,14 @@ export class UserComponent implements OnInit {
     const data = this.userForm.get('userSearch').value;
     this._userService.getUserData(data).subscribe({
       next: (response) => {
-        if (response.user.length > 0) {
-          this.userDataList = response.user;
-          this.totalRecordLength = response.totalRecord;
-          this.p = 1
-          this._toastrService.success("Data found successfully");
-        } else {
+        if (response.user.length == 0) {
           this.userDataList = [];
           return this._toastrService.info("No user found to display, please add new user to view data", "User not found");
         }
+        this.userDataList = response.user;
+        this.totalRecordLength = response.totalRecord;
+        this.p = 1
+        this._toastrService.success("Data found successfully");
       },
       error: (error) => {
         this._toastrService.error(error.error.msg || "Error occured while searching for data");
@@ -290,7 +282,6 @@ export class UserComponent implements OnInit {
     const {error: submitError} = await this.elements.submit();
 
     if (submitError) {
-      console.log(submitError);      
       return;
     }
 
@@ -332,6 +323,7 @@ export class UserComponent implements OnInit {
         } else this.cardDetails = [];
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while getting cards list")
         console.log(error);
       },
       complete: () => {}
@@ -341,8 +333,7 @@ export class UserComponent implements OnInit {
   /**Set default card to user */
   async setDefaultCard() {
     this._userService.setDefaultCard(this.customerDetails.id, this.selectedCardId).subscribe({
-      next: (response) => {
-        console.log(response);
+      next: () => {
         this._toastrService.success("Your default card payment has been updated successfully","Card Updated")
       },
       error: (error) => {
@@ -355,16 +346,18 @@ export class UserComponent implements OnInit {
 
   /**Delete already added card */
   async deleteCard(cardId: string) {
-    this._userService.deleteCard(cardId).subscribe({
-      next: (response) => {
-        this.getCardDetails(this.customerDetails.id);
-        this._toastrService.success("Your card has been deleted successfully", "Card deleted");
-      },
-      error: (error) => {
-        this._toastrService.error("Error occured while deleting card", "Error");
-      },
-      complete: () => {}
-    })
+    if (confirm('Are you sure you want to delete card details')) {
+      this._userService.deleteCard(cardId).subscribe({
+        next: (response) => {
+          this.getCardDetails(this.customerDetails.id);
+          this._toastrService.success("Your card has been deleted successfully", "Card deleted");
+        },
+        error: (error) => {
+          this._toastrService.error("Error occured while deleting card", "Error");
+        },
+        complete: () => {}
+      })
+    }
   }
 
   /**Change selected card */

@@ -34,7 +34,12 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
 import { MessagingService } from './shared/messaging.service';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { BrowserModule } from '@angular/platform-browser';
+import { BnNgIdleService } from 'bn-ng-idle';
+import { NgxUiLoaderHttpModule, NgxUiLoaderModule ,POSITION,SPINNER,PB_DIRECTION,NgxUiLoaderConfig,NgxUiLoaderRouterModule} from 'ngx-ui-loader';
 
+
+// const ngxUiLoaderConfig: NgxUiLoaderConfig = ;
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -59,7 +64,23 @@ import { NgxPaginationModule } from 'ngx-pagination';
     }),
     AngularFireAuthModule,
     AngularFireMessagingModule,
-    AngularFireModule.initializeApp(environment.firebase)
+    AngularFireModule.initializeApp(environment.firebase),
+    BrowserModule,
+    NgxUiLoaderModule,
+    NgxUiLoaderModule.forRoot({
+      fgsColor: "#F5365C",
+      bgsPosition: POSITION.centerCenter,
+      bgsSize: 40,
+      bgsType: SPINNER.doubleBounce, // background spinner type
+      fgsType: SPINNER.foldingCube, // foreground spinner type
+      pbDirection: PB_DIRECTION.leftToRight, // progress bar direction
+      pbThickness: 5, // progress bar thickness
+      text:"Loading ...",
+      pbColor:"#F5365C"
+    }),
+    NgxUiLoaderHttpModule,
+    NgxUiLoaderRouterModule,
+NgxUiLoaderHttpModule.forRoot({ showForeground: true })
   ],
   declarations: [
     AppComponent,
@@ -86,7 +107,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     },
     DatePipe,
     MessagingService,
-    AsyncPipe
+    AsyncPipe,
+    BnNgIdleService
   ],
   bootstrap: [AppComponent]
 })

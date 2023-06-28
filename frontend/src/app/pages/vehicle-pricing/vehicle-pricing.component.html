@@ -31,7 +31,7 @@
             <div class="row mt-3">
                 <div class="xl-12">
                     <label for="cityId">Select City :&nbsp;&nbsp; </label>
-                    <select class="ml-7" id="cityDropDown" formControlName="cityId" name="cityId">
+                    <select class="ml-7" id="cityDropDown" formControlName="cityId" name="cityId" >
                         <option disabled selected hidden [value]="null" >Select city</option>
                         <option *ngFor="let city of cityList" [value]="city._id" >{{city.cityName}}, {{city.countryName}}</option>
                     </select>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { CityService } from 'src/app/shared/city.service';
 import { CountryService } from 'src/app/shared/country.service';
 import { VehiclePricingService } from 'src/app/shared/vehicle-pricing.service';
@@ -17,6 +18,7 @@ export class VehiclePricingComponent implements OnInit {
     private _cityService: CityService,
     private _vehicleTypeService: VehicleTypeService,
     private _vehiclePricingService: VehiclePricingService,
+    private _toastrService: ToastrService
   ) { }
 
   public vehiclePricingForm: FormGroup;
@@ -55,10 +57,13 @@ export class VehiclePricingComponent implements OnInit {
   fillCountryDropDown() {
     this._countryService.getCountry().subscribe({
       next: (response) => {
+        if (response.country.length == 0) {
+          return this._toastrService.info("No country to display, please add new country to display");
+        }
         this.countryList = response.country;
       },
       error: (error) => {
-        this.countryList = [{countryName: "No country To display", countryIcon: ""}];
+        this._toastrService.error(error.error.msg || "Error occured while getting country list");
       },
       complete: () => {}
     })
@@ -67,10 +72,15 @@ export class VehiclePricingComponent implements OnInit {
   fillCityDropDown(countryId: string) {
     this._cityService.getCityList(countryId).subscribe({
       next: (response) => {
+        if (response.city.length == 0) {
+          this.cityList = [];
+          return this._toastrService.info("No city to display, please add new city to display");
+        }
         this.cityList = response.city;
       },
       error: (error) => {
-        console.log(error);
+        this.cityList = [];
+        this._toastrService.error("Error occured while getting city data");
       },
       complete: () => {}
     })
@@ -79,10 +89,13 @@ export class VehiclePricingComponent implements OnInit {
   fillVehicleTypeDropDown() {
     this._vehicleTypeService.getVehicleType().subscribe({
       next: (response) => {
+        if (response.vehicle.length == 0) {
+          return this._toastrService.info("No vehicle type to display, please add new vehicle type to display");
+        }
         this.vehicleTypeList = response.vehicle;
       },
       error: (error) => {
-
+        this._toastrService.error(error.error.msg ||"Error occured while getting vehicle type");
       },
       complete: () => {}
     })
@@ -105,9 +118,10 @@ export class VehiclePricingComponent implements OnInit {
       next: (response) => {
         this.getVehiclePricing();
         this.cancelVehiclePricing();
+        this._toastrService.success("Vehicle pricing added successfully");
       },
       error: (error) => {
-        console.log(error);
+        this._toastrService.error(error.error.msg || "Error occured while adding vehicle pricing");
         this.customErrMsg = error.error.msg;
       },
       complete: () => {}
@@ -126,13 +140,14 @@ export class VehiclePricingComponent implements OnInit {
       next: (response) => {
         this.cancelVehiclePricing();
         this.getVehiclePricing();
+        this._toastrService.success("Vehicle pricing edited successfully.");
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while updateing vehicle pricing");
         console.log(error);
       },
       complete: () => {}
     })
-
   }
 
   cancelVehiclePricing() {
@@ -147,10 +162,14 @@ export class VehiclePricingComponent implements OnInit {
   getVehiclePricing() {
     this._vehiclePricingService.getVehiclePricing("", this.p-1).subscribe({
       next: (response) => {
+        if (response.vehiclePricing.length == 0) {
+          return this._toastrService.info("No vehicle pricing found");
+        }
         this.totalRecordLength = response.totalRecord;
         this.vehiclePricingList = response.vehiclePricing;
       },
       error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while getting vehicle pricing list.");
         console.log(error);
       },
       complete: () => {}
@@ -181,15 +200,18 @@ export class VehiclePricingComponent implements OnInit {
   }
 
   deleteVehiclePricing(id: string) {
-    this._vehiclePricingService.deleteVehiclePricing(id).subscribe({
-      next: (response) => {
-        this.getVehiclePricing();
-      },
-      error: (error) => {
-        console.log(error);        
-      },
-      complete: () => {}
-    })
+    if (confirm('are you sure you want to delete vehicle pricing')) {
+      this._vehiclePricingService.deleteVehiclePricing(id).subscribe({
+        next: (response) => {
+          this.getVehiclePricing();
+          this._toastrService.success("Vehicle pricing deleted successfully");
+        },
+        error: (error) => {
+          this._toastrService.error(error.error.msg || "Error occured while deleting vehicle pricing");
+        },
+        complete: () => {}
+      })
+    }
   }
 
   sortData(columnName: string) {

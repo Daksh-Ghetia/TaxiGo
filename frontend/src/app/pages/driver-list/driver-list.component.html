@@ -101,7 +101,7 @@
                     <td>Driver Phone:</td>
                     <td>
                         <input class="countryCodeInput" type="text" formControlName="driverCountryCode" name="driverCountryCode" [(ngModel)]="selectedCountryCode" id="driverCountryCode" placeholder="" disabled>
-                        <input class="driver-input" formControlName="driverPhone" type="phone" maxlength="10" name="driverPhone" id="driverPhone" placeholder="Driver phone" style="width: 19rem;">
+                        <input class="driver-input" formControlName="driverPhone" type="number" onKeyPress="if(this.value.length==10) return false;" name="driverPhone" id="driverPhone" placeholder="Driver phone" style="width: 19rem;">
                         <br>
                         <div>
                             <strong *ngIf="driverForm.get('driverPhone').invalid && driverForm.get('driverPhone').touched && (driverForm.get('driverPhone').value == null || driverForm.get('driverPhone').value == '')">Please enter driver phone number</strong>

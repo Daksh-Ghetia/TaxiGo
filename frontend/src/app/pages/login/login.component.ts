@@ -40,7 +40,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this._authService.authenticateAdmin(data).subscribe({
       next: (response) => {
-        console.log(response);
         // (document.getElementById('msg') as HTMLLabelElement).textContent = response?.msg
         localStorage.setItem("token", response?.token);
         this.router.navigate(['dashboard']);

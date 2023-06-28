@@ -39,16 +39,19 @@ export class SettingComponent implements OnInit {
   getSettingData() {
     this._settingService.getSettingData().subscribe({
       next: (response) => {
-        this.id = response.setting[0]._id;
+        if (response.setting.length == 0) {
+          return this._toastrService.info("No setting information found");
+        }
+        this.id = response.setting._id;
         this.settingForm.patchValue({
-          timeToAcceptRequest: response.setting[0].timeToAcceptRequest,
-          stopsInBetweenDestination: response.setting[0].stopsInBetweenDestination,
-          stripePublicKey: response.setting[0].stripePublicKey,
-          stripeSecretKey: response.setting[0].stripeSecretKey,
-          messagingSID: response.setting[0].messagingSID,
-          messagingAuthToken: response.setting[0].messagingAuthToken,
-          mailClientID: response.setting[0].mailClientID,
-          mailClientSecret: response.setting[0].mailClientSecret
+          timeToAcceptRequest: response.setting.timeToAcceptRequest,
+          stopsInBetweenDestination: response.setting.stopsInBetweenDestination,
+          stripePublicKey: response.setting.stripePublicKey,
+          stripeSecretKey: response.setting.stripeSecretKey,
+          messagingSID: response.setting.messagingSID,
+          messagingAuthToken: response.setting.messagingAuthToken,
+          mailClientID: response.setting.mailClientID,
+          mailClientSecret: response.setting.mailClientSecret
         });
       },
       error: (error) => {

@@ -35,10 +35,6 @@ const upload = multer({
 const handleUpload = async(req, res, next) => {
     try {
         upload(req, res, (error) => {
-            if (!req.file) {
-                return next();
-            }
-
             /**If error thrown by multer then catch it and display it over here 
              * Else if the error is defined by developer then show that error
             */
@@ -46,6 +42,10 @@ const handleUpload = async(req, res, next) => {
                 return res.status(500).send({msg: "File size greater than 10MB", status: "failed" ,error: error});
             } else if (error) {
                 return res.status(500).send({msg: "Only .jpg, .jpeg, .png allowed", status: "failed", error: error});
+            }
+
+            if (!req.file) {
+                return next();
             }
 
             /**Update the updated name of file to the body */

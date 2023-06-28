@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CityService } from 'src/app/shared/city.service';
 import { ConvertMinutesToHoursAndMinutesPipe } from 'src/app/shared/convert-minutes-to-hours-and-minutes.pipe';
@@ -35,7 +35,6 @@ export class CreateRideComponent implements OnInit {
   private wayPts: google.maps.DirectionsWaypoint[] = [];
   private directionsService = new google.maps.DirectionsService();
   private directionsRenderer = new google.maps.DirectionsRenderer();
-  private distanceMatService = new google.maps.DistanceMatrixService();
 
   constructor(
     private _userService: UserService,
@@ -249,9 +248,22 @@ export class CreateRideComponent implements OnInit {
       travelMode: google.maps.TravelMode.DRIVING,
     })
     .then((response) => {
+      this.totalDistance = 0;
+      this.totalTime = 0;
+
       this.directionsRenderer.setDirections(response)
-      this.setDistanceAndTime();
       this.calculateFare((document.getElementById('rideServiceTypeId')as HTMLSelectElement).value);
+
+      for (let i = 0; i < response.routes[0].legs.length; i++) {
+        this.totalDistance += response.routes[0].legs[i].distance.value;
+        this.totalTime += response.routes[0].legs[i].duration.value
+      }
+
+      this.totalDistance = Number((this.totalDistance/1000).toFixed(1));
+      this.totalTime = Math.floor(this.totalTime/60);
+
+      (document.getElementById("distance") as HTMLInputElement).innerText = this.totalDistance + " km";
+      (document.getElementById("duration") as HTMLInputElement).innerText = new ConvertMinutesToHoursAndMinutesPipe().transform(this.totalTime);
     })
     .catch((error) => {
       this.directionsRenderer.setDirections({routes: []});
@@ -261,45 +273,6 @@ export class CreateRideComponent implements OnInit {
       }
       return this._toastrService.info("currently we are provinding road travel only", "Services unavailable");
     });
-  }
-
-  setDistanceAndTime() {
-    let destinattionArray = [];
-
-    destinattionArray.push((document.getElementById("rideDropLocation") as HTMLInputElement).value);
-    for (let i = 0; i < (this.createRideForm.get('rideIntermediateStops') as FormArray).length; i++) {
-      destinattionArray.push((document.getElementById(String(i)) as HTMLInputElement).value);
-    }
-
-    this.distanceMatService.getDistanceMatrix({
-      origins: [(document.getElementById("ridePickUpLocation") as HTMLInputElement).value],
-      destinations: destinattionArray,
-      travelMode: google.maps.TravelMode.DRIVING,
-      avoidHighways: false,
-      avoidTolls: false
-    })
-    .then((response) => {
-      this.totalDistance = 0;
-      this.totalTime = 0;
-      const routes = response.rows[0].elements;
-
-      for (let i = 0; i < routes.length; i++) {
-        const element = routes[i];
-        if (element.status === "OK") {
-          this.totalDistance += element.distance.value;
-          this.totalTime += element.duration.value;
-        }
-      };      
-
-      this.totalDistance = Number((this.totalDistance/1000).toFixed(1));
-      this.totalTime = Math.floor(this.totalTime/60);
-
-      (document.getElementById("distance") as HTMLInputElement).innerText = this.totalDistance + " km";
-      (document.getElementById("duration") as HTMLInputElement).innerText = new ConvertMinutesToHoursAndMinutesPipe().transform(this.totalTime);
-    })
-    .catch((error) => {
-      console.log(error);
-    })
   }
 
   calculateFare(vehicleTypeId: string){
@@ -349,9 +322,6 @@ export class CreateRideComponent implements OnInit {
       } else {
         return this._toastrService.info("Please select any one card available or else select cash","Payment information missing")
       }
-
-    } else {
-      return this._toastrService.info("Please select any one card available or else select cash","Payment information missing")
     }
     
     /**Add date and time for booking ride */
