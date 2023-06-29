@@ -87,7 +87,7 @@ export class CreateRideComponent implements OnInit {
   getSettingData() {
     this._settingSerive.getSettingData().subscribe({
       next: (response) => {
-        this.allowedStopsCount = response.setting[0].stopsInBetweenDestination
+        this.allowedStopsCount = response.setting.stopsInBetweenDestination
       },
       error: (error) => {
         console.log(error);        

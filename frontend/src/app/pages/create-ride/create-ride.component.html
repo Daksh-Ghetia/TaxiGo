@@ -69,7 +69,7 @@
                             <td>Add Stop: </td>
                             <td>
                                 <span class="deleteicon">
-                                    <input class="createRide-input mt-3" type="text" placeholder="Add location" formControlName="{{i}}" [id]="i" (load)="bindAutoComplete(i)" [readOnly]="createRideForm.get('rideCustomerEmail').invalid">
+                                    <input class="createRide-input mt-3" type="text" placeholder="Add location" formControlName="{{i}}" [id]="i" [readOnly]="createRideForm.get('rideCustomerEmail').invalid">
                                     <span (click)="deleteElement(i)">x</span>
                                 </span>
                                 <br>
@@ -179,7 +179,8 @@
                 <table class=" ml-9 mb-3 full" *ngIf="createRideForm.get('ridePickUpLocation').valid">
                     <tr>
                         <td class="label-info">Estimate distance: </td>
-                        <td class="info-data" id="distance"></td>
+                        <td class="info-data" id="distance">{{totalDistance}} Km</td>
+                        <td class="info-data">{{totalDistance}} Km</td>
                     </tr>
                     <div class="mt-3"></div>
                     <tr>

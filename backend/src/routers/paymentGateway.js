@@ -15,7 +15,7 @@ async function createCustomer(user) {
         });
         return customer.id;
     } catch (error) {
-        console.log("Error while creating customer in payment gateway ", error);
+      throw new Error(error.raw.message || "Error in payment gateway while creating customer");
     }    
 }
 
@@ -27,16 +27,16 @@ async function createIntent(userPaymentCustomerId) {
         });
         return intent.client_secret;
     } catch (error) {
-        console.log("Error while creating intent in payment gateway ", error);
+      throw new Error(error.raw.message || "Error in payment gateway while creating intent");
     }    
 }
 
 async function getCustomerDetails(customerId) {
     try {
-        const customer = await stripe.customers.retrieve(customerId);        
+        const customer = await stripe.customers.retrieve(customerId);
         return customer;
     } catch (error) {
-        console.log(error);
+      throw new Error(error.raw.message || "Error in payment gateway while creating customer.");
     }
 }
 
@@ -50,10 +50,9 @@ async function setDefaultCard(customerId, defaultPaymentCardId) {
         }
       }
     );
-
     return customer;
   } catch (error) {
-    console.log(error);
+    throw new Error(error.raw.message || "Error in payment gateway while setting default card")
   }
 }
 
@@ -65,7 +64,7 @@ async function getCardsList(customerId) {
         });
         return paymentMethods.data;
     } catch (error) {
-        console.log(error);
+      throw new Error(error.raw.message || "Error in payment gateway while getting card list");
     }
 }
 
@@ -74,7 +73,7 @@ async function deleteCard(cardId) {
     const deletedCard = await stripe.paymentMethods.detach(cardId);
     return deleteCard;
   } catch (error) {
-    console.log(error);
+    throw new Error(error.raw.message || "Error in payment gateway while deleting card")
   }
 }
 
@@ -95,7 +94,7 @@ async function deductPayment(customerId, paymentCardId, amountToDeduct) {
       console.log('Payment failed.');
     }
   } catch (error) {
-    console.log("error occured while paying", error);
+    throw new Error(error.raw.message || "Error in payment gateway while deduction payment");
   }
 }
 
