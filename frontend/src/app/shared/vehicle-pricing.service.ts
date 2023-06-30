@@ -11,8 +11,8 @@ export class VehiclePricingService {
 
   constructor(private http: HttpClient) { }
 
-  getVehiclePricing(cityId: string = "", pageNumber = 0) : Observable<any> {
-    this._url = "http://localhost:3000/vehiclePricing/getVehiclePricing?&cityId=" + cityId + "&pageNumber=" + encodeURIComponent(pageNumber);
+  getVehiclePricing(cityId: string = "", pageNumber = 0, sortField = "updatedAt", sortFieldValue = 1) : Observable<any> {
+    this._url = "http://localhost:3000/vehiclePricing/getVehiclePricing?&cityId=" + cityId + "&pageNumber=" + encodeURIComponent(pageNumber) + "&sortField=" + encodeURIComponent(sortField) + "&sortFieldValue=" + encodeURIComponent(sortFieldValue);
     return this.http.get(this._url);
   }
 

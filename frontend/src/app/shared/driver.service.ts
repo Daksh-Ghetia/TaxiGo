@@ -11,8 +11,8 @@ export class DriverService {
 
   constructor(private http: HttpClient) { }
 
-  getDriverData(data: string = '', pageNumber = 0) : Observable <any> {    
-    this._url = "http://localhost:3000/driver/getDriverDetails?data=" + encodeURIComponent(data) + "&pagenumber=" + encodeURIComponent(pageNumber);
+  getDriverData(data: string = '', pageNumber = 0, sortField = "createdAt", sortFieldValue = 1) : Observable <any> {    
+    this._url = "http://localhost:3000/driver/getDriverDetails?data=" + encodeURIComponent(data) + "&pagenumber=" + encodeURIComponent(pageNumber) + "&sortField=" + encodeURIComponent(sortField) + "&sortFieldValue=" + encodeURIComponent(sortFieldValue);
     return this.http.get(this._url);
   }
 

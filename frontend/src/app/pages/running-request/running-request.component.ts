@@ -34,6 +34,7 @@ export class RunningRequestComponent implements OnInit {
     this._rideService.getRideData([3,4,5,6]).subscribe({
       next: (response) => {
         if (response.ride.length == 0) {
+          this.rideDataList = [];
           return this._toastrService.info("No rides to display");
         }
         this.rideDataList = response.ride;
@@ -41,7 +42,6 @@ export class RunningRequestComponent implements OnInit {
       },
       error: (error) => {
         this._toastrService.error(error.error.msg || "Error occured while getting data");
-        console.log(error);
       },
       complete: () => {}
     })

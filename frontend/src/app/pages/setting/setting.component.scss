@@ -18,3 +18,15 @@
     box-sizing: border-box;
     outline: none;
 }
+
+.formBackground {
+    border: 1px solid rgba(0, 0, 0, .05);
+    border-radius: .375rem;
+    background-color: #fff;
+    background-clip: border-box;
+    width: 90rem;
+}
+
+table tr td:first-child, table div{
+    padding-left: 2rem;
+}

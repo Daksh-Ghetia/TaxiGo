@@ -1,13 +1,26 @@
+const Setting = require('../models/setting');
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
-
-const CLIENT_ID = '552509408536-g966403bdh7v11t99knt6h1jahen263f.apps.googleusercontent.com';
-const CLIENT_SECRET = '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';
+let oAuth2Client,CLIENT_ID,CLIENT_SECRET;
 const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
 const REFRESH_TOKEN = '1//04FRfn4bI2VnUCgYIARAAGAQSNgF-L9Ir203Y4DxqKR-InuuXI6xOM1q-s1-76t4cKl14Z2JiIc_7sZsjI_KTf1TqIDKWKJiRig';
 
-const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-oAuth2Client.setCredentials({refresh_token: REFRESH_TOKEN})
+async function getSettingData() {
+    try {
+        let setting = await Setting.findOne();
+        CLIENT_ID = setting.mailClientID;
+        CLIENT_SECRET = setting.mailClientSecret;
+        
+        oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+        oAuth2Client.setCredentials({refresh_token: REFRESH_TOKEN})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+getSettingData();
+// const CLIENT_ID = '552509408536-g966403bdh7v11t99knt6h1jahen263f.apps.googleusercontent.com';
+// const CLIENT_SECRET = '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';
+
 
 async function sendMail(mailRecipient, mailSubject, mailBodyText = "", mailBodyHTML="") {
     try {
@@ -36,11 +49,15 @@ async function sendMail(mailRecipient, mailSubject, mailBodyText = "", mailBodyH
         const result = await transport.sendMail(mailOptions);
         return result
     } catch (error) {
-        console.log("error occure while sending mail");
-        return error;
+        if (error.message == "invalid_client") {
+            throw new Error("Invalid credentials for mailing system");
+        } else {
+            throw new Error(error.message)
+        }
     }
 }
 
 module.exports = {
+    getSettingData: getSettingData,
     sendMail: sendMail
 }

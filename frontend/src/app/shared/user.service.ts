@@ -11,8 +11,9 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getUserData(data: string = '', pageNumber = 0) : Observable <any> {
-    this._url = "http://localhost:3000/user/getUserDetails?data=" + encodeURIComponent(data) + "&pageNumber=" + pageNumber;
+  getUserData(data: string = '', pageNumber = 0, sortField = "createdAt", sortFieldValue = 1) : Observable <any> {
+    console.log(data);
+    this._url = "http://localhost:3000/user/getUserDetails?data=" + encodeURIComponent(data) + "&pageNumber=" + encodeURIComponent(pageNumber) + "&sortField=" + encodeURIComponent(sortField) + "&sortFieldValue=" + encodeURIComponent(sortFieldValue);
     return this.http.get(this._url);
   }
 

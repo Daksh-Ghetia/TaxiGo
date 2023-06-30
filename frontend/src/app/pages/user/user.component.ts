@@ -34,9 +34,9 @@ export class UserComponent implements OnInit {
   private userId: any;
 
   /**For sorting data */
-  private sortedColumn: string = "";
+  private sortedColumn: string = "createdAt";
   public currentSort: string = "";
-  public currentSortDirection: string = "";
+  public currentSortDirection: string = "asc";
   private isAscending: boolean = true;
 
   constructor(
@@ -102,18 +102,13 @@ export class UserComponent implements OnInit {
   getUserData() {
     let data: string = "";
     if (this.sideButtonTitle == "Add") {
-      setTimeout(() => {
-        data = (document.getElementById("searchUser") as HTMLInputElement)
-          .value;
-      }, 10);
+      data = (document.getElementById("searchUser") as HTMLInputElement).value;
     }
-    this._userService.getUserData(data, this.p - 1).subscribe({
+
+    this._userService.getUserData(data, this.p - 1, this.sortedColumn, this.currentSortDirection == "asc" ? 1 : -1).subscribe({
       next: (response) => {
         if (response.user.length == 0) {
-          return this._toastrService.info(
-            "No user found to display, please add new user to use data",
-            "User not found"
-          );
+          return this._toastrService.info("No user found to display, please add new user to use data","User not found");
         }
         this.userDataList = response.user;
         this.totalRecordLength = response.totalRecord;
@@ -156,6 +151,7 @@ export class UserComponent implements OnInit {
     this.userForm.reset();
     this.customErrMsg = "";
     this.actionButton = "Add";
+    this.sortData("createdAt");
     this.getUserData();
   }
 
@@ -224,11 +220,9 @@ export class UserComponent implements OnInit {
       next: (response) => {
         if (response.user.length == 0) {
           this.userDataList = [];
-          return this._toastrService.info(
-            "No user found to display, please add new user to view data",
-            "User not found"
-          );
+          return this._toastrService.info("No user found to display, please add new user to view data","User not found");
         }
+        this.sortData("createdAt")
         this.userDataList = response.user;
         this.totalRecordLength = response.totalRecord;
         this.p = 1;
@@ -243,28 +237,14 @@ export class UserComponent implements OnInit {
 
   sortData(columnName: string) {
     if (this.sortedColumn === columnName) {
-      if (this.currentSortDirection == "asc") {
-        this.isAscending = !this.isAscending; // Reverse the order if the same column is clicked again
-        this.currentSortDirection = "desc";
-      } else {
-        this.isAscending = !this.isAscending;
-        this.currentSortDirection = "asc";
-      }
+      this.isAscending = !this.isAscending; // Reverse the order if the same column is clicked again
+      this.isAscending == true ? this.currentSortDirection = "asc" : this.currentSortDirection = "desc";
     } else {
       this.isAscending = true; // Set the default order to ascending
       this.sortedColumn = columnName; // Update the sorted column
       this.currentSort = columnName;
       this.currentSortDirection = "asc";
     }
-
-    // Sort the data based on the selected column and order
-    this.userDataList.sort((a, b) => {
-      if (this.isAscending) {
-        return a[columnName] > b[columnName] ? 1 : -1;
-      } else {
-        return a[columnName] < b[columnName] ? 1 : -1;
-      }
-    });
   }
 
   sideButton() {
@@ -274,8 +254,10 @@ export class UserComponent implements OnInit {
       this.sideButtonTitle = "Add";
     }
     this.customErrMsg = "";
-    this.getUserData();
-    this.cancelUser();
+    setTimeout(() => {
+      this.getUserData();
+      this.cancelUser();
+    }, 10);
   }
 
   cardsInfo(content: any, currentCustomerId: string) {

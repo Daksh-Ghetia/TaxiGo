@@ -67,6 +67,8 @@ const deleteFile = (imagePath) => {
 /**Get user data */
 router.get('/user/getUserDetails', auth, async (req, res) => {
     const data = req.query.data;
+    const sortField = req.query.sortField;
+    const sortFieldValue = parseInt(req.query.sortFieldValue);
     let dataID;
 
     if (typeof data === 'string' && (data.length == 12 || data.length == 24) && ObjectId.isValid(data)) {
@@ -101,6 +103,9 @@ router.get('/user/getUserDetails', auth, async (req, res) => {
             },
             {
                 $unwind: '$country'
+            },
+            {
+                $sort: { [sortField]: sortFieldValue }
             },
             {
                 $facet: {
@@ -161,7 +166,7 @@ router.post('/user/addUser', auth, handleUpload, async (req,res) => {
         }
         await user.save();
 
-        mail.sendMail(user.userEmail, "Registration successfull", `Congratulations ${user.userName}, you have successfully registered for TaxiGo`);
+        await mail.sendMail(user.userEmail, "Registration successfull", `Congratulations ${user.userName}, you have successfully registered for TaxiGo`);
         /**Revert back to the user stating user added successfully */
         return res.status(200).send({user: user, msg: "User added successfully", status: "success"});
     } catch (error) {
@@ -279,7 +284,7 @@ router.post('/user/addPaymentDetails/:id', auth, async (req,res) => {
 
         return res.status(200).send({msg: "Client Secret generated successfully", user: user,clientSecret: clientSecret, status: "success"});
     } catch (error) {
-        return res.status(500).send({msg: error.message || "Server error while updating user payment details", status: "failed", error: error});
+        return res.status(500).send({msg: "Server error while updating user payment details", status: "failed", error: error});
     }
 })
 
@@ -293,7 +298,7 @@ router.get('/user/getCardsList/:id', auth, async (req,res) => {
         const cardsData = await paymentGateway.getCardsList(req.params.id);
         return res.status(200).send({msg: "Client card details accquired successfully", cardsData: cardsData, customerData: customerData, status: "success"});
     } catch (error) {
-        return res.status(500).send({msg: error.message || "Server error while getting user cards details", status: "failed", error: error});
+        return res.status(500).send({msg: "Server error while getting user cards details", status: "failed", error: error});
     }
 })
 
@@ -303,7 +308,7 @@ router.patch('/user/setDefaultCard', auth, async (req,res) => {
         const customer = await paymentGateway.setDefaultCard(req.body.customerId, req.body.defaultPaymentCardId);
         return res.status(200).send({msg: "Default card updated successfully", customer: customer, status: "success"});
     } catch (error) {
-        return res.status(500).send({msg: error.message || "Server error while updating default card", status: "failed", error: error});
+        return res.status(500).send({msg: "Server error while updating default card", status: "failed", error: error});
     }
 })
 
@@ -316,6 +321,5 @@ router.delete('/user/deleteCard/:id', auth, async (req,res) => {
         res.status(500).send({error, msg: "Server error while deleting card", status: "failed"});
     }
 })
-
 
 module.exports = router

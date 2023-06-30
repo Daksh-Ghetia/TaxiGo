@@ -198,5 +198,11 @@ export class ConfirmedRideComponent implements OnInit {
         this._toastrService.success("Congratulations driver accepted the request");
       }
     })
+
+    this._webSocketService.listen('errorOccured').subscribe({
+      next: (response: any) => {
+        this._toastrService.error(response);
+      }
+    })
   }
 }

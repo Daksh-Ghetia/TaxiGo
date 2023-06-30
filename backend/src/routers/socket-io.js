@@ -65,11 +65,11 @@ function socket(server) {
                 /**Update ride status as assigned to a driver and waiting for driver response */
                 const ride = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus: 4}, {new: true, runValidators: true});
                 SMSBody = "Ride Confirmed, Congratulations " + driver.driverName + " you have been assigned to a new ride, and your customer pickup location is " +  ride.ridePickUpLocation + " And customer should be dropped at " + ride.rideDropLocation;
-                SendMessage.SendMessage(SMSBody);
                 socketEmit('dataChange');
                 socketEmit('driverAcceptRequest');
+                await SendMessage.SendMessage(SMSBody);
             } catch (error) {
-                console.log(error);
+                socketEmit('errorOccured', error.message);
             }
         });
 
@@ -90,7 +90,7 @@ function socket(server) {
                 const ride = await Ride.findByIdAndUpdate(
                     data.ride._id, 
                     {
-                        rideStatus: 3,
+                        rideStatus: 2,
                         $push: { rideRejectedByDriverId: new ObjectId(data.driver._id)}
                     }, 
                     {new: true, runValidators: true}

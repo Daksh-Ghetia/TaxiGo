@@ -4,6 +4,7 @@ const multer = require('multer');
 const Setting = require('../models/setting');
 const Cron = require('../routers/crone');
 const PaymentGateway = require('../routers/paymentGateway');
+const Mail = require('../routers/mail');
 
 const router = new express.Router();
 
@@ -51,7 +52,7 @@ router.patch('/setting/editSetting/:id', auth, upload.none(), async(req,res) => 
         await setting.save();
         Cron.getSettingData();
         PaymentGateway.getSettingData();
-
+        Mail.getSettingData();
         return res.status(200).send({msg: "Edit success", setting: setting, status: "success"});
 
     } catch (error) {

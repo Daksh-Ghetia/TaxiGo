@@ -66,6 +66,8 @@ const deleteFile = (imagePath) => {
 /**Get driver data */
 router.get('/driver/getDriverDetails', auth, async (req, res) => {
     const data = req.query.data;
+    const sortField = req.query.sortField;
+    const sortFieldValue = parseInt(req.query.sortFieldValue);
     let dataID;
 
     if (typeof data === 'string' && (data.length == 12 || data.length == 24) && ObjectId.isValid(data)) {
@@ -118,6 +120,9 @@ router.get('/driver/getDriverDetails', auth, async (req, res) => {
             },
             {
                 $unwind: '$city'
+            },
+            {
+                $sort: { [sortField]: sortFieldValue }
             },
             {
                 $facet: {
@@ -178,7 +183,7 @@ router.post('/driver/addDriver', auth, handleUpload, async (req,res) => {
         }
         await driver.save()
 
-        mail.sendMail(driver.driverEmail, "Registration successfull", `Congratulations ${driver.driverName}, you have successfully registered for TaxiGo as a driver, you will be assigned with a service by the admin shortly.`);
+        await mail.sendMail(driver.driverEmail, "Registration successfull", `Congratulations ${driver.driverName}, you have successfully registered for TaxiGo as a driver, you will be assigned with a service by the admin shortly.`);
         /**Revert back to the admin stating driver added successfully */
         return res.status(200).send({driver: driver, msg: "Driver added successfully", status: "success"});
     } catch (error) {

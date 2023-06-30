@@ -9,6 +9,9 @@ const upload = multer()
 
 router.get('/vehiclePricing/getVehiclePricing', auth, async (req,res) => {
     try {
+        const sortField = req.query.sortField;
+        const sortFieldValue = parseInt(req.query.sortFieldValue);
+
         /**Create a pipeline for aggregatea and use it to send the data*/
         let pipeline = [
             {
@@ -50,6 +53,9 @@ router.get('/vehiclePricing/getVehiclePricing', auth, async (req,res) => {
                     "city.cityName": 1,
                     "vehicleType.vehicleName": 1
                 }
+            },
+            {
+                $sort: { [sortField]: sortFieldValue }
             },
             {
                 $facet: {
@@ -100,6 +106,7 @@ router.get('/vehiclePricing/getVehiclePricing', auth, async (req,res) => {
         /**If data found send successs message */
         res.status(200).send({vehiclePricing: vehiclePricing[0].paginatedData, totalRecord: vehiclePricing[0].totalCount, msg: 'Vehicle pricing found', status: "success"})
     } catch (error) {
+        console.log(error);
         res.status(500).send({msg: "Error occured while getting data of vehicle pricing", status: "failed", error: error});
     }
 })

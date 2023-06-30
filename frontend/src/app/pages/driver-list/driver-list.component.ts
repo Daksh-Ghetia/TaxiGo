@@ -30,9 +30,9 @@ export class DriverListComponent implements OnInit {
   
 
   /**For sorting data */
-  private sortedColumn: string = '';
+  private sortedColumn: string = 'createdAt';
   public currentSort: string = "";
-  public currentSortDirection: string = '';
+  public currentSortDirection: string = 'asc';
   private isAscending: boolean = true;
 
   constructor(
@@ -70,11 +70,10 @@ export class DriverListComponent implements OnInit {
   getDriverData() {
     let data: string = "";
     if (this.sideButtonTitle == "Add") {
-      setTimeout(() => {
-        data = (document.getElementById('searchDriver') as HTMLInputElement).value;
-      }, 10);
+      data = (document.getElementById('searchDriver') as HTMLInputElement).value;
     }
-    this._driverService.getDriverData(data, this.p-1).subscribe({
+    
+    this._driverService.getDriverData(data, this.p-1, this.sortedColumn, this.currentSortDirection == "asc" ? 1 : -1).subscribe({
       next: (response) => {
         this.totalRecordLength = response.totalRecord;
         this.driverDataList = response.driver;
@@ -244,6 +243,7 @@ export class DriverListComponent implements OnInit {
     this.customErrMsg = "";
     this.cityList = []
     this.actionButton = "Add";
+    this.sortData("createdAt");
     this.getDriverData();
   }
 
@@ -253,6 +253,7 @@ export class DriverListComponent implements OnInit {
         if (response.driver.length === 0) {
           return this._toastrService.info("there are no drivers to display", "No drivers")
         }
+        this.sortData("createdAt")
         this.totalRecordLength = response.totalRecord;
         this.driverDataList = response.driver;
         this.p = 1
@@ -273,34 +274,22 @@ export class DriverListComponent implements OnInit {
       this.sideButtonTitle = "Add";
     }
     this.customErrMsg = "";
-    this.getDriverData();
-    this.cancelDriver();
+    setTimeout(() => {
+      this.getDriverData();
+      this.cancelDriver();
+    }, 10);
   }
 
   sortData(columnName: string) {
     if (this.sortedColumn === columnName) {
-      if (this.currentSortDirection == "asc") {
-        this.isAscending = !this.isAscending; // Reverse the order if the same column is clicked again
-        this.currentSortDirection = "desc";        
-      } else {
-        this.isAscending = !this.isAscending;
-        this.currentSortDirection = "asc"
-      }
+      this.isAscending = !this.isAscending; // Reverse the order if the same column is clicked again
+      this.isAscending == true ? this.currentSortDirection = "asc" : this.currentSortDirection = "desc";
     } else {
       this.isAscending = true; // Set the default order to ascending
       this.sortedColumn = columnName; // Update the sorted column
       this.currentSort = columnName;
       this.currentSortDirection = "asc";
     }
-
-    // Sort the data based on the selected column and order
-    this.driverDataList.sort((a, b) => {
-      if (this.isAscending) {
-        return (a[columnName] > b[columnName]) ? 1 : -1;
-      } else {
-        return (a[columnName] < b[columnName]) ? 1 : -1;
-      }
-    });
   }
 
   updateServiceModel(content: any, cityId: string, driverId: string, vehicleServiceTypeId: string = null){

@@ -127,6 +127,7 @@
         </form>
     </div>
 
+    <!-- User Table -->
     <div class="row mt-3">
         <div class="col">
           <div class="card shadow">
@@ -139,25 +140,25 @@
                 <!-- Table header section -->
                 <thead class="thead-light">
                   <tr class="text-center">
-                    <th scope="col" (click)="sortData('userName')">
+                    <th scope="col" (click)="sortData('userName'); getUserData()">
                       User Name
                       <i *ngIf="currentSort === 'userName' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
                       <i *ngIf="currentSort === 'userName' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
                     </th>
-                    <th scope="col" (click)="sortData('userEmail')">
+                    <th scope="col" (click)="sortData('userEmail'); getUserData()">
                       User Email-id
                       <i *ngIf="currentSort === 'userEmail' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
                       <i *ngIf="currentSort === 'userEmail' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
                     </th>
-                    <th scope="col" (click)="sortData('userPhone')">
+                    <th scope="col" (click)="sortData('userPhone'); getUserData()">
                         User Phone number
                       <i *ngIf="currentSort === 'userPhone' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
                       <i *ngIf="currentSort === 'userPhone' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
                     </th>
-                    <th scope="col" (click)="sortData('userCountryId')">
+                    <th scope="col" (click)="sortData('country.countryName'); getUserData()">
                         Country
-                      <i *ngIf="currentSort === 'userCountryId' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
-                      <i *ngIf="currentSort === 'userCountryId' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                      <i *ngIf="currentSort === 'country.countryName' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'country.countryName' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
                     </th>
                     <th scope="col">
                       User Profile

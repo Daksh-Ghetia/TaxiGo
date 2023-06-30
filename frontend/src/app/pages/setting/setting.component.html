@@ -10,9 +10,9 @@
     <!-- Form -->
     <div class="col-xl-12">
         <form id="setting" [formGroup]="settingForm">
-            <table>
+            <table class="formBackground p-8">
                 <!-- Time to accept request -->
-                <div class="mt-9"><b>Cron Settings</b></div>
+                <div class="mt-2 ml-2"><b>Cron Settings</b></div>
                 <tr>
                     <td class="">Time to accept request:</td>
                     <td>
@@ -25,7 +25,7 @@
                             <strong *ngIf="settingForm.get('timeToAcceptRequest').invalid && settingForm.get('timeToAcceptRequest').touched">Please select time to accept request</strong>
                         </div>
                     </td>
-                </tr>                
+                </tr>
                 <!-- Stops in between two destination -->
                 <div class="mt-3"></div>
                 <tr>
@@ -41,16 +41,12 @@
                         </div>
                     </td>
                 </tr>
-                <!-- Action Button -->
-                <div class="mt-3"></div>
                 <tr>
-                    <td></td>
-                    <td>
-                        <button class="btn btn-success" id="submit" type="submit" (click)="updateSetting()">Update cron setting</button>
-                    </td>
+                    <td><hr></td>
+                    <td class="pr-5"><hr></td>
                 </tr>
                 <!-- Stripe setting -->
-                <div class="mt-5"><b>Strpe Settings</b></div>
+                <div class="mt-2"><b>Strpe Settings</b></div>
                 <tr>
                     <td>public key</td>
                     <td>
@@ -70,15 +66,12 @@
                         </div>
                     </td>
                 </tr>
-                <br>
                 <tr>
-                    <td></td>
-                    <td>
-                        <button class="btn btn-success" id="submit" type="submit" (click)="updateSetting()">Update stripe setting</button>
-                    </td>
+                    <td><hr></td>
+                    <td class="pr-5"><hr></td>
                 </tr>
                 <!-- SMS setting -->
-                <div class="mt-5"><b>SMS Settings</b></div>
+                <div class="mt-2"><b>SMS Settings</b></div>
                 <tr>
                     <td>Account SID</td>
                     <td>
@@ -98,15 +91,12 @@
                         </div>
                     </td>
                 </tr>
-                <br>
                 <tr>
-                    <td></td>
-                    <td>
-                        <button class="btn btn-success" id="submit" type="submit" (click)="updateSetting()">Update SMS setting</button>
-                    </td>
+                    <td><hr></td>
+                    <td class="pr-5"><hr></td>
                 </tr>
                 <!-- Mail setting -->
-                <div class="mt-5"><b>Mail Settings</b></div>
+                <div class="mt-2"><b>Mail Settings</b></div>
                 <tr>
                     <td>Client ID:</td>
                     <td>
@@ -126,13 +116,14 @@
                         </div>
                     </td>
                 </tr>
-                <br>
+                <br><br>
+                <!-- Action button -->
                 <tr>
-                    <td></td>
                     <td>
-                        <button class="btn btn-success" id="submit" type="submit" (click)="updateSetting()">Update mail setting</button>
+                        <button class="btn btn-success" id="submit" type="submit" (click)="updateSetting()">Update setting</button>
                     </td>
                 </tr>
+                <div class="mb-5"></div>
             </table>
         </form>
     </div>

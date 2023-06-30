@@ -149,35 +149,35 @@
                 <!-- Table header section -->
                 <thead class="thead-light">
                   <tr class="text-center">
-                    <th scope="col" (click)="sortData('driverName')">
+                    <th scope="col" (click)="sortData('driverName'); getDriverData()">
                       Driver Name
                       <i *ngIf="currentSort === 'driverName' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
                       <i *ngIf="currentSort === 'driverName' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
                     </th>
-                    <th scope="col" (click)="sortData('driverEmail')">
+                    <th scope="col" (click)="sortData('driverEmail'); getDriverData()">
                       Driver Email-id
                       <i *ngIf="currentSort === 'driverEmail' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
                       <i *ngIf="currentSort === 'driverEmail' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
                     </th>
-                    <th scope="col" (click)="sortData('driverPhone')">
+                    <th scope="col" (click)="sortData('driverPhone'); getDriverData()">
                         Driver Phone number
                       <i *ngIf="currentSort === 'driverPhone' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
                       <i *ngIf="currentSort === 'driverPhone' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
                     </th>
-                    <th scope="col" (click)="sortData('driverCountryId')">
+                    <th scope="col" (click)="sortData('country.countryName'); getDriverData()">
                         Country
-                      <i *ngIf="currentSort === 'driverCountryId' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
-                      <i *ngIf="currentSort === 'driverCountryId' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                      <i *ngIf="currentSort === 'country.countryName' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'country.countryName' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
                     </th>
-                    <th scope="col" (click)="sortData('driverCityId')">
+                    <th scope="col" (click)="sortData('city.cityName'); getDriverData()">
                         City
-                      <i *ngIf="currentSort === 'driverCityId' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
-                      <i *ngIf="currentSort === 'driverCityId' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                      <i *ngIf="currentSort === 'city.cityName' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'city.cityName' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
                     </th>
-                    <th scope="col" (click)="sortData('driverServiceType')">
+                    <th scope="col" (click)="sortData('vehicleType.vehicleName'); getDriverData()">
                       Driver Service Type
-                      <i *ngIf="currentSort === 'driverServiceType' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
-                      <i *ngIf="currentSort === 'driverServiceType' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
+                      <i *ngIf="currentSort === 'vehicleType.vehicleName' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
+                      <i *ngIf="currentSort === 'vehicleType.vehicleName' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
                     </th>
                     <th scope="col">
                         Approval Status

@@ -151,6 +151,7 @@
                 </div>
             </div>
 
+            <!-- Action button -->
             <div class="row mt-3 ml-9">
                 <div class="col-md-3">
                     <label id="editId" for="id" hidden></label>
@@ -183,56 +184,27 @@
                 <!-- Table header section -->
                 <thead class="thead-light">
                   <tr class="text-center">
-                    <th scope="col" (click)="sortData('countryId')">
-                      Country
+                    <th scope="col" (click)="sortData('countryId'); getVehiclePricing('country.countryName')">Country
                       <i *ngIf="currentSort === 'countryId' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
                       <i *ngIf="currentSort === 'countryId' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
                     </th>
-                    <th scope="col" (click)="sortData('cityId')">
+                    <th scope="col" (click)="sortData('cityId'); getVehiclePricing('city.cityName')">
                       City
                       <i *ngIf="currentSort === 'cityId' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
                       <i *ngIf="currentSort === 'cityId' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
                     </th>
-                    <th scope="col" (click)="sortData('vehicleTypeId')">
+                    <th scope="col" (click)="sortData('vehicleTypeId'); getVehiclePricing('vehicleType.vehicleName')">
                       Vehicle Type
                       <i *ngIf="currentSort === 'vehicleTypeId' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
                       <i *ngIf="currentSort === 'vehicleTypeId' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
                     </th>
-                    <th scope="col" (click)="sortData('driverProfit')">
-                      Driver profit
-                      <i *ngIf="currentSort === 'driverProfit' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
-                      <i *ngIf="currentSort === 'driverProfit' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
-                    </th>
-                    <th scope="col" (click)="sortData('minimumFare')">
-                      Minimum Fare
-                      <i *ngIf="currentSort === 'minimumFare' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
-                      <i *ngIf="currentSort === 'minimumFare' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
-                    </th>
-                    <th scope="col" (click)="sortData('distanceForBasePrice')" class="text-wrap">
-                      Distance for base price
-                      <i *ngIf="currentSort === 'distanceForBasePrice' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
-                      <i *ngIf="currentSort === 'distanceForBasePrice' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
-                    </th>
-                    <th scope="col" (click)="sortData('basePrice')">
-                      Base Price
-                      <i *ngIf="currentSort === 'basePrice' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
-                      <i *ngIf="currentSort === 'basePrice' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
-                    </th>
-                    <th scope="col" (click)="sortData('pricePerUnitDistance')" class="text-wrap">
-                      Price per unit distance
-                      <i *ngIf="currentSort === 'pricePerUnitDistance' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
-                      <i *ngIf="currentSort === 'pricePerUnitDistance' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
-                    </th>
-                    <th scope="col" (click)="sortData('pricePerUnitTime')" class="text-wrap">
-                      Price per unit time
-                      <i *ngIf="currentSort === 'pricePerUnitTime' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
-                      <i *ngIf="currentSort === 'pricePerUnitTime' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
-                    </th>
-                    <th scope="col" (click)="sortData('maxSpace')">
-                      Max space
-                      <i *ngIf="currentSort === 'maxSpace' && currentSortDirection === 'asc'" class="fa fa-arrow-up"></i>
-                      <i *ngIf="currentSort === 'maxSpace' && currentSortDirection === 'desc'" class="fa fa-arrow-down"></i>
-                    </th>
+                    <th scope="col" >Driver profit</th>
+                    <th scope="col" >Minimum Fare</th>
+                    <th scope="col"  class="text-wrap">Distance for base price</th>
+                    <th scope="col" >Base Price</th>
+                    <th scope="col"  class="text-wrap">Price per unit distance</th>
+                    <th scope="col"  class="text-wrap">Price per unit time</th>
+                    <th scope="col" >Max space</th>
                     <th scope="col" >Action</th>
                   </tr>
                 </thead>

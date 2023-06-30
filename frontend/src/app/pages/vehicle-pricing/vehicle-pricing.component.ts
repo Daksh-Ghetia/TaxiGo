@@ -28,12 +28,14 @@ export class VehiclePricingComponent implements OnInit {
   public vehiclePricingList: any = [];
   public customErrMsg: string;
   public actionButton: string = "Add";
-  private sortedColumn: string = '';
-  public currentSort: string = "";
-  public currentSortDirection: string = '';
-  private isAscending: boolean = true;
   public p: any = 1;
   public totalRecordLength: number;
+
+  /**For sorting data */
+  private sortedColumn: string = "";
+  public currentSort: string = "";
+  public currentSortDirection: string = "asc";
+  private isAscending: boolean = true;
 
   ngOnInit(): void {
     this.fillCountryDropDown();
@@ -159,8 +161,8 @@ export class VehiclePricingComponent implements OnInit {
     (document.getElementById('editId') as HTMLElement).textContent = "";
   }
 
-  getVehiclePricing() {
-    this._vehiclePricingService.getVehiclePricing("", this.p-1).subscribe({
+  getVehiclePricing(sortField = "updatedAt") {
+    this._vehiclePricingService.getVehiclePricing("", this.p-1, sortField, this.currentSortDirection == "asc" ? 1 : -1).subscribe({
       next: (response) => {
         if (response.vehiclePricing.length == 0) {
           return this._toastrService.info("No vehicle pricing found");
@@ -214,25 +216,16 @@ export class VehiclePricingComponent implements OnInit {
     }
   }
 
-  sortData(columnName: string) {
+  sortData(columnName: string) {    
     if (this.sortedColumn === columnName) {
       this.isAscending = !this.isAscending; // Reverse the order if the same column is clicked again
-      this.currentSortDirection = "desc";
+      this.isAscending == true ? this.currentSortDirection = "asc" : this.currentSortDirection = "desc";
     } else {
       this.isAscending = true; // Set the default order to ascending
       this.sortedColumn = columnName; // Update the sorted column
       this.currentSort = columnName;
       this.currentSortDirection = "asc";
     }
-
-    // Sort the data based on the selected column and order
-    this.vehiclePricingList.sort((a, b) => {
-      if (this.isAscending) {
-        return (a[columnName] > b[columnName]) ? 1 : -1;
-      } else {
-        return (a[columnName] < b[columnName]) ? 1 : -1;
-      }
-    });
   }
 
   scrollToTop() {

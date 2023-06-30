@@ -123,7 +123,7 @@ router.post('/ride/getRideDetails', auth, upload.none(),async (req, res) => {
         /**Find all the ride data and if not found return no data to display*/
         let ride = await Ride.aggregate(pipeline);
         if (ride.length == 0) {
-            return res.status(404).send({msg: "No ride to display", status: "failed"});
+            return res.status(200).send({msg: "No ride to display", ride: [], status: "failed"});
         }
 
         /**If data found send the data */
@@ -179,19 +179,20 @@ router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
         if (req.body.rideStatus == 7) {
             await Driver.findByIdAndUpdate(ride.rideDriverId, {driverRideStatus: 0}, {new: true, runValidators: true});
             const user = await User.findOne({_id: ride.rideCustomerId});
+            await ride.save();
             await paymentGateway.deductPayment(user.userPaymentCustomerId, ride.ridePaymentCardId, ride.rideFare);
-            SendMessage.SendMessage("Ride has been completed");
             let msg = `Congratulations ${user.userName}, your ride has been completed successfully. Total charge for the ride is ${ride.rideFare},`
+            await mail.sendMail(user.userEmail, "Ride receipt", "Ride completed", msg);
             if (ride.ridePaymentMethod == 0) {
                 msg+= ` And your payment method is cash. Future reference id for ride is ${ride._id}`
             } else {
                 msg+= ` And your payment method is card, payment id is ${ride.ridePaymentCardId}. Future reference id for ride is ${ride._id}`
             }
-            mail.sendMail(user.userEmail, "Ride receipt", "Ride completed", msg);
+            await SendMessage.SendMessage("Ride has been completed");
         } else if (req.body.rideStatus == 6) {
-            SendMessage.SendMessage("Ride has been started");
+            await ride.save();
+            await SendMessage.SendMessage("Ride has been started");
         }
-        await ride.save();
         res.status(200).send({msg: "Edit success", ride: ride, status: "success"});
     } catch (error) {
         res.status(500).send({msg: "Server error while adding ride", status: "failed", error: error});
