@@ -6,6 +6,7 @@ const Driver = require('../models/driver');
 const User = require('../models/user');
 const SendMessage = require('./SMS');
 const paymentGateway = require('./paymentGateway');
+const VehicleType = require('../models/vehicleType');
 const mongoose = require('mongoose');
 const mail = require('./mail');
 
@@ -177,17 +178,43 @@ router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
         
         /**Free driver whenever the ride is completed and if the ride is started then send message of ride started */
         if (req.body.rideStatus == 7) {
-            await Driver.findByIdAndUpdate(ride.rideDriverId, {driverRideStatus: 0}, {new: true, runValidators: true});
+            /**Update Driver data and get user, vehicle type data to send message and mail  */
+            const driver = await Driver.findByIdAndUpdate(ride.rideDriverId, {driverRideStatus: 0}, {new: true, runValidators: true});
             const user = await User.findOne({_id: ride.rideCustomerId});
-            await ride.save();
-            await paymentGateway.deductPayment(user.userPaymentCustomerId, ride.ridePaymentCardId, ride.rideFare);
-            let msg = `Congratulations ${user.userName}, your ride has been completed successfully. Total charge for the ride is ${ride.rideFare},`
-            await mail.sendMail(user.userEmail, "Ride receipt", "Ride completed", msg);
-            if (ride.ridePaymentMethod == 0) {
-                msg+= ` And your payment method is cash. Future reference id for ride is ${ride._id}`
-            } else {
-                msg+= ` And your payment method is card, payment id is ${ride.ridePaymentCardId}. Future reference id for ride is ${ride._id}`
+            const vehicleType = await VehicleType.findOne({_id: ride.rideServiceTypeId})
+
+            /**Deduct payment if payment method is card and after that save the ride info*/
+            if (ride.ridePaymentMethod == 1) {
+                await paymentGateway.deductPayment(user.userPaymentCustomerId, ride.ridePaymentCardId, ride.rideFare);
             }
+            await ride.save();
+            
+            /**Get mail body */
+            let msg = await getMailBody(ride, user, driver, vehicleType);
+            if (ride.ridePaymentMethod == 0) {
+                msg+= `<tr>
+                        <td class="label-input">Payment method: </td>
+                        <td>Cash</td>
+                    </tr>
+                </tbody>
+                </table>`
+            } else {
+                msg += `
+                    <tr>
+                        <td class="label-input">Payment method: </td>
+                        <td>Card</td>
+                    </tr>
+                    <tr>
+                        <td class="label-input">Payment Card Id: </td>
+                        <td>${ride.ridePaymentCardId} </td>
+                    </tr>
+                    </tbody>
+                </table>
+                `
+            }
+
+            /**Send mail and message */
+            await mail.sendMail(user.userEmail, "Ride receipt", null ,msg);
             await SendMessage.SendMessage("Ride has been completed");
         } else if (req.body.rideStatus == 6) {
             await ride.save();
@@ -198,5 +225,63 @@ router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
         res.status(500).send({msg: "Server error while adding ride", status: "failed", error: error});
     }       
 })
+
+async function getMailBody(ride, user, driver, vehicleType) {
+    return `Congratulations <h5>${user.userName} </h5>, your ride has been completed successfully. 
+            <br>
+            <H2>Ride summary</H2>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="label-input">Ride id: </td>
+                        <td>${ride._id}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-input">User id: </td>
+                        <td>${ride.rideCustomerId}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-input">User contact no: </td>
+                        <td>${user.userPhone}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-input">User email: </td>
+                        <td>${user.userEmail} </td>
+                    </tr>
+                    <tr>
+                        <td class="label-input">Vehicle type: </td>
+                        <td>${vehicleType.vehicleName} </td>
+                    </tr>
+                    <tr>
+                        <td class="label-input">Driver Name: </td>
+                        <td>${driver.driverName} </td>
+                    </tr>
+                    <tr>
+                        <td class="label-input">Pick point: </td>
+                        <td><li>${ride.ridePickUpLocation}</li> </td>
+                    </tr>
+                    <tr>
+                        <td class="label-input">Drop point: </td>
+                        <td><li>${ride.rideDropLocation}</li> </td>
+                    </tr>
+                    <tr>
+                        <td class="label-input">Ride Date and Time: </td>
+                        <td>${new Date(ride.rideDateTime)}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-input">Ride Distance: </td>
+                        <td>${ride.rideDistance} Km </td>
+                    </tr>
+                    <tr>
+                        <td class="label-input">Total travel time: </td>
+                        <td>${ride.rideTime} minutes</td>
+                    </tr>
+                    <tr>
+                        <td class="label-input">Estimated Fare: </td>
+                        <td>$ ${ride.rideFare} </td>
+                    </tr>
+                    `
+}
 
 module.exports = router

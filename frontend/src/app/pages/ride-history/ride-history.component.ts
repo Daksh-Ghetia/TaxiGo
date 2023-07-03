@@ -105,8 +105,6 @@ export class RideHistoryComponent implements OnInit {
 
   initMap(latitude:number = 22.270956722802083, longitude: number = 70.7387507402433, zoomSize:number = 12) {
     let location:any = {lat: Number(latitude), lng: Number(longitude)};
-      
-    console.log(this.fullRideData);
     
     this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
       center: location,
@@ -133,14 +131,64 @@ export class RideHistoryComponent implements OnInit {
       waypoints: this.wayPts,
       optimizeWaypoints: true,
       travelMode: google.maps.TravelMode.DRIVING,
-    })
-    .then((response) => {
-      console.log(response);
-      this.directionsRenderer.setDirections(response)
-    })
-    .catch((error) => {
-      this.directionsRenderer.setDirections({routes: []});
-    });
+    },((response: any, status: any) => {
+        // this.directionsRenderer.setDirections(response);
+        if (status == google.maps.DirectionsStatus.OK) {
+          
+          /**Get the polyline data from the response */
+          let drawPolyline = new google.maps.Polyline({
+            path: google.maps.geometry.encoding.decodePath(response.routes[0].overview_polyline),
+            geodesic: true,
+            strokeColor: "#73B9FF",
+            strokeOpacity: 1.0,
+            strokeWeight: 5
+          });
+
+          /**Set the map for polyline and also create an empty marker array */
+          drawPolyline.setMap(this.map);
+          let markers: any[] = [];
+          let currentMarkerAsciiCode = 66;
+
+          /**Marker for starting point */
+          let pickupMarker = new google.maps.Marker({
+            position: response.routes[0].legs[0].start_location,
+            map: this.map,
+            label: {
+              text: 'A',
+              color: 'white'
+            }
+          });
+          markers.push(pickupMarker)
+
+          /**Loop for all the intermediate stops and also pushing them to markers array */
+          for (let i = 1; i <= this.fullRideData[0].rideIntermediateStops.length; i++) {
+            let marker = new google.maps.Marker({
+              position: response.routes[0].legs[i].start_location,
+              map: this.map,
+              label: {
+                text: String.fromCharCode(currentMarkerAsciiCode),
+                color: "white"
+              }
+            })
+            currentMarkerAsciiCode += 1;
+            markers.push(marker);
+          }
+
+          /**Maeker for ending point and also make the path as center and map according to its bound points*/
+          let destinationMarker = new google.maps.Marker({
+            position: response.routes[0].legs[response.routes[0].legs.length - 1].end_location,
+            map: this.map,
+            label: {
+              text: String.fromCharCode(currentMarkerAsciiCode),
+              color: "white"
+            }
+          })
+          markers.push(destinationMarker)
+          this.map.fitBounds(response.routes[0]?.bounds);
+          this.map.setCenter(response.routes[0]?.bounds.getCenter());
+        }
+      }
+    ));
   }
 
   downloadData() {

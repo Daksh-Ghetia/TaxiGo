@@ -262,7 +262,7 @@ export class CreateRideComponent implements OnInit {
       this.totalDistance = Number((this.totalDistance/1000).toFixed(1));
       this.totalTime = Math.floor(this.totalTime/60);
 
-      (document.getElementById("distance") as HTMLInputElement).innerText = this.totalDistance + " km";
+      (document.getElementById("distance") as HTMLInputElement).innerText = this.totalDistance + " Km";
       (document.getElementById("duration") as HTMLInputElement).innerText = new ConvertMinutesToHoursAndMinutesPipe().transform(this.totalTime);
     })
     .catch((error) => {
@@ -323,11 +323,18 @@ export class CreateRideComponent implements OnInit {
         return this._toastrService.info("Please select any one card available or else select cash","Payment information missing")
       }
     }
-    
-    /**Add date and time for booking ride */
-    (this.createRideForm.get('rideDateTime').value == 'bookNow') ? (createRideData["rideDateTime"] = new Date().toISOString()) : (createRideData["rideDateTime"] = (document.getElementById('scheduleDateTime') as HTMLInputElement).value);
+
     /**Add payment method */
     (this.createRideForm.get('ridePaymentMethod').value == 'cash') ? (createRideData["ridePaymentMethod"] = 0) : (createRideData["ridePaymentMethod"] = 1);
+    
+    /**Add date and time for booking ride */
+    if ((this.createRideForm.get('rideDateTime').value == 'bookNow')) {
+      (createRideData["rideDateTime"] = new Date().toISOString())
+    } else if ((document.getElementById('scheduleDateTime') as HTMLInputElement).value != "") {
+      (createRideData["rideDateTime"] = (document.getElementById('scheduleDateTime') as HTMLInputElement).value)
+    } else {
+      return this._toastrService.warning("Please select a date for schedule", "Date selection missing");
+    }
 
     /**Send data to create a new ride*/
     this._rideService.addNewRide(createRideData).subscribe({
@@ -336,7 +343,6 @@ export class CreateRideComponent implements OnInit {
         this.cancel();
       },
       error: (error) => {
-        console.log(error);
         this._toastrService.error("Error occured while booking", "Error occured")
       },
       complete: () => {}
