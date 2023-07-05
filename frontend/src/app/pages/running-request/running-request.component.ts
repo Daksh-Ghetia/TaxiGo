@@ -13,10 +13,10 @@ export class RunningRequestComponent implements OnInit {
 
   public rideDataList: any = [];
   public fullRideData: any = [];
-  public p: number;
+  public p: number = 1;
   public totalRecordLength: number;
 
-  private modalRef: NgbModalRef;
+  public modalRef: NgbModalRef;
 
   constructor(
     private _rideService: RideService,
@@ -31,14 +31,14 @@ export class RunningRequestComponent implements OnInit {
   }
 
   getRideData() {
-    this._rideService.getRideData([3,4,5,6]).subscribe({
+    this._rideService.getRideData([3,4,5,6], null, this.p-1).subscribe({
       next: (response) => {
         if (response.ride.length == 0) {
           this.rideDataList = [];
           return this._toastrService.info("No rides to display");
         }
         this.rideDataList = response.ride;
-        this.totalRecordLength = response.ride.length;
+        this.totalRecordLength = response.totalRecord ? response.totalRecord : response.ride.length;
       },
       error: (error) => {
         this._toastrService.error(error.error.msg || "Error occured while getting data");

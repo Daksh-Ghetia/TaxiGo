@@ -156,8 +156,10 @@ export class DriverListComponent implements OnInit {
 
     this._driverService.addNewDriver(driverFormData).subscribe({
       next: (response) => {
-        this.getDriverData();
         this.cancelDriver();
+        this.sortedColumn = "createdAt";
+        this.sortData("createdAt");
+        this.getDriverData();
         this._toastrService.success("Driver added successfully");
       },
       error: (error) => {
@@ -207,6 +209,7 @@ export class DriverListComponent implements OnInit {
     if (confirm('are you sure you want to delete Driver')) {
       this._driverService.deleteDriver(id).subscribe({
         next: (response) => {
+          this.driverDataList.length == 1 ? this.p != 1 ? this.p -= 1 : this.p = 1 : {};
           this.getDriverData();
           this.cancelDriver();
           this._toastrService.success("Driver deleted successfully", "");
@@ -243,6 +246,7 @@ export class DriverListComponent implements OnInit {
     this.customErrMsg = "";
     this.cityList = []
     this.actionButton = "Add";
+    this.sortedColumn = "";
     this.sortData("createdAt");
     this.getDriverData();
   }
@@ -253,6 +257,7 @@ export class DriverListComponent implements OnInit {
         if (response.driver.length === 0) {
           return this._toastrService.info("there are no drivers to display", "No drivers")
         }
+        this.sortedColumn = "";
         this.sortData("createdAt")
         this.totalRecordLength = response.totalRecord;
         this.driverDataList = response.driver;

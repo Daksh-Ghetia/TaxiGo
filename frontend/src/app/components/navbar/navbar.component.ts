@@ -1,7 +1,9 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { ROUTES } from '../sidebar/sidebar.component';
-import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/shared/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-navbar',
@@ -12,7 +14,13 @@ export class NavbarComponent implements OnInit {
   public focus;
   public listTitles: any[];
   public location: Location;
-  constructor(location: Location,  private element: ElementRef, private router: Router) {
+  constructor(
+    location: Location,
+    private element: ElementRef,
+    private router: Router,
+    private _authService: AuthService,
+    private _toastrService: ToastrService
+    ) {
     this.location = location;
   }
 
@@ -33,10 +41,33 @@ export class NavbarComponent implements OnInit {
     return 'Dashboard';
   }
 
-  onLogout() {    
-    localStorage.clear();
-    this.router.navigate(['login']);
-    location.reload();
+  onLogout() {
+    this._authService.logOutAdmin().subscribe({
+      next: (response) => {
+        localStorage.clear();
+        this.router.navigate(['login']);
+        this._toastrService.success(response.msg, "Logout successfull");
+      },
+      error: (error) => {
+        this._toastrService.error(error.error.error);
+      },
+      complete: () => {}
+    })
+
+  }
+
+  onLogoutAllDevice() {
+    this._authService.logOutAdminAllDevice().subscribe({
+      next: (response) => {
+        localStorage.clear();
+        this.router.navigate(['login']);
+        this._toastrService.success(response.msg, "Logout successfull");
+      },
+      error: (error) => {
+        this._toastrService.error(error.error.error);
+      },
+      complete: () => {}
+    })
   }
 
 }

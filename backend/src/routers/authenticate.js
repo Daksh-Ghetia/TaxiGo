@@ -52,11 +52,11 @@ router.post('/admin/logout', auth, async (req, res) => {
         })
         await req.admin.save();
 
-        res.send("You have been logged out of the system");
+        res.status(200).send({msg: "You have been logged out of the system"});
     } catch (error) {
-        res.status(500).send("Failed to log out");
+        res.status(500).send({msg: "Failed to log out"});
     }
-})
+});
 
 router.post('/admin/logoutALL', auth, async (req, res) => {
 
@@ -65,10 +65,10 @@ router.post('/admin/logoutALL', auth, async (req, res) => {
 
         await req.admin.save();
 
-        res.status(200).send("Successfully logged out from all devices");
+        res.status(200).send({msg: "Successfully logged out from all devices"});
     } catch (error) {
         res.status(500).send("Failed to log-out from all sessions");
     }
-})
+});
 
 module.exports = router

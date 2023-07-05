@@ -16,6 +16,16 @@ export class AuthService {
     this._url = "http://localhost:3000/admin/login";
     return this.http.post<any>(this._url, data);
   }
+
+  logOutAdmin() {
+    this._url = "http://localhost:3000/admin/logout";
+    return this.http.post<any>(this._url, {});
+  }
+
+  logOutAdminAllDevice() {
+    this._url = "http://localhost:3000/admin/logoutALL";
+    return this.http.post<any>(this._url, {});
+  }
   
   isLoggedIn() {
     return !!localStorage.getItem('token')

@@ -11,11 +11,6 @@ export class VehicleTypeService {
 
   constructor(private http: HttpClient) { }
 
-  test() {
-    this._url = "http://localhost:3000/vehicle/getData";
-    return this.http.get<any>(this._url);
-  }
-
   getVehicleType() : Observable <any> {
     this._url = "http://localhost:3000/vehicle/getVehicleDetails";
     return this.http.get<any>(this._url);

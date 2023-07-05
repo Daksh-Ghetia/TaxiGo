@@ -60,6 +60,7 @@ export class RideHistoryComponent implements OnInit {
       rideFromDate: this.rideFilter.get('rideFromDate').value || "null",
       rideToDate: this.rideFilter.get('rideToDate').value || "null"
     }
+    console.log("getRide");
     this._rideService.getRideData([0,7],rideFilterData).subscribe({
       next: (response) => {
         if (response.ride.length <= 0) {
@@ -88,7 +89,9 @@ export class RideHistoryComponent implements OnInit {
         }
         this.vehicleTypeList = response.vehicle;
       },
-      error: (error) => {console.log(error);},
+      error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while getting vehicle type for filter");
+      },
       complete: () => {}
     })
   }
@@ -189,6 +192,31 @@ export class RideHistoryComponent implements OnInit {
         }
       }
     ));
+  }
+
+  searchRide() {
+    const rideFilterData = {
+      rideSearchData: this.rideFilter.get('rideSearchData').value || "null",
+      rideStatus: this.rideFilter.get('rideStatus').value || "null",
+      rideVehicleType: this.rideFilter.get('rideVehicleType').value || "null",
+      rideFromDate: this.rideFilter.get('rideFromDate').value || "null",
+      rideToDate: this.rideFilter.get('rideToDate').value || "null"
+    }
+    this._rideService.getRideData([0,7],rideFilterData, 0).subscribe({
+      next: (response) => {
+        if (response.ride.length == 0) {
+          return this._toastrService.error("No ride to display");
+        }
+        this.totalRecordLength = response.totalRecord ? response.totalRecord : response.ride.length;
+        this.rideDataList = response.ride;
+        this.p = 1;
+      },
+      error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while getting data");
+        console.log(error);
+      },
+      complete: () => {}
+    })
   }
 
   downloadData() {

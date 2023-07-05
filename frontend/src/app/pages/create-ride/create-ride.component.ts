@@ -35,6 +35,7 @@ export class CreateRideComponent implements OnInit {
   private wayPts: google.maps.DirectionsWaypoint[] = [];
   private directionsService = new google.maps.DirectionsService();
   private directionsRenderer = new google.maps.DirectionsRenderer();
+  private geoCoder = new google.maps.Geocoder();
 
   constructor(
     private _userService: UserService,
@@ -292,16 +293,35 @@ export class CreateRideComponent implements OnInit {
     })
   }
 
-  addNewRide() {
+  async addNewRide() {
     if (this.createRideForm.invalid) {
       this._toastrService.error("please fill all the necessary details", "Information missing");
       this.createRideForm.markAllAsTouched();
       return
     }
 
+    await this.geoCoder.geocode({address: (document.getElementById('ridePickUpLocation') as HTMLInputElement).value}, (results: any, status: any) => {
+      if (status !== 'OK') {
+        return this._toastrService.info("Please enter a valid pickup location", "Invalid pickup Location");
+      }
+    })
+
+    await this.geoCoder.geocode({address: (document.getElementById('rideDropLocation') as HTMLInputElement).value}, (results: any, status: any) => {
+      if (status !== 'OK') {
+        return this._toastrService.info("Please enter a valid drop location", "Invalid Drop Location");
+      }
+    })
+
     let rideIntermediateStops = [];
     for (let i = 0; i < (this.createRideForm.get('rideIntermediateStops') as FormArray).length; i++) {
-      rideIntermediateStops.push((document.getElementById(String(i) )as HTMLInputElement).value)
+      await this.geoCoder.geocode({address: (document.getElementById(String(i)) as HTMLInputElement).value}, (results: any, status: any) => {
+        if (status == 'OK') {
+          rideIntermediateStops.push((document.getElementById(String(i)) as HTMLInputElement).value)
+        }
+        else {
+          return this._toastrService.info(`Please enter a valid location for stop ${i+1}`, "Invalid Stop Location");
+        }
+      })
     }
     
     const createRideData = {
@@ -327,7 +347,7 @@ export class CreateRideComponent implements OnInit {
     /**Add payment method */
     (this.createRideForm.get('ridePaymentMethod').value == 'cash') ? (createRideData["ridePaymentMethod"] = 0) : (createRideData["ridePaymentMethod"] = 1);
     
-    /**Add date and time for booking ride */
+    /**Add date and time for booking ride */    
     if ((this.createRideForm.get('rideDateTime').value == 'bookNow')) {
       (createRideData["rideDateTime"] = new Date().toISOString())
     } else if ((document.getElementById('scheduleDateTime') as HTMLInputElement).value != "") {

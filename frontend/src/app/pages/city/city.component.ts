@@ -18,7 +18,6 @@ export class CityComponent implements OnInit {
   public cityList: any = []
   public reactiveForm: FormGroup;
   private map: google.maps.Map;
-  private marker: google.maps.Marker;
   private autocomplete: google.maps.places.Autocomplete;
   public customErrMsg: string;
   private editablePolygon: google.maps.Polygon;
@@ -67,12 +66,6 @@ export class CityComponent implements OnInit {
       zoom: zoomSize
     });
 
-    this.marker = new google.maps.Marker({
-      position: location,
-      map: this.map,
-    })
-    this.marker.setPosition(null);
-
     const drawingManager = new google.maps.drawing.DrawingManager({
       drawingMode: null,
       drawingControl: true,      
@@ -109,6 +102,9 @@ export class CityComponent implements OnInit {
     this._countryService.getSingleCountryData(selectedCountry.countryName).subscribe({
       next: (response) => {
         this.autocomplete.setComponentRestrictions({'country': [response[0].cca2]});
+        this.map.panTo({lat: response[0].latlng[0], lng: response[0].latlng[1]});
+        this.map.setZoom(4);
+        (document.getElementById('cityName')as HTMLInputElement).value = "";
       },
       error: (error) => {
         console.log(error);
@@ -177,10 +173,9 @@ export class CityComponent implements OnInit {
     this.customErrMsg = "";
     this.reactiveForm.reset();
     this.infoWindow.close();
-    this.marker.setPosition(null);
     if (this.editablePolygon) {
       this.editablePolygon.setEditable(false)
-      this.editablePolygon = null;      
+      this.editablePolygon = null;
     }
     if (this.polygon) {
       this.polygon.setMap(null);
@@ -232,8 +227,8 @@ export class CityComponent implements OnInit {
             <input type="text" class="infoCity-Input" name="cityId" id="cityId" value=${city._id} hidden>
             <br>
 
-            <button class="btn btn-success editButton" id="editCity">Update City</button>
-            <button class="btn btn-danger editButton" id="cancelCity">Cancel</button>
+            <button class="btn btn-success editButton" type="button" id="editCity">Update City</button>
+            <button class="btn btn-danger editButton" type="button" id="cancelCity">Cancel</button>
             </form>
           </div>
         `;
@@ -328,9 +323,9 @@ export class CityComponent implements OnInit {
 
             this._cityService.editCity(cityId, editCityData).subscribe({
               next: (response) => {
+                this._toastrService.success("City has been edited successfull","Edit successfull");
                 this.getCity();
                 this.resetMap();
-                this._toastrService.success("City has been edited successfull","Edit successfull");
               },
               error: (error) => {
                 this._toastrService.error(error.error.msg || "Error occured while updating city");
@@ -380,7 +375,9 @@ export class CityComponent implements OnInit {
 
     this.autocomplete.addListener("place_changed", () => {
       let location = this.autocomplete?.getPlace()?.geometry?.location;
-      this.marker.setPosition(location);
+      console.log(location);
+      let bounds = new google.maps.LatLngBounds(new google.maps.LatLng(this.autocomplete?.getPlace()?.geometry?.viewport?.getSouthWest()), new google.maps.LatLng(this.autocomplete.getPlace()?.geometry?.viewport?.getNorthEast()))
+      this.map.fitBounds(bounds);
       this.map.panTo(location);
     })
   }

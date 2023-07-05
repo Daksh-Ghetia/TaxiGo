@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="col-md-3">
-                  <button class="btn btn-success" id="submit" type="button" (click)="getRideData()">Search Ride</button>
+                  <button class="btn btn-success" id="submit" type="button" (click)="searchRide()">Search Ride</button>
                   <button class="btn btn-danger" (click)="cancelSearch()">Cancel</button>
                 </div>
               </form>
@@ -128,7 +128,7 @@
             <div class="card-footer py-4">
               <nav aria-label="...">
                 <ul class="pagination justify-content-center mb-0">
-                  <pagination-controls (pageChange)="p = $event;"></pagination-controls>
+                  <pagination-controls (pageChange)="p = $event; getRideData()"></pagination-controls>
                 </ul>
                 <input class="justify-content-end btn btn-info" type="button" (click)="downloadData()" value="Download">
                 <!-- <ul class="pagination justify-content-end mb-0">

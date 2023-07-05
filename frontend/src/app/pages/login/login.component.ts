@@ -46,9 +46,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this._toastrService.success("","Login successful")
       },
       error: (error) => {
-        console.log("eRROR");
         // (document.getElementById('msg') as HTMLLabelElement).textContent = error?.msg
-        console.log("failed");
         this._toastrService.error("","Authentication failed");
       },
       complete:() => {

@@ -67,7 +67,7 @@
             <div class="card-footer py-4">
               <nav aria-label="...">
                 <ul class="pagination justify-content-center mb-0">
-                  <pagination-controls (pageChange)="p = $event;"></pagination-controls>
+                  <pagination-controls (pageChange)="p = $event; getRideData()"></pagination-controls>
                 </ul>
                 <!-- <ul class="pagination justify-content-end mb-0">
                   <li class="page-item disabled">

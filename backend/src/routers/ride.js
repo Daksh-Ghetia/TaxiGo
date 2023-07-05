@@ -19,6 +19,7 @@ router.post('/ride/getRideDetails', auth, upload.none(),async (req, res) => {
     try {
         let rideStatusMatchQuery;
         let rideFilterQuery;
+        let ridePaginationQueryFacet,ridePaginationQueryTotalCountUnwind,ridePaginationQueryProjectTotalCount;
 
         if (req.body.rideStatus && Array.isArray(req.body.rideStatus)) {
             rideStatusMatchQuery = {
@@ -62,7 +63,7 @@ router.post('/ride/getRideDetails', auth, upload.none(),async (req, res) => {
                 }
             },
             {
-                $unwind: '$user'
+                $unwind: "$user"
             },
             {
                 $unwind: '$vehicleType'
@@ -115,10 +116,47 @@ router.post('/ride/getRideDetails', auth, upload.none(),async (req, res) => {
             }
         }
 
+        if (req.body.pageNumber !== null) {
+            ridePaginationQueryFacet = {
+                $facet: {
+                    totalCount: [
+                        {
+                            $group: {
+                                _id: null,
+                                count: { $sum: 1 }
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 0,
+                                count: 1
+                            }
+                        }
+                    ],
+                    paginatedData: [
+                        { $skip: req.body.pageNumber * 10 },
+                        { $limit: 10 }
+                    ]
+                }
+            }
+            ridePaginationQueryTotalCountUnwind = {
+                $unwind: '$totalCount'
+            }
+            ridePaginationQueryProjectTotalCount = {
+                $project: {
+                    totalCount: '$totalCount.count',
+                    paginatedData: 1
+                }
+            }
+        }
+
         let pipeline = [
             ...(rideStatusMatchQuery ? [rideStatusMatchQuery] : []),
             ...lookupPipeline,
-            ...(rideFilterQuery ? [{ $match: rideFilterQuery}] : [])
+            ...(rideFilterQuery ? [{ $match: rideFilterQuery}] : []),
+            ...(ridePaginationQueryFacet ? [ridePaginationQueryFacet] : []),
+            ...(ridePaginationQueryTotalCountUnwind ? [ridePaginationQueryTotalCountUnwind] : []),
+            ...(ridePaginationQueryProjectTotalCount ? [ridePaginationQueryProjectTotalCount] : [])
         ]
 
         /**Find all the ride data and if not found return no data to display*/
@@ -128,8 +166,13 @@ router.post('/ride/getRideDetails', auth, upload.none(),async (req, res) => {
         }
 
         /**If data found send the data */
-        res.status(200).send({ride: ride, msg: 'ride found', status: "success"})
+        if (req.body.pageNumber !== null) {
+            return res.status(200).send({ride: ride[0].paginatedData, totalRecord: ride[0].totalCount, msg: 'ride found', status: "success"})
+        } else {
+            return res.status(200).send({ride: ride, msg: 'ride found', status: "success"})
+        }
     } catch (error) {
+        console.log(error);
         res.status(500).send({msg: "Error occured while getting data of ride", status: "failed", error: error});
     }
 })
@@ -223,7 +266,7 @@ router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
         res.status(200).send({msg: "Edit success", ride: ride, status: "success"});
     } catch (error) {
         res.status(500).send({msg: "Server error while adding ride", status: "failed", error: error});
-    }       
+    }
 })
 
 async function getMailBody(ride, user, driver, vehicleType) {

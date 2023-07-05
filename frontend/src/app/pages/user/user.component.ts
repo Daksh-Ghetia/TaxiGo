@@ -104,7 +104,7 @@ export class UserComponent implements OnInit {
     if (this.sideButtonTitle == "Add") {
       data = (document.getElementById("searchUser") as HTMLInputElement).value;
     }
-
+    console.log(this.sortedColumn, this.currentSortDirection)
     this._userService.getUserData(data, this.p - 1, this.sortedColumn, this.currentSortDirection == "asc" ? 1 : -1).subscribe({
       next: (response) => {
         if (response.user.length == 0) {
@@ -135,8 +135,9 @@ export class UserComponent implements OnInit {
 
     this._userService.addNewUser(userFormData).subscribe({
       next: (response) => {
-        this.getUserData();
         this.cancelUser();
+        this.sortData("createdAt");
+        this.getUserData();
         this._toastrService.success("User added successfully");
       },
       error: (error) => {
@@ -151,6 +152,7 @@ export class UserComponent implements OnInit {
     this.userForm.reset();
     this.customErrMsg = "";
     this.actionButton = "Add";
+    this.sortedColumn = "";
     this.sortData("createdAt");
     this.getUserData();
   }
@@ -178,8 +180,10 @@ export class UserComponent implements OnInit {
       .textContent;
     this._userService.editUser(id, editFormData).subscribe({
       next: (response) => {
-        this.getUserData();
         this.cancelUser();
+        this.sortData("updatedAt");
+        this.currentSortDirection = "desc";
+        this.getUserData();
         this._toastrService.success("User updated sucessfully");
       },
       error: (error) => {
@@ -194,8 +198,9 @@ export class UserComponent implements OnInit {
     if (confirm("are you sure you want to delete user")) {
       this._userService.deleteUser(id).subscribe({
         next: (response) => {
-          this.getUserData();
+          this.userDataList.length == 1 ? this.p != 1 ? this.p -= 1 : this.p = 1 : {};
           this.cancelUser();
+          this.getUserData();
           this._toastrService.success("User deleted successfully");
         },
         error: (error) => {
@@ -222,6 +227,7 @@ export class UserComponent implements OnInit {
           this.userDataList = [];
           return this._toastrService.info("No user found to display, please add new user to view data","User not found");
         }
+        this.sortedColumn = "";
         this.sortData("createdAt")
         this.userDataList = response.user;
         this.totalRecordLength = response.totalRecord;

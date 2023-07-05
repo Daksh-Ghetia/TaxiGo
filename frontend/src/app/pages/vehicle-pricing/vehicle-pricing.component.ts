@@ -82,7 +82,7 @@ export class VehiclePricingComponent implements OnInit {
       },
       error: (error) => {
         this.cityList = [];
-        this._toastrService.error("Error occured while getting city data");
+        this._toastrService.error(error.error.msg || "Error occured while getting city data");
       },
       complete: () => {}
     })

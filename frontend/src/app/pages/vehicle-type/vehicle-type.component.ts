@@ -122,12 +122,6 @@ export class VehicleTypeComponent implements OnInit {
     this.customErrMsg = "";
   }
 
-  testAuth(){
-    this._vehicleTypeService.test().subscribe((msg) => {
-      console.log(msg);
-    })
-  }
-
   scrollToTop() {
     window.scrollTo({
       top: 0,

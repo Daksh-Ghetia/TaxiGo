@@ -177,6 +177,7 @@ export class CountryComponent implements OnInit {
           return this._toastrService.info("No data found");
         }
         this.countryList = response.country;
+        this._toastrService.success("","Country found");
       },
       error: (error) => {
         this._toastrService.error(error.error.msg || "Error occured while searching the country");

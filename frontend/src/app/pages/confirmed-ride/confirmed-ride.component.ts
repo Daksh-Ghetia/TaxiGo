@@ -22,9 +22,9 @@ export class ConfirmedRideComponent implements OnInit {
   public selectedRowIndex: number;
   public rideDetails: any;
   public message: any;
-  public p: number;
   public focus:any;
   public rideFilter: FormGroup;
+  public p: number = 1;
   public totalRecordLength: number;
   
   private modalRef: NgbModalRef;
@@ -70,13 +70,13 @@ export class ConfirmedRideComponent implements OnInit {
       rideFromDate: this.rideFilter.get('rideFromDate').value || "null",
       rideToDate: this.rideFilter.get('rideToDate').value || "null"
     }
-    this._rideService.getRideData([1,2,3],rideFilterData).subscribe({
+    this._rideService.getRideData([1,2,3],rideFilterData, this.p-1).subscribe({
       next: (response) => {
         if (response.ride.length == 0) {
           return this._toastrService.error("No ride to display");
         }
         this.rideDataList = response.ride;
-        this.totalRecordLength = response.ride.length;
+        this.totalRecordLength = response.totalRecord ? response.totalRecord : response.ride.length;
       },
       error: (error) => {
         this._toastrService.error(error.error.msg || "Error occured while getting data");
@@ -168,6 +168,31 @@ export class ConfirmedRideComponent implements OnInit {
     // this._toastrService.success("Nearest driver assigning succesful", "");
     this.modalRef.close();
     this.getRideData();
+  }
+
+  searchRide() {
+    const rideFilterData = {
+      rideSearchData: this.rideFilter.get('rideSearchData').value || "null",
+      rideStatus: this.rideFilter.get('rideStatus').value || "null",
+      rideVehicleType: this.rideFilter.get('rideVehicleType').value || "null",
+      rideFromDate: this.rideFilter.get('rideFromDate').value || "null",
+      rideToDate: this.rideFilter.get('rideToDate').value || "null"
+    }
+    this._rideService.getRideData([1,2,3],rideFilterData, 0).subscribe({
+      next: (response) => {
+        if (response.ride.length == 0) {
+          return this._toastrService.error("No ride to display");
+        }
+        this.totalRecordLength = response.totalRecord ? response.totalRecord : response.ride.length;
+        this.rideDataList = response.ride;
+        this.p = 1;
+      },
+      error: (error) => {
+        this._toastrService.error(error.error.msg || "Error occured while getting data");
+        console.log(error);
+      },
+      complete: () => {}
+    })
   }
 
   listenToSocket() {
