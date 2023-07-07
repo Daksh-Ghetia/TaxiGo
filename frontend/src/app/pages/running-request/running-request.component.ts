@@ -52,12 +52,12 @@ export class RunningRequestComponent implements OnInit {
     this.fullRideData = [this.rideDataList[index]];
   }
 
-  acceptRequest(ride: any) {    
+  acceptRequest(ride: any) {
     this._webSocketService.emit('driverAcceptReuest', {driver: {_id: ride.rideDriverId}, ride: {_id: ride._id}});
     this.getRideData();
   }
 
-  rejectRequest(ride: any) {    
+  rejectRequest(ride: any) {
     if (ride.rideDriverAssignType == 1) {
       if (confirm('Are you sure you want to reject the ride')) {
         this._webSocketService.emit('driverRejectRequestSelected', {driver: {_id: ride.rideDriverId}, ride: {_id: ride._id}});
@@ -69,6 +69,23 @@ export class RunningRequestComponent implements OnInit {
         this.getRideData();
       }
     }
+  }
+
+  updateRide(id: string, rideStatusUpdate: number) {
+    console.log(rideStatusUpdate);
+    const rideData = new FormData();
+    rideData.append('rideStatus', String(rideStatusUpdate));
+    this._rideService.updateRide(id, rideData).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.getRideData();
+        this._toastrService.success("Ride status updated");
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {}
+    })
   }
 
   listenToSocket() {
@@ -85,6 +102,12 @@ export class RunningRequestComponent implements OnInit {
     this._webSocketService.listen('driverAcceptRequest').subscribe({
       next: () => {
         this._toastrService.success("Congratulations driver accepted the request")
+      }
+    })
+
+    this._webSocketService.listen('errorOccured').subscribe({
+      next: (response: any) => {
+        this._toastrService.error(response || "Error occured in socket");
       }
     })
   }

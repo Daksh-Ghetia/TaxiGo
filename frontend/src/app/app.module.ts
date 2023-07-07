@@ -78,9 +78,9 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule ,POSITION,SPINNER,PB_DIRECTION
       text:"Loading ...",
       pbColor:"#F5365C"
     }),
-    NgxUiLoaderHttpModule,
+    // NgxUiLoaderHttpModule,
     NgxUiLoaderRouterModule,
-NgxUiLoaderHttpModule.forRoot({ showForeground: true })
+    NgxUiLoaderHttpModule.forRoot({ showForeground: true })
   ],
   declarations: [
     AppComponent,

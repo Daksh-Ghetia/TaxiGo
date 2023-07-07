@@ -63,22 +63,32 @@ export class ConfirmedRideComponent implements OnInit {
   }
 
   getRideData() {
+    let toDate: any;
+    if (this.rideFilter.get('rideToDate').value) {
+      const dateObject = new Date(this.rideFilter.get('rideToDate').value);
+      dateObject.setHours(23);
+      dateObject.setMinutes(59);
+      dateObject.toISOString();
+      toDate = dateObject.toISOString();
+    }
     const rideFilterData = {
       rideSearchData: this.rideFilter.get('rideSearchData').value || "null",
       rideStatus: this.rideFilter.get('rideStatus').value || "null",
       rideVehicleType: this.rideFilter.get('rideVehicleType').value || "null",
       rideFromDate: this.rideFilter.get('rideFromDate').value || "null",
-      rideToDate: this.rideFilter.get('rideToDate').value || "null"
+      rideToDate: toDate || "null"
     }
     this._rideService.getRideData([1,2,3],rideFilterData, this.p-1).subscribe({
       next: (response) => {
         if (response.ride.length == 0) {
+          this.rideDataList = [];
           return this._toastrService.error("No ride to display");
         }
         this.rideDataList = response.ride;
         this.totalRecordLength = response.totalRecord ? response.totalRecord : response.ride.length;
       },
       error: (error) => {
+        this.rideDataList = []
         this._toastrService.error(error.error.msg || "Error occured while getting data");
         console.log(error);
       },
@@ -171,16 +181,26 @@ export class ConfirmedRideComponent implements OnInit {
   }
 
   searchRide() {
+    let toDate: any;
+    if (this.rideFilter.get('rideToDate').value) {
+      const dateObject = new Date(this.rideFilter.get('rideToDate').value);
+      dateObject.setHours(23);
+      dateObject.setMinutes(59);
+      dateObject.toISOString();
+      toDate = dateObject.toISOString();
+    }
     const rideFilterData = {
       rideSearchData: this.rideFilter.get('rideSearchData').value || "null",
       rideStatus: this.rideFilter.get('rideStatus').value || "null",
       rideVehicleType: this.rideFilter.get('rideVehicleType').value || "null",
       rideFromDate: this.rideFilter.get('rideFromDate').value || "null",
-      rideToDate: this.rideFilter.get('rideToDate').value || "null"
+      rideToDate: toDate || "null"
     }
+    
     this._rideService.getRideData([1,2,3],rideFilterData, 0).subscribe({
       next: (response) => {
         if (response.ride.length == 0) {
+          this.rideDataList = [];
           return this._toastrService.error("No ride to display");
         }
         this.totalRecordLength = response.totalRecord ? response.totalRecord : response.ride.length;
@@ -188,6 +208,7 @@ export class ConfirmedRideComponent implements OnInit {
         this.p = 1;
       },
       error: (error) => {
+        this.rideDataList = []
         this._toastrService.error(error.error.msg || "Error occured while getting data");
         console.log(error);
       },
@@ -226,7 +247,7 @@ export class ConfirmedRideComponent implements OnInit {
 
     this._webSocketService.listen('errorOccured').subscribe({
       next: (response: any) => {
-        this._toastrService.error(response);
+        this._toastrService.error(response || "Error occured in socket");
       }
     })
   }

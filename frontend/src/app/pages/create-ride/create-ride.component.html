@@ -11,16 +11,17 @@
     <div class="col-xl-12">
         <div class="row formBackground">
             <h3 class="col-12 mt-3 ml-3">Create Ride</h3>
+            <!-- Create Ride -->
             <form class="mt-3 mb-3 ml-3" id="createRide" [formGroup]="createRideForm">
                 <table col-xl-9>
-                    <!-- Create Ride -->
+                    <!-- Customer phone number -->
                     <tr>
                         <td class="label-input">Phone number:</td>
                         <td>
-                            <input class="createRide-input" formControlName="rideCustomerPhone" type="number" name="rideCustomerPhone" id="rideCustomerPhone" placeholder="10 digit phone number" onKeyPress="if(this.value.length==10) return false;">
+                            <input class="createRide-input" formControlName="rideCustomerPhone" type="number" name="rideCustomerPhone" id="rideCustomerPhone" placeholder="10 digit phone number" onKeyPress="if(this.value.length == 10 || isNaN(Number(String.fromCharCode(event.keyCode)))) return false;">
                             <br>
                             <div>
-                                <strong *ngIf="createRideForm.get('rideCustomerPhone').invalid && createRideForm.get('rideCustomerPhone').touched && (createRideForm.get('rideCustomerPhone').value == null || createRideForm.get('rideCustomerPhone').value == '')">Please add phone number</strong>
+                                <strong *ngIf="createRideForm.get('rideCustomerPhone').invalid && createRideForm.get('rideCustomerPhone').touched && (createRideForm.get('rideCustomerPhone').value == null || createRideForm.get('rideCustomerPhone').value == '') && !createRideForm.get('rideCustomerPhone').errors?.pattern">Please add phone number</strong>
                                 <strong *ngIf="createRideForm.get('rideCustomerPhone').invalid && createRideForm.get('rideCustomerPhone').touched && createRideForm.get('rideCustomerPhone').errors.pattern">Please add valid phone number</strong>
                             </div>
                         </td>                    

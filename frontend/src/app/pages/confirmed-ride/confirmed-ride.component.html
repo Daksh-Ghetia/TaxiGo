@@ -96,6 +96,7 @@
                       <th scope="col" class="text-wrap">Pick up location</th>
                       <th scope="col" class="text-wrap">Drop location</th>
                       <th scope="col" >Service type</th>
+                      <th scope="col" >Pickup time</th>
                       <th scope="col" >Status</th>
                       <th scope="col" class="text-wrap">Full information</th>
                       <th scope="col" >Action</th>
@@ -107,11 +108,11 @@
                   <tr *ngFor="let ride of rideDataList | paginate: { itemsPerPage: 10, currentPage: p, totalItems: totalRecordLength }; let i = index" class="text-center text-capitalize">
                     <ng-container *ngIf="ride.rideStatus > 0 && ride.rideStatus < 4">
                       <td class="text-wrap">{{ride._id}}</td>
-                      <!-- <td class="text-wrap">{{ride.user._id}}</td> -->
                       <td>{{ride.user.userName}}</td>
                       <td class="text-wrap">{{ride.ridePickUpLocation}}</td>
                       <td class="text-wrap">{{ride.rideDropLocation}} </td>
                       <td>{{ride.vehicleType.vehicleName}} </td>
+                      <td class="">{{ride.rideDateTime | date}} {{ride.rideDateTime | date: 'shortTime'}}</td>
                       <td>
                         <span *ngIf="ride.rideStatus === 1 || ride.rideStatus === 2 || ride.rideStatus === 3"class="badge badge-dot mr-4"><i class="bg-warning"></i>{{ride.rideStatus | rideStatus}}</span>
                       </td>

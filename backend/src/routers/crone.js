@@ -52,6 +52,7 @@ async function freeDriver(driver,ride) {
    try {
         async function checkCondition() {
             if ((Math.floor((new Date() - driver.updatedAt)/1000)) >= timeToAcceptRequest) {
+                // console.log(driver.driverName, ride._id)
                 let driverCurrent = await Driver.findById({_id: driver._id});
                 if (driverCurrent.driverRideStatus == 1) {
                     driver.driverRideStatus = 0;

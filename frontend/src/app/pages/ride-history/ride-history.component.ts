@@ -53,12 +53,20 @@ export class RideHistoryComponent implements OnInit {
   }
 
   getRideData() {
+    let toDate: any;
+    if (this.rideFilter.get('rideToDate').value) {
+      const dateObject = new Date(this.rideFilter.get('rideToDate').value);
+      dateObject.setHours(23);
+      dateObject.setMinutes(59);
+      dateObject.toISOString();
+      toDate = dateObject.toISOString();
+    }
     const rideFilterData = {
       rideSearchData: this.rideFilter.get('rideSearchData').value || "null",
       rideStatus: this.rideFilter.get('rideStatus').value || "null",
       rideVehicleType: this.rideFilter.get('rideVehicleType').value || "null",
       rideFromDate: this.rideFilter.get('rideFromDate').value || "null",
-      rideToDate: this.rideFilter.get('rideToDate').value || "null"
+      rideToDate: toDate || "null"
     }
     console.log("getRide");
     this._rideService.getRideData([0,7],rideFilterData).subscribe({
@@ -195,12 +203,20 @@ export class RideHistoryComponent implements OnInit {
   }
 
   searchRide() {
+    let toDate: any;
+    if (this.rideFilter.get('rideToDate').value) {
+      const dateObject = new Date(this.rideFilter.get('rideToDate').value);
+      dateObject.setHours(23);
+      dateObject.setMinutes(59);
+      dateObject.toISOString();
+      toDate = dateObject.toISOString();
+    }
     const rideFilterData = {
       rideSearchData: this.rideFilter.get('rideSearchData').value || "null",
       rideStatus: this.rideFilter.get('rideStatus').value || "null",
       rideVehicleType: this.rideFilter.get('rideVehicleType').value || "null",
       rideFromDate: this.rideFilter.get('rideFromDate').value || "null",
-      rideToDate: this.rideFilter.get('rideToDate').value || "null"
+      rideToDate: toDate || "null"
     }
     this._rideService.getRideData([0,7],rideFilterData, 0).subscribe({
       next: (response) => {

@@ -54,7 +54,11 @@
                       <td>
                         <button class="btn btn-info" [id]="ride._id" *ngIf="ride.rideStatus == 3" [disabled]="ride.rideStatus != 3" (click)="acceptRequest(ride)">Accept</button>
                         <button class="btn btn-danger" [id]="ride._id" *ngIf="ride.rideStatus == 3" [disabled]="ride.rideStatus != 3" (click)="rejectRequest(ride)">Reject</button>
-                        <label for="action" *ngIf="ride.rideStatus != 3">No action required</label>
+                        <label for="action" *ngIf="ride.rideStatus != 3 && ride.rideStatus+1 != 8">
+                          <button type="button" class="btn btn-info" (click)="updateRide(ride._id, ride.rideStatus+1)">
+                            {{ride.rideStatus+1 | rideStatus}}
+                          </button>
+                        </label>
                       </td>
                     </ng-container>
                   </tr>

@@ -32,6 +32,7 @@ function socket(server) {
                 socketEmit('dataChange');
                 socketEmit('driverAssigned');
             } catch (error) {
+                socketEmit('errorOccured', error.message);
                 console.log(error);
             }
         });
@@ -52,6 +53,7 @@ function socket(server) {
                 socketEmit('dataChange');
                 socketEmit('driverAssigned');
             } catch (error) {
+                socketEmit('errorOccured', error.message);
                 console.log(error);
             }
         })
@@ -80,6 +82,7 @@ function socket(server) {
                 const ride = await Ride.findByIdAndUpdate(data.ride._id, {rideStatus: 0}, {new: true, runValidators: true});
                 socketEmit('dataChange');
             } catch (error) {
+                socketEmit('errorOccured', error.message);
                 console.log(error);
             }
         });
@@ -88,21 +91,23 @@ function socket(server) {
             try {
                 const driver = await Driver.findByIdAndUpdate(data.driver._id, {driverRideStatus: 0}, {new: true, runValidators: true});
                 const ride = await Ride.findByIdAndUpdate(
-                    data.ride._id, 
-                    {
-                        rideStatus: 2,
-                        $push: { rideRejectedByDriverId: new ObjectId(data.driver._id)}
-                    }, 
-                    {new: true, runValidators: true}
+                data.ride._id, 
+                {
+                    rideStatus: 2,
+                    $push: { rideRejectedByDriverId: new ObjectId(data.driver._id)}
+                }, 
+                {new: true, runValidators: true}
                 );
-                
+                    
+                // console.log(driver.driverName,ride._id);
                 if (driver.length == 0 || ride.length == 0) {
                     return console.log("No driver or ride to update after rejection");
                 }
 
                 const rides = await findDriver(data);
-                socketEmit('dataChange', rides);
+                socketEmit('dataChange');
             } catch (error) {
+                socketEmit('errorOccured', error.message);
                 console.log(error);
             }
         })
@@ -178,6 +183,7 @@ async function findDriver(data) {
                         rideDriverId: driverList,
                         rideDriverAssignType: data.rideDriverAssignType
                     }, { new: true, runValidators: true });
+                    socketEmit('dataChange');
                     break;
                 }
             }

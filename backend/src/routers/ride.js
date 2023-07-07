@@ -218,7 +218,7 @@ router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
 
         /**Apply updates to the field */
         updates.forEach((update) => ride[update] = req.body[update])
-        
+        await ride.save();
         /**Free driver whenever the ride is completed and if the ride is started then send message of ride started */
         if (req.body.rideStatus == 7) {
             /**Update Driver data and get user, vehicle type data to send message and mail  */
@@ -230,7 +230,6 @@ router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
             if (ride.ridePaymentMethod == 1) {
                 await paymentGateway.deductPayment(user.userPaymentCustomerId, ride.ridePaymentCardId, ride.rideFare);
             }
-            await ride.save();
             
             /**Get mail body */
             let msg = await getMailBody(ride, user, driver, vehicleType);
@@ -260,7 +259,6 @@ router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
             await mail.sendMail(user.userEmail, "Ride receipt", null ,msg);
             await SendMessage.SendMessage("Ride has been completed");
         } else if (req.body.rideStatus == 6) {
-            await ride.save();
             await SendMessage.SendMessage("Ride has been started");
         }
         res.status(200).send({msg: "Edit success", ride: ride, status: "success"});
