@@ -26,7 +26,7 @@ export class RideHistoryComponent implements OnInit {
   public vehicleTypeList: any = [];
   public rideFilter: FormGroup;
   public focus:any;
-  public p: number;
+  public p: number = 1;
   public totalRecordLength: number;
 
   private modalRef: NgbModalRef;
@@ -68,14 +68,14 @@ export class RideHistoryComponent implements OnInit {
       rideFromDate: this.rideFilter.get('rideFromDate').value || "null",
       rideToDate: toDate || "null"
     }
-    console.log("getRide");
-    this._rideService.getRideData([0,7],rideFilterData).subscribe({
+    this._rideService.getRideData([0,7],rideFilterData, this.p-1).subscribe({
       next: (response) => {
         if (response.ride.length <= 0) {
           return this._toastrService.info("Currently there are no rides to display", "")
         }
+        console.log(response);
         this.rideDataList = response.ride;
-        this.totalRecordLength = response.ride.length;
+        this.totalRecordLength = response.totalRecord ? response.totalRecord : response.ride.length;
       },
       error: (error) => {
         this._toastrService.error(error.error.msg || "Error occured while getting ride data.");
@@ -220,6 +220,7 @@ export class RideHistoryComponent implements OnInit {
     }
     this._rideService.getRideData([0,7],rideFilterData, 0).subscribe({
       next: (response) => {
+        console.log(response);
         if (response.ride.length == 0) {
           return this._toastrService.error("No ride to display");
         }

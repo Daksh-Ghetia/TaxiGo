@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { FeedbackService } from 'src/app/shared/feedback.service';
 import { RideService } from 'src/app/shared/ride.service';
 import { WebSocketService } from 'src/app/shared/web-socket.service';
 
@@ -15,19 +17,28 @@ export class RunningRequestComponent implements OnInit {
   public fullRideData: any = [];
   public p: number = 1;
   public totalRecordLength: number;
-
+  public feedbackForm: FormGroup;
   public modalRef: NgbModalRef;
+
+  private feedbackRideId: any;
+
 
   constructor(
     private _rideService: RideService,
     private _toastrService: ToastrService,
     private _webSocketService: WebSocketService,
+    private _feedbackService: FeedbackService,
     private _modalService: NgbModal,
   ) { }
 
   ngOnInit(): void {
     this.getRideData();
     this.listenToSocket();
+
+    this.feedbackForm = new FormGroup({
+      userFeedback: new FormControl(null, [Validators.required]),
+      feedbackRideId: new FormControl(null, [Validators.required])
+    })
   }
 
   getRideData() {
@@ -71,8 +82,7 @@ export class RunningRequestComponent implements OnInit {
     }
   }
 
-  updateRide(id: string, rideStatusUpdate: number) {
-    console.log(rideStatusUpdate);
+  updateRide(id: string, rideStatusUpdate: number, content: any) {
     const rideData = new FormData();
     rideData.append('rideStatus', String(rideStatusUpdate));
     this._rideService.updateRide(id, rideData).subscribe({
@@ -80,6 +90,13 @@ export class RunningRequestComponent implements OnInit {
         console.log(response);
         this.getRideData();
         this._toastrService.success("Ride status updated");
+        this.feedbackForm.patchValue({
+          "feedbackRideId": response.ride._id
+        })
+        if (rideStatusUpdate == 7) {
+          this.feedbackRideId = response.ride._id
+          this.feedback(content);
+        }
       },
       error: (error) => {
         console.log(error);
@@ -109,6 +126,32 @@ export class RunningRequestComponent implements OnInit {
       next: (response: any) => {
         this._toastrService.error(response || "Error occured in socket");
       }
+    })
+  }
+
+  feedback(content: any) {
+    this.modalRef = this._modalService.open(content, { centered: true, scrollable: true });
+  }
+
+  submitFeedBack() {
+    if (this.feedbackForm.invalid) {
+      return this._toastrService.info("Please enter valid details to give feedback");
+    }
+
+    const feedbackForm = (document.getElementById('feedbackForm') as HTMLFormElement)
+    let feedbackData = new FormData(feedbackForm);
+    feedbackData.append('feedbackRideId', this.feedbackRideId.toString());
+
+    this._feedbackService.addFeedback(feedbackData).subscribe({
+      next: (response) => {
+        this._toastrService.success(response.msg || "Thankyou for your response");
+        this.modalRef.close();
+      },
+      error: (error) => {
+        console.log(error);
+        this._toastrService.error(error.error.msg || "Error occured while submiting response");
+      },
+      complete: () => {}
     })
   }
 }

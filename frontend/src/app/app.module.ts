@@ -36,10 +36,9 @@ import { MessagingService } from './shared/messaging.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { BrowserModule } from '@angular/platform-browser';
 import { BnNgIdleService } from 'bn-ng-idle';
-import { NgxUiLoaderHttpModule, NgxUiLoaderModule ,POSITION,SPINNER,PB_DIRECTION,NgxUiLoaderConfig,NgxUiLoaderRouterModule} from 'ngx-ui-loader';
+import { NgxUiLoaderHttpModule, NgxUiLoaderModule ,POSITION,SPINNER,PB_DIRECTION,NgxUiLoaderRouterModule} from 'ngx-ui-loader';
 
 
-// const ngxUiLoaderConfig: NgxUiLoaderConfig = ;
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -78,7 +77,7 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule ,POSITION,SPINNER,PB_DIRECTION
       text:"Loading ...",
       pbColor:"#F5365C"
     }),
-    // NgxUiLoaderHttpModule,
+    NgxUiLoaderHttpModule,
     NgxUiLoaderRouterModule,
     NgxUiLoaderHttpModule.forRoot({ showForeground: true })
   ],

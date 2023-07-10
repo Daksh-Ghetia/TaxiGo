@@ -55,7 +55,7 @@
                         <button class="btn btn-info" [id]="ride._id" *ngIf="ride.rideStatus == 3" [disabled]="ride.rideStatus != 3" (click)="acceptRequest(ride)">Accept</button>
                         <button class="btn btn-danger" [id]="ride._id" *ngIf="ride.rideStatus == 3" [disabled]="ride.rideStatus != 3" (click)="rejectRequest(ride)">Reject</button>
                         <label for="action" *ngIf="ride.rideStatus != 3 && ride.rideStatus+1 != 8">
-                          <button type="button" class="btn btn-info" (click)="updateRide(ride._id, ride.rideStatus+1)">
+                          <button type="button" class="btn btn-info" (click)="updateRide(ride._id, ride.rideStatus+1, feedbackContent)">
                             {{ride.rideStatus+1 | rideStatus}}
                           </button>
                         </label>
@@ -181,4 +181,35 @@
       </div>
     </ng-template>
 
+    <!-- Feedback form -->
+    <ng-template #feedbackContent let-modal>
+      <div class="modal-header">
+          <h4>Feedback form</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="feedbackForm" id="feedbackForm">
+          <table>
+            <tr>
+              <td>
+                <textarea formControlName="userFeedback" class="feedback-input" name="userFeedback" id="userFeedback" placeholder="Please enter your feedback here..." style="height: 150px;"></textarea>
+                <br>
+                <div>
+                  <strong *ngIf="feedbackForm.get('userFeedback').invalid && feedbackForm.get('userFeedback').touched">Please enter value to submit feedback</strong>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><button type="button" class="btn btn-success" (click)="submitFeedBack()">Submit</button></td>
+            </tr>
+          </table>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.dismiss('Cross click')">Close</button>
+      </div>
+    </ng-template>
 </div>
+

@@ -11,7 +11,7 @@ import { SettingService } from 'src/app/shared/setting.service';
 export class SettingComponent implements OnInit {
 
   public settingForm: FormGroup;
-  public timeCountList: any = [10,20,30,45,60,90,120];
+  public timeCountList: any = [10,20,30,40,60,90,120];
   public stopCountList: any = [1,2,3,4,5];
   private id: string;
 

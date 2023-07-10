@@ -12,6 +12,7 @@ const rideRouter = require('./routers/ride');
 const socketIo = require('./routers/socket-io');
 const cron = require('./routers/crone');
 const settingRouter = require('./routers/setting');
+const feedbackRouter = require('./routers/feedback');
 
 const app = express();
 app.use(cors());
@@ -28,6 +29,7 @@ app.use(userRouter);
 app.use(driverRouter);
 app.use(rideRouter);
 app.use(settingRouter);
+app.use(feedbackRouter);
 
 /**Connect to socket io */
 var server = require('http').Server(app);

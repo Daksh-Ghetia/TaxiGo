@@ -63,6 +63,14 @@ router.post('/ride/getRideDetails', auth, upload.none(),async (req, res) => {
                 }
             },
             {
+                $lookup: {
+                    from: 'feedbacks',
+                    as: 'feedback',
+                    localField: '_id',
+                    foreignField: 'feedbackRideId'
+                }
+            },
+            {
                 $unwind: "$user"
             },
             {
@@ -257,9 +265,9 @@ router.patch('/ride/editRide/:id', auth, upload.none(), async(req,res) => {
 
             /**Send mail and message */
             await mail.sendMail(user.userEmail, "Ride receipt", null ,msg);
-            await SendMessage.SendMessage("Ride has been completed");
+            // await SendMessage.SendMessage("Ride has been completed");
         } else if (req.body.rideStatus == 6) {
-            await SendMessage.SendMessage("Ride has been started");
+            // await SendMessage.SendMessage("Ride has been started");
         }
         res.status(200).send({msg: "Edit success", ride: ride, status: "success"});
     } catch (error) {

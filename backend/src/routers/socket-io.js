@@ -69,7 +69,7 @@ function socket(server) {
                 SMSBody = "Ride Confirmed, Congratulations " + driver.driverName + " you have been assigned to a new ride, and your customer pickup location is " +  ride.ridePickUpLocation + " And customer should be dropped at " + ride.rideDropLocation;
                 socketEmit('dataChange');
                 socketEmit('driverAcceptRequest');
-                await SendMessage.SendMessage(SMSBody);
+                // await SendMessage.SendMessage(SMSBody);
             } catch (error) {
                 socketEmit('errorOccured', error.message);
             }
@@ -99,7 +99,7 @@ function socket(server) {
                 {new: true, runValidators: true}
                 );
                     
-                // console.log(driver.driverName,ride._id);
+                console.log(driver.driverName,ride._id);
                 if (driver.length == 0 || ride.length == 0) {
                     return console.log("No driver or ride to update after rejection");
                 }

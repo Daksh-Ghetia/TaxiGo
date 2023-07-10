@@ -95,6 +95,7 @@
                       <th scope="col" class="text-wrap">Pick up location</th>
                       <th scope="col" class="text-wrap">Drop location</th>
                       <th scope="col" >Service type</th>
+                      <th scope="col" >Pickup time</th>
                       <th scope="col" >Status</th>
                       <th scope="col" class="text-wrap">Full information</th>
                     </tr>
@@ -110,6 +111,7 @@
                       <td class="text-wrap">{{ride.ridePickUpLocation}}</td>
                       <td class="text-wrap">{{ride.rideDropLocation}} </td>
                       <td>{{ride.vehicleType.vehicleName}} </td>
+                      <td class="">{{ride.rideDateTime | date}} {{ride.rideDateTime | date: 'shortTime'}}</td>
                       <td>
                         <span *ngIf="ride.rideStatus === 0"class="badge badge-dot mr-4"><i class="bg-gradient-danger"></i>{{ride.rideStatus | rideStatus}}</span>
                         <span *ngIf="ride.rideStatus === 7"class="badge badge-dot mr-4"><i class="bg-success"></i>{{ride.rideStatus | rideStatus}}</span>
@@ -158,6 +160,7 @@
         </div>
     </div>
 
+    <!-- Full ride info -->
     <ng-template #content let-modal>
       <div class="modal-header">
           <h4>Full ride info</h4>
@@ -236,7 +239,16 @@
               <td class="label-input">Payment method: </td>
                 <td *ngIf="ride.ridePaymentMethod == 0">Cash </td>
                 <td *ngIf="ride.ridePaymentMethod == 1">Card </td>
-            </tr>            
+            </tr>
+            <ng-container *ngIf="(ride.feedback).length > 0">
+              <tr *ngFor="let rideFeedbackCurrent of ride.feedback; let i = index">
+                <td class="label-input" *ngIf="i == 0">Feedback: </td>
+                <td class="label-input" *ngIf="i > 0"></td>
+                <td>
+                  <li>{{rideFeedbackCurrent.userFeedback}}</li>
+                </td>
+              </tr>              
+            </ng-container>
           </tbody>
         </table>
       </div>
