@@ -23,7 +23,9 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "allowedCommonJsDependencies": [
-              "chart.js"
+              "chart.js",
+              "file-saver",
+              "papaparse"
             ],
             "assets": [
               "src/favicon.ico",

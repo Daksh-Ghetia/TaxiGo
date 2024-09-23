@@ -184,7 +184,10 @@ export class CreateRideComponent implements OnInit {
     this.createRideForm.reset();
     this.serviceTypeList = [];
     (this.createRideForm.get('rideIntermediateStops') as FormArray).clear();
-    this.directionsRenderer.setDirections({ routes: []});
+    this.directionsRenderer.setDirections({
+      routes: [],
+      request: undefined
+    });
   }
 
   /**Load the map */
@@ -267,7 +270,10 @@ export class CreateRideComponent implements OnInit {
       (document.getElementById("duration") as HTMLInputElement).innerText = new ConvertMinutesToHoursAndMinutesPipe().transform(this.totalTime);
     })
     .catch((error) => {
-      this.directionsRenderer.setDirections({routes: []});
+      this.directionsRenderer.setDirections({
+        routes: [],
+        request: undefined
+      });
       this.createRideForm.get('rideDropLocation').reset();
       for (let i = 0; i < (this.createRideForm.get('rideIntermediateStops') as FormArray).length; i++) {
         (this.createRideForm.get('rideIntermediateStops') as FormArray).controls[i].patchValue("");
