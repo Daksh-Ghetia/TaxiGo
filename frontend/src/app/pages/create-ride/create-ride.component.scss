@@ -112,3 +112,10 @@ input::-webkit-inner-spin-button {
     max-height: 200px; 
     overflow-y: auto;
 }
+
+@media (min-width: 1200px) {
+    #map{
+        height: 350px;
+        width: 500px;
+    }
+}

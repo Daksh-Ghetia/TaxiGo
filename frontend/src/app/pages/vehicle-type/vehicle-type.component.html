@@ -8,7 +8,7 @@
 </div>
 <div class="container-fluid mt--7">
     <div class="row">
-        <div class="col-xl-9 mb-5 mb-xl-0" >
+        <div class="col-xl-12 mb-5 mb-xl-0" >
             <form [formGroup]="reactiveForm" id="addNewVehicleType">
                 <div class="row">
                     <div class="col-md-4">
@@ -47,8 +47,7 @@
     <div class="row mt-5">
 
         <div *ngFor="let vehicle of vehicles">
-            <div class="card mr-4 my-2" style="width: 18rem;" id="">
-              <!-- width="286px" height="160px" -->
+            <div class="card mr-3 my-2" style="width: 18rem;">
                 <img class="card-img-top" src="http://localhost:3000/vehicleTypeImages/{{vehicle.vehicleIcon}}" alt="Card image" width="286px" height="350px">
                 <div class="card-body">
                   <h5 class="card-title text-capitalize" style="text-align: center;">{{vehicle.vehicleName}} </h5>
