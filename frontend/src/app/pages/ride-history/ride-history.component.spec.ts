@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RideHistoryComponent } from './ride-history.component';
+import {TestingModule} from "../../testing/testing.module";
 
 describe('RideHistoryComponent', () => {
   let component: RideHistoryComponent;
@@ -8,7 +9,8 @@ describe('RideHistoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RideHistoryComponent ]
+      declarations: [ RideHistoryComponent ],
+      imports: [TestingModule]
     })
     .compileComponents();
 

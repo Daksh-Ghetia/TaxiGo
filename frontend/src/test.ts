@@ -6,6 +6,8 @@ import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
+import { NgModule } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 declare const require: any;
 
@@ -18,3 +20,9 @@ getTestBed().initTestEnvironment(
 const context = require.context('./', true, /\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
+
+@NgModule({
+  imports: [HttpClientTestingModule],
+  exports: [HttpClientTestingModule],
+})
+export class TestingModule {}

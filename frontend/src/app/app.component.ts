@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'argon-dashboard-angular';
+  title = 'taxiGo';
 
   constructor(
     private _webSocketService: WebSocketService,

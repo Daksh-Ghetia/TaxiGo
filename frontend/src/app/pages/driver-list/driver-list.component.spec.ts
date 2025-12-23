@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DriverListComponent } from './driver-list.component';
+import {TestingModule} from "../../testing/testing.module";
 
 describe('DriverListComponent', () => {
   let component: DriverListComponent;
@@ -8,7 +9,8 @@ describe('DriverListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DriverListComponent ]
+      declarations: [ DriverListComponent ],
+      imports: [TestingModule]
     })
     .compileComponents();
 

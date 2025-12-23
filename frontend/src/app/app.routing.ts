@@ -10,7 +10,7 @@ import { AuthGuard } from './shared/auth.guard';
 const routes: Routes =[
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'login',
     pathMatch: 'full',
   }, {
     path: '',
@@ -34,7 +34,7 @@ const routes: Routes =[
   }, {
     path: '**',
     redirectTo: 'dashboard',
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   }
 ];
 

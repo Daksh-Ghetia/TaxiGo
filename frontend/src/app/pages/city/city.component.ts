@@ -25,9 +25,9 @@ export class CityComponent implements OnInit {
   public polygon: google.maps.Polygon;
 
   constructor(
-    private _countryService: CountryService, 
+    private _countryService: CountryService,
     private _cityService: CityService,
-    private _toastrService: ToastrService
+    private _toasterService: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -46,12 +46,12 @@ export class CityComponent implements OnInit {
     this._countryService.getCountry().subscribe({
       next: (response) => {
         if (response.country.length == 0) {
-          return this._toastrService.warning("Please add countries in order to add cities","No countries");
+          return this._toasterService.warning("Please add countries in order to add cities","No countries");
         }
         this.countryList = response.country;
       },
       error: (error) => {
-        this._toastrService.error(error.error.msg || "Error occured while getting country data");
+        this._toasterService.error(error.error.msg || "Error occurred while getting country data");
       },
       complete: () => {}
     })
@@ -60,7 +60,7 @@ export class CityComponent implements OnInit {
   initMap(latitude:number = 22.270956722802083, longitude: number = 70.7387507402433, zoomSize:number = 8) {
 
     let location:any = {lat: Number(latitude), lng: Number(longitude)};
-      
+
     this.map = new google.maps.Map(document.getElementById('maps') as HTMLElement, {
       center: location,
       zoom: zoomSize
@@ -68,7 +68,7 @@ export class CityComponent implements OnInit {
 
     const drawingManager = new google.maps.drawing.DrawingManager({
       drawingMode: null,
-      drawingControl: true,      
+      drawingControl: true,
       drawingControlOptions: {
         position: google.maps.ControlPosition.TOP_CENTER,
         drawingModes: [
@@ -87,7 +87,7 @@ export class CityComponent implements OnInit {
 
       if (event.type == google.maps.drawing.OverlayType.POLYGON) {
         this.polygon = event.overlay as google.maps.Polygon;
-        
+
         this.polygon.setOptions({
             editable: true
         });
@@ -117,8 +117,8 @@ export class CityComponent implements OnInit {
     this._cityService.getCityList().subscribe({
       next: (response) => {
         if (response.city.length == 0) {
-          return this._toastrService.info("There are no cities to display currently please add new one to display","No cities");
-        }        
+          return this._toasterService.info("There are no cities to display currently please add new one to display","No cities");
+        }
         this.cityList = response.city;
         for (let index = 0; index < this.createdPolygonList.length; index++) {
           const element = this.createdPolygonList[index];
@@ -131,7 +131,7 @@ export class CityComponent implements OnInit {
         }
       },
       error: (error) => {
-        this._toastrService.error(error.error.msg || "Error occured while getting city data")
+        this._toasterService.error(error.error.msg || "Error occurred while getting city data")
         console.log(error);
       },
       complete: () => {}
@@ -141,14 +141,14 @@ export class CityComponent implements OnInit {
   addCity() {
     /**If the form is invalid or without the polygon drawn display errors */
     if (this.reactiveForm.invalid === true || !this.polygon) {
-      
+
       this.reactiveForm.markAllAsTouched()
       if (this.polygon && this.polygon.getPath() && this.polygon.getPath().getArray().length >= 3) {
         this.reactiveForm.get('cityLatLng').markAsUntouched();
       }
       return
     }
-    
+
     const addCityData = {
       'countryId': this.reactiveForm.get('countryId').value,
       'cityName': (document.getElementById('cityName')as HTMLInputElement).value,
@@ -156,14 +156,14 @@ export class CityComponent implements OnInit {
     }
 
     this._cityService.addCity(addCityData).subscribe({
-      next: (response) => {
+      next: () => {
         this.polygon.setMap(null);
         this.getCity();
         this.resetMap();
-        this._toastrService.success("City Added successfully");
+        this._toasterService.success("City Added successfully");
       },
       error: (error) => {
-        this._toastrService.error(error.error.msg || "Error occured while adding city")
+        this._toasterService.error(error.error.msg || "Error occurred while adding city")
         console.log(error);
       }
     })
@@ -184,20 +184,20 @@ export class CityComponent implements OnInit {
   }
 
   createPolygon(city: any) {
-    /**Create a new polygon and display it in map */    
+    /**Create a new polygon and display it in map */
     const poly = new google.maps.Polygon({
       paths: city.cityLatLng,
     })
     poly.setMap(this.map);
     this.createdPolygonList.push(poly);
-    
-    /**Add listener that exexutes every time a map is clicked */
+
+    /**Add listener that executes every time a map is clicked */
     google.maps.event.addListener(poly, "click", (event) => {
 
       /**Check if the click is on currently editing polygon */
       if (this.editablePolygon && this.editablePolygon != poly) {
         this.editablePolygon.setEditable(false);
-      }      
+      }
 
       /**When user click on the map
        * if the click is inside the polygon then execute the following sequence
@@ -207,14 +207,14 @@ export class CityComponent implements OnInit {
         /**Make the polygon editable and set editable polygon value to current polygon*/
         poly.setEditable(true);
         this.editablePolygon = poly;
-        
 
-        /**get the bounds of curent polygon and get the center point   */
+
+        /**get the bounds of current polygon and get the center point   */
         const bounds = new google.maps.LatLngBounds();
         city.cityLatLng.forEach((point) => bounds.extend(point));
         const center = bounds.getCenter();
 
-        /**Set the content of the infowindow that should be displayed */
+        /**Set the content of the info window that should be displayed */
         const content = `
           <div class="info-window-content">
           <form>
@@ -233,22 +233,22 @@ export class CityComponent implements OnInit {
           </div>
         `;
 
-        /**Css for infowindow */
+        /**Css for info window */
         const infoWindowStyle = `
         .info-window-content {
-          
+
           padding: 5px;
         }
-        
+
         .info-window-label {
           font-size: 16px;
           margin-right: 10px;
         }
-        
+
         .info-window-colon {
           font-weight: bold;
         }
-        
+
         .infoCity-Input {
           margin-bottom: 10px;
           padding: 5px;
@@ -257,7 +257,7 @@ export class CityComponent implements OnInit {
           width: 100%;
           box-sizing: border-box;
         }
-        
+
         .editButton {
           margin-top: 10px;
           padding: 10px 20px;
@@ -265,24 +265,24 @@ export class CityComponent implements OnInit {
           cursor: pointer;
           font-size: 13px;
         }
-        
+
         .btn-success {
           color: #fff;
           background-color: #28a745;
           border-color: #28a745;
         }
-        
+
         .btn-success:hover {
           background-color: #218838;
           border-color: #1e7e34;
         }
-        
+
         .btn-danger {
           color: #fff;
           background-color: #dc3545;
           border-color: #dc3545;
         }
-        
+
         .btn-danger:hover {
           background-color: #c82333;
           border-color: #bd2130;
@@ -322,27 +322,27 @@ export class CityComponent implements OnInit {
             }
 
             this._cityService.editCity(cityId, editCityData).subscribe({
-              next: (response) => {
-                this._toastrService.success("City has been edited successfull","Edit successfull");
+              next: () => {
+                this._toasterService.success("City has been edited successfully","Edit successfully");
                 this.getCity();
                 this.resetMap();
               },
               error: (error) => {
-                this._toastrService.error(error.error.msg || "Error occured while updating city");
+                this._toasterService.error(error.error.msg || "Error occurred while updating city");
                 console.log(error);
               },
               complete: () => {}
             })
-            
+
           })
         }, 100);
 
-        /**Close the info Window whenever clicked outside the polygon and also make the polygon non editable*/
+        /**Close the info Window whenever clicked outside the polygon and also make the polygon non-editable*/
         google.maps.event.addListener(this.map, "click", (event) => {
           if (!google.maps.geometry.poly.containsLocation(event.latLng, poly)) {
             if (this.editablePolygon) {
               this.editablePolygon.setEditable(false);
-              this.editablePolygon = null;              
+              this.editablePolygon = null;
             }
             this.infoWindow.close();
           }
@@ -363,7 +363,7 @@ export class CityComponent implements OnInit {
           stop: () => {}
         } as google.maps.MapMouseEvent;
         google.maps.event.trigger(poly, 'click', event);
-      })      
+      })
     }, 1000);
 
   }
