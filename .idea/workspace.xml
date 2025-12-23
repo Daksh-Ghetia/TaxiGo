@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9ce804a-c4f6-470d-85f4-333888b0f922" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/messaging.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/messaging.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/web-socket.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/web-socket.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/country.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/country.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,7 +16,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -29,6 +30,8 @@
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Node.js.country.component.ts.executor": "Debug",
+    "Node.js.country.service.ts.executor": "Run",
+    "Node.js.index.js.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -36,6 +39,7 @@
     "code.cleanup.on.save": "true",
     "git-widget-placeholder": "main",
     "javascript.preferred.runtime.type.id": "node",
+    "last_opened_file_path": "D:/Carleton/Fall 2024/web and mobile development/Project/TaxiGo",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -64,7 +68,8 @@
       <option name="presentableId" value="Default" />
       <updated>1766292242751</updated>
       <workItem from="1766292245061" duration="2960000" />
-      <workItem from="1766330623979" duration="10803000" />
+      <workItem from="1766330623979" duration="12028000" />
+      <workItem from="1766450016688" duration="1251000" />
     </task>
     <servers />
   </component>

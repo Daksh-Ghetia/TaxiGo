@@ -12,7 +12,7 @@ export class CountryService {
   constructor(private http: HttpClient) { }
 
   getCountryList() : Observable<any> {
-    this._url = "https://restcountries.com/v3.1/all"
+    this._url = "https://restcountries.com/v3.1/all?fields=name,idd,currencies,timezones,flag,flags"
     return this.http.get<any>(this._url);
   }
 
