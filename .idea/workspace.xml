@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9ce804a-c4f6-470d-85f4-333888b0f922" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/tests/adminModel.test.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/tests/authentication.test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/country.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/country.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,6 +13,13 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ChangesViewManager" show_ignored="true" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -43,7 +51,7 @@
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.sourceCode.TypeScript",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "ts.external.directory.path": "D:\\Carleton\\Fall 2024\\web and mobile development\\Project\\TaxiGo\\frontend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   },
@@ -53,6 +61,12 @@
     ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Carleton\Fall 2024\web and mobile development\Project\TaxiGo\backend\tests" />
+      <recent name="D:\Carleton\Fall 2024\web and mobile development\Project\TaxiGo\backend\tests\backend\tests" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -69,7 +83,7 @@
       <updated>1766292242751</updated>
       <workItem from="1766292245061" duration="2960000" />
       <workItem from="1766330623979" duration="12028000" />
-      <workItem from="1766450016688" duration="1251000" />
+      <workItem from="1766450016688" duration="3659000" />
     </task>
     <servers />
   </component>
