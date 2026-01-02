@@ -2,32 +2,54 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9ce804a-c4f6-470d-85f4-333888b0f922" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/app/shared/convert-minutes-to-hours-and-minutes.pipe.spec.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/app/testing/testing.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/02ad7ed2-984c-46a6-b0e1-68a5d8392bba.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/.env.demo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/config/env.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/db/mongoose.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/db/mongoose.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/middleware/authentication.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/middleware/authentication.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/models/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/models/admin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/tests/authentication.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/tests/authentication.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.firebaserc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/firebase.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/functions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/functions/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.component.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.routing.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.routing.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/navbar/navbar.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/navbar/navbar.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/sidebar/sidebar.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/sidebar/sidebar.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/city/city.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/city/city.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/city/city.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/city/city.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/confirmed-ride/confirmed-ride.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/confirmed-ride/confirmed-ride.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/country/country.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/country/country.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/create-ride/create-ride.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/create-ride/create-ride.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/driver-list/driver-list.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/driver-list/driver-list.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/login/login.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/login/login.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/maps/maps.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/maps/maps.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/ride-history/ride-history.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/ride-history/ride-history.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/running-request/running-request.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/running-request/running-request.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/setting/setting.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/setting/setting.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/user/user.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/user/user.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/vehicle-pricing/vehicle-pricing.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/vehicle-pricing/vehicle-pricing.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/vehicle-type/vehicle-type.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/vehicle-type/vehicle-type.component.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/tsconfig.spec.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/tsconfig.spec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/layouts/admin-layout/admin-layout.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/layouts/admin-layout/admin-layout.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/confirmed-ride/confirmed-ride.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/confirmed-ride/confirmed-ride.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/driver-list/driver-list.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/driver-list/driver-list.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/driver-list/driver-list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/driver-list/driver-list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/user/user.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/user/user.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/user/user.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/user/user.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/vehicle-type/vehicle-type.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/vehicle-type/vehicle-type.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/vehicle-type/vehicle-type.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/vehicle-type/vehicle-type.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/auth.interceptor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/auth.interceptor.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/auth.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/city.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/city.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/country.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/country.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/driver.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/driver.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/feedback.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/feedback.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/messaging.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/ride.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/ride.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/setting.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/setting.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/user.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/vehicle-pricing.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/vehicle-pricing.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/vehicle-type.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/vehicle-type.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/web-socket.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/web-socket.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/testing/testing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/testing/testing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/browserslist" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/browserslist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/environments/environment.prod.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/environments/environment.prod.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/environments/environment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/environments/environment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/firebase-messaging-sw.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +68,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -60,6 +82,7 @@
   "keyToString": {
     "JavaScript Debug.localhost:4200.executor": "Debug",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Node.js Test Runner.auth middleware attaches admin and token when verification succeeds.executor": "Debug",
     "Node.js.country.component.ts.executor": "Debug",
     "Node.js.country.service.ts.executor": "Run",
     "Node.js.index.js.executor": "Run",
@@ -68,13 +91,15 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "code.cleanup.on.save": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "backendModuleUpdate",
+    "javascript.nodejs.core.library.configured.version": "20.17.0",
+    "javascript.nodejs.core.library.typings.version": "20.17.58",
     "javascript.preferred.runtime.type.id": "node",
-    "last_opened_file_path": "D:/Carleton/Fall 2024/web and mobile development/Project/TaxiGo",
+    "last_opened_file_path": "D:/Carleton/Fall 2024/web and mobile development/Project/TaxiGo/backend/src",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "terminal",
     "ts.external.directory.path": "D:\\Carleton\\Fall 2024\\web and mobile development\\Project\\TaxiGo\\frontend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   },
@@ -85,6 +110,10 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Carleton\Fall 2024\web and mobile development\Project\TaxiGo\backend\src" />
+      <recent name="D:\Carleton\Fall 2024\web and mobile development\Project\TaxiGo\backend" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Carleton\Fall 2024\web and mobile development\Project\TaxiGo\frontend\src\app" />
       <recent name="D:\Carleton\Fall 2024\web and mobile development\Project\TaxiGo\frontend\src\app\shared" />
@@ -93,12 +122,26 @@
       <recent name="D:\Carleton\Fall 2024\web and mobile development\Project\TaxiGo\backend\tests\backend\tests" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Node.js Test Runner.auth middleware attaches admin and token when verification succeeds">
     <configuration name="localhost:4200" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:4200/">
+      <method v="2" />
+    </configuration>
+    <configuration name="auth middleware attaches admin and token when verification succeeds" type="NodeJsTestRunner" temporary="true">
+      <node-interpreter value="project" />
+      <working-dir value="$PROJECT_DIR$/backend" />
+      <language value="JAVA_SCRIPT" />
+      <typescript-loader value="MANUAL_SETUP_IN_NODE_OPTION" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/backend/tests/authentication.test.js" />
+      <test-names>
+        <test-name value="auth middleware attaches admin and token when verification succeeds" />
+      </test-names>
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Node.js Test Runner.auth middleware attaches admin and token when verification succeeds" />
         <item itemvalue="JavaScript Debug.localhost:4200" />
       </list>
     </recent_temporary>
@@ -119,19 +162,25 @@
       <updated>1766292242751</updated>
       <workItem from="1766292245061" duration="2960000" />
       <workItem from="1766330623979" duration="12028000" />
-      <workItem from="1766450016688" duration="22418000" />
+      <workItem from="1766450016688" duration="23404000" />
+      <workItem from="1766967973160" duration="14877000" />
+      <workItem from="1767105873302" duration="1671000" />
+      <workItem from="1767297753837" duration="13847000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Created frontend test cases" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/frontend/src/app/pages/city/city.component.ts</url>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

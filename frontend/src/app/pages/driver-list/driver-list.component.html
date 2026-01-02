@@ -49,7 +49,7 @@
                         <div>
                             <strong *ngIf="driverForm.get('driverName').invalid && driverForm.get('driverName').touched && (driverForm.get('driverName').value == null || driverForm.get('driverName').value == '')">Please add driver name</strong>
                             <strong *ngIf="driverForm.get('driverName').invalid && driverForm.get('driverName').touched && driverForm.get('driverName').errors.pattern">Please add valid driver name</strong>
-                        </div>                        
+                        </div>
                     </td>
                 </tr>
                 <!-- Driver Email -->
@@ -79,7 +79,7 @@
                             <strong *ngIf="driverForm.get('driverCountryId').invalid && driverForm.get('driverCountryId').touched">Please select a country</strong>
                         </div>
                     </td>
-                </tr>                
+                </tr>
                 <!-- Driver City -->
                 <div class="mt-3"></div>
                 <tr>
@@ -112,7 +112,7 @@
                 <!-- Driver Profile -->
                 <div class="mt-3"></div>
                 <tr>
-                    <td>Driver Profile:</td>                    
+                    <td>Driver Profile:</td>
                     <td>
                         <input class="driver-input" formControlName="driverProfile" type="file" name="driverProfile" id="driverProfile"  placeholder="Driver profile picture" accept="image/png, image/jpeg, image/jpg" >
                     </td>
@@ -145,7 +145,7 @@
             </div>
             <div class="table-responsive">
               <table class="table align-items-center table-flush">
-                
+
                 <!-- Table header section -->
                 <thead class="thead-light">
                   <tr class="text-center">
@@ -192,19 +192,19 @@
                 <!-- Table body section -->
                 <tbody>
                   <tr *ngFor="let driver of driverDataList | paginate: { itemsPerPage: 10, currentPage: p, totalItems: totalRecordLength }" class="text-center text-capitalize">
-                    
+
                     <td>{{driver.driverName}}</td>
                     <td>{{driver.driverEmail}}</td>
                     <td>{{driver.country.countryCode}} {{driver.driverPhone}}</td>
                     <td>{{driver.country.countryName}}</td>
                     <td>{{driver.city.cityName}}</td>
-                    <td *ngIf="driver?.vehicleType.length > 0">{{driver.vehicleType[0].vehicleName}} 
+                    <td *ngIf="driver?.vehicleType.length > 0">{{driver.vehicleType[0].vehicleName}}
                         <span (click)="updateServiceModel(content, driver.city._id, driver._id, driver.vehicleType[0]._id)">
                             <img src="assets/img/icons/editVehicleServiceType.png" alt="editVehicleType" srcset="" height="20px" width="20px">
                         </span>
                     </td>
                     <td *ngIf="driver?.vehicleType.length == 0">
-                         - 
+                         -
                         <span (click)="updateServiceModel(content, driver.city._id, driver._id)">
                             <img src="assets/img/icons/editVehicleServiceType.png" alt="editVehicleType" srcset="" height="20px" width="20px">
                         </span>
@@ -221,8 +221,8 @@
                       </div>
                     </td>
                     <td>
-                        <img *ngIf="driver.driverProfile" src="http://localhost:3000/driverImages/{{driver.driverProfile}}" alt="Driver profile" height="80px" >
-                        <img *ngIf="!driver.driverProfile" src="http://localhost:3000/driverImages/defaultImage.png" alt="Driver profile default" height="60px" >
+                        <img *ngIf="driver.driverProfile" [src]="apiBaseUrl + '/driverImages/' + driver.driverProfile" alt="Driver profile" height="80px" >
+                        <img *ngIf="!driver.driverProfile" [src]="apiBaseUrl + '/driverImages/defaultImage.png'" alt="Driver profile default" height="60px" >
                     </td>
                     <td>
                       <button class="btn btn-info"  (click)="fillDataForEdit(driver); scrollToTop()">Edit</button>
@@ -265,7 +265,7 @@
           </div>
         </div>
     </div>
-    
+
 
     <ng-template #content let-modal>
         <div class="modal-header">
@@ -284,7 +284,7 @@
             <br>
             <div>
               <strong *ngIf="driverServiceTypeForm.get('driverServiceTypeId').invalid && driverServiceTypeForm.get('driverServiceTypeId').touched">Please select a service type</strong>
-            </div> 
+            </div>
           </form>
         </div>
 

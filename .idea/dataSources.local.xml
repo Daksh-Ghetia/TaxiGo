@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="WS-253.29346.143">
+    <data-source name="@localhost" uuid="02ad7ed2-984c-46a6-b0e1-68a5d8392bba">
+      <database-info product="Mongo DB" version="8.0.0" jdbc-version="4.2" driver-name="MongoDB JDBC Driver" driver-version="1.20" dbms="MONGO" exact-version="8.0.0" exact-driver-version="1.20" />
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <secret-storage>master_key</secret-storage>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema">
+            <name qname="@" />
+            <name qname="TaxiGo" />
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+  </component>
+</project>

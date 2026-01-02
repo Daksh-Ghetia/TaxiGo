@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { VehicleTypeService } from 'src/app/shared/vehicle-type.service';
+import {environment} from "src/environments/environment";
 
 @Component({
   selector: 'app-vehicle-type',
@@ -20,6 +21,7 @@ export class VehicleTypeComponent implements OnInit {
   vehicles: any = [];
   customErrMsg: string;
   updateId: string;
+  apiBaseUrl: string = environment.apiBaseUrl;
 
   ngOnInit(): void {
     this.getVehicleType()
@@ -34,7 +36,7 @@ export class VehicleTypeComponent implements OnInit {
   getVehicleType() {
     /**Call the service and subscribe to the data change */
     this._vehicleTypeService.getVehicleType().subscribe({
-      next: (response) => {      
+      next: (response) => {
         if (response.vehicle.legth == 0) {
           return this._toastrService.info("No vehicle type to display")
         }
@@ -61,17 +63,17 @@ export class VehicleTypeComponent implements OnInit {
     if (buttonVal === "Edit Vehicle Type") {
       return this.editVehicleType();
     }
-    
+
     if (this.reactiveForm.invalid === true) {
       this.reactiveForm.get('vehicleName').markAsDirty();
       this.reactiveForm.get('vehicleIcon').markAsTouched();
       this._toastrService.warning("Please enter valid details", "Invalid details");
       return console.log("Invalid form details");
     }
-    
+
     const vehicleAddForm = document.getElementById('addNewVehicleType') as HTMLFormElement;
     const formData = new FormData(vehicleAddForm);
-    
+
     this._vehicleTypeService.addVehicleType(formData).subscribe({
       next: () => {
         this.getVehicleType();
@@ -90,7 +92,7 @@ export class VehicleTypeComponent implements OnInit {
     if (this.updateId === "" || this.reactiveForm.get('vehicleName').value == "") {
       this._toastrService.warning("Please enter valid details", "Invalid details");
       return console.log("invalidUpdata");
-    }    
+    }
 
     const vehicleAddForm = document.getElementById('addNewVehicleType') as HTMLFormElement;
     const formData = new FormData(vehicleAddForm);
@@ -127,5 +129,5 @@ export class VehicleTypeComponent implements OnInit {
       top: 0,
       behavior: 'smooth'
     });
-  }  
+  }
 }

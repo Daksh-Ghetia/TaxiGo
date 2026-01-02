@@ -28,11 +28,7 @@ import { ConvertMinutesToHoursAndMinutesPipe } from './shared/convert-minutes-to
 import { RideHistoryComponent } from './pages/ride-history/ride-history.component';
 import { RunningRequestComponent } from './pages/running-request/running-request.component';
 import { RideStatusPipe } from './shared/ride-status.pipe';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
-import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
-import { MessagingService } from './shared/messaging.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { BrowserModule } from '@angular/platform-browser';
 import { BnNgIdleService } from 'bn-ng-idle';
@@ -61,9 +57,6 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule ,POSITION,SPINNER,PB_DIRECTION
       timeOut: 3000,
       extendedTimeOut: 3000,
     }),
-    AngularFireAuthModule,
-    AngularFireMessagingModule,
-    AngularFireModule.initializeApp(environment.firebase),
     BrowserModule,
     NgxUiLoaderModule,
     NgxUiLoaderModule.forRoot({
@@ -105,7 +98,6 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule ,POSITION,SPINNER,PB_DIRECTION
       multi: true,
     },
     DatePipe,
-    MessagingService,
     AsyncPipe,
     BnNgIdleService
   ],

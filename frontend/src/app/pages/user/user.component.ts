@@ -6,6 +6,7 @@ import { UserService } from "src/app/shared/user.service";
 import { loadStripe } from "@stripe/stripe-js";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { SettingService } from "src/app/shared/setting.service";
+import {environment} from "src/environments/environment";
 
 @Component({
   selector: "app-user",
@@ -27,6 +28,7 @@ export class UserComponent implements OnInit {
   public selectedCardId: string;
   public p: any = 1;
   public totalRecordLength: number;
+  protected apiBaseUrl: string = environment.apiBaseUrl;
 
   private options: any;
   private elements: any;

@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="header-body">
             <h1 class="text-white">{{title}} Vehicle Type</h1>
-            
+
         </div>
     </div>
 </div>
@@ -48,7 +48,7 @@
 
         <div *ngFor="let vehicle of vehicles">
             <div class="card mr-3 my-2" style="width: 18rem;">
-                <img class="card-img-top" src="http://localhost:3000/vehicleTypeImages/{{vehicle.vehicleIcon}}" alt="Card image" width="286px" height="350px">
+                <img class="card-img-top" [src]="apiBaseUrl + '/vehicleTypeImages/' + vehicle.vehicleIcon" alt="Card image" width="286px" height="350px">
                 <div class="card-body">
                   <h5 class="card-title text-capitalize" style="text-align: center;">{{vehicle.vehicleName}} </h5>
                   <div style="text-align: center;">

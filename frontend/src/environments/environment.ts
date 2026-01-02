@@ -4,15 +4,7 @@
 
 export const environment = {
   production: false,
-  firebase: {
-    apiKey: "AIzaSyBbq0DgIeuedDcp6fqkL-vm5SGGuA3hn4E",
-    authDomain: "my-first-project-1748f.firebaseapp.com",
-    projectId: "my-first-project-1748f",
-    storageBucket: "my-first-project-1748f.appspot.com",
-    messagingSenderId: "1061296328400",
-    appId: "1:1061296328400:web:09fc14bd0884ef5372d8d5",
-    measurementId: "G-51B0R16GMP"
-  }
+  apiBaseUrl: "http://localhost:3000",
 };
 
 /*

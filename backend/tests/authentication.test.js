@@ -39,7 +39,7 @@ afterEach(() => {
 });
 
 test('auth middleware attaches admin and token when verification succeeds', async () => {
-    const token = jwt.sign({ _id: 'admin123' }, 'TaxiGoElluminati');
+    const token = jwt.sign({ _id: 'admin123' }, process.env.JWT_SECRET);
     const adminRecord = { _id: 'admin123', tokens: [{ token }] };
 
     Admin.findOne = async (query) => {
@@ -64,7 +64,7 @@ test('auth middleware attaches admin and token when verification succeeds', asyn
 });
 
 test('auth middleware responds with 400 when admin lookup fails', async () => {
-    const token = jwt.sign({ _id: 'admin123' }, 'TaxiGoElluminati');
+    const token = jwt.sign({ _id: 'admin123' }, process.env.JWT_SECRET);
 
     Admin.findOne = async () => null;
 

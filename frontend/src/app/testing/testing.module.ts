@@ -2,19 +2,9 @@ import { NgModule } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrService, ActiveToast, IndividualConfig } from 'ngx-toastr';
-import { AngularFireMessaging } from '@angular/fire/compat/messaging';
-import { of } from 'rxjs';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 const fakeToast = {} as ActiveToast<any>;
-
-const angularFireMessagingMock: Partial<AngularFireMessaging> = {
-  messages: of(null),
-  requestToken: of(null),
-  getToken: of(null as any),
-  tokenChanges: of(null as any),
-  deleteToken: () => of(true),
-};
 
 export const toastrServiceMock: Partial<ToastrService> = {
   success: (
@@ -57,8 +47,7 @@ export const toastrServiceMock: Partial<ToastrService> = {
     NgxPaginationModule,
   ],
   providers: [
-    { provide: ToastrService, useValue: toastrServiceMock },
-    { provide: AngularFireMessaging, useValue: angularFireMessagingMock }
+    { provide: ToastrService, useValue: toastrServiceMock }
   ],
 })
 export class TestingModule {}

@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="@localhost">
+  <database-model serializer="dbm" dbms="MONGO" family-id="MONGO" format-version="4.54">
+    <root id="1">
+      <ServerVersion>8.0.0</ServerVersion>
+    </root>
+    <schema id="2" parent="1" name="TaxiGo">
+      <LastIntrospectionLocalTimestamp>2025-12-29.17:44:25</LastIntrospectionLocalTimestamp>
+    </schema>
+    <schema id="3" parent="1" name="admin"/>
+    <schema id="4" parent="1" name="config"/>
+    <schema id="5" parent="1" name="local"/>
+    <schema id="6" parent="1" name="your_database_name"/>
+    <table id="7" parent="2" name="admins"/>
+    <table id="8" parent="2" name="cities"/>
+    <table id="9" parent="2" name="countries"/>
+    <table id="10" parent="2" name="drivers"/>
+    <table id="11" parent="2" name="feedbacks"/>
+    <table id="12" parent="2" name="rides"/>
+    <table id="13" parent="2" name="settings"/>
+    <table id="14" parent="2" name="users"/>
+    <table id="15" parent="2" name="vehicle pricings"/>
+    <table id="16" parent="2" name="vehicletypes"/>
+    <column id="17" parent="7" name="_id">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="18" parent="7" name="__v">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="19" parent="7" name="createdAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="20" parent="7" name="email">
+      <Position>1</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="21" parent="7" name="name">
+      <Position>1</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="22" parent="7" name="tokens">
+      <Position>1</Position>
+      <StoredType>list|4999545s</StoredType>
+    </column>
+    <column id="23" parent="7" name="updatedAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="24" parent="7" name="password">
+      <Position>2</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="25" parent="7" name="tokens._id">
+      <Position>2</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="26" parent="7" name="tokens.token">
+      <Position>3</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <index id="27" parent="7" name="_id_">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="28" parent="7" name="email_1">
+      <ColNames>email</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <column id="29" parent="8" name="_id">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="30" parent="8" name="__v">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="31" parent="8" name="cityLatLng">
+      <Position>1</Position>
+      <StoredType>list|4999545s</StoredType>
+    </column>
+    <column id="32" parent="8" name="countryId">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="33" parent="8" name="createdAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="34" parent="8" name="updatedAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="35" parent="8" name="cityLatLng.lat">
+      <Position>2</Position>
+      <StoredType>Double|8s</StoredType>
+    </column>
+    <column id="36" parent="8" name="cityLatLng.lng">
+      <Position>3</Position>
+      <StoredType>Double|8s</StoredType>
+    </column>
+    <column id="37" parent="8" name="cityName">
+      <Position>4</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <index id="38" parent="8" name="_id_">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="39" parent="8" name="cityName_1">
+      <ColNames>cityName</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <column id="40" parent="9" name="_id">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="41" parent="9" name="countryCode">
+      <Position>1</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="42" parent="9" name="countryName">
+      <Position>1</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="43" parent="9" name="updatedAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="44" parent="9" name="__v">
+      <Position>2</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="45" parent="9" name="countryCurrency">
+      <Position>2</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="46" parent="9" name="countryTimeZone">
+      <Position>2</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="47" parent="9" name="countryCurrencySymbol">
+      <Position>3</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="48" parent="9" name="createdAt">
+      <Position>3</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="49" parent="9" name="countryFlag">
+      <Position>4</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="50" parent="9" name="countryIcon">
+      <Position>5</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <index id="51" parent="9" name="_id_">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="52" parent="9" name="countryName_1">
+      <ColNames>countryName</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <column id="53" parent="10" name="_id">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="54" parent="10" name="__v">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="55" parent="10" name="createdAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="56" parent="10" name="driverCityId">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="57" parent="10" name="driverRideStatus">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="58" parent="10" name="updatedAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="59" parent="10" name="driverCountryId">
+      <Position>2</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="60" parent="10" name="driverServiceTypeId">
+      <Position>2</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="61" parent="10" name="driverEmail">
+      <Position>3</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="62" parent="10" name="driverStatus">
+      <Position>3</Position>
+      <StoredType>Boolean|12s</StoredType>
+    </column>
+    <column id="63" parent="10" name="driverName">
+      <Position>4</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="64" parent="10" name="driverPhone">
+      <Position>5</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="65" parent="10" name="driverProfile">
+      <Position>6</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <index id="66" parent="10" name="_id_">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="67" parent="10" name="driverEmail_1">
+      <ColNames>driverEmail</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="68" parent="10" name="driverPhone_1">
+      <ColNames>driverPhone</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <column id="69" parent="11" name="_id">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="70" parent="11" name="__v">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="71" parent="11" name="createdAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="72" parent="11" name="feedbackRideId">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="73" parent="11" name="updatedAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="74" parent="11" name="userFeedback">
+      <Position>1</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <index id="75" parent="11" name="_id_">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <column id="76" parent="12" name="_id">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="77" parent="12" name="__v">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="78" parent="12" name="createdAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="79" parent="12" name="rideCityId">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="80" parent="12" name="updatedAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="81" parent="12" name="rideCustomerId">
+      <Position>2</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="82" parent="12" name="rideDateTime">
+      <Position>3</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="83" parent="12" name="rideDistance">
+      <Position>4</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="84" parent="12" name="rideDriverAssignType">
+      <Position>5</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="85" parent="12" name="rideDriverId">
+      <Position>6</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="86" parent="12" name="rideDropLocation">
+      <Position>7</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="87" parent="12" name="rideFare">
+      <Position>8</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="88" parent="12" name="rideIntermediateStops">
+      <Position>9</Position>
+      <StoredType>list|4999545s</StoredType>
+    </column>
+    <column id="89" parent="12" name="rideNoActionByDriverId">
+      <Position>10</Position>
+      <StoredType>list|4999545s</StoredType>
+    </column>
+    <column id="90" parent="12" name="ridePaymentCardId">
+      <Position>11</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="91" parent="12" name="ridePaymentMethod">
+      <Position>12</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="92" parent="12" name="ridePickUpLocation">
+      <Position>13</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="93" parent="12" name="rideRejectedByDriverId">
+      <Position>15</Position>
+      <StoredType>list|4999545s</StoredType>
+    </column>
+    <column id="94" parent="12" name="rideServiceTypeId">
+      <Position>16</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="95" parent="12" name="rideStatus">
+      <Position>17</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="96" parent="12" name="rideTime">
+      <Position>18</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <index id="97" parent="12" name="_id_">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <column id="98" parent="13" name="_id">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="99" parent="13" name="__v">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="100" parent="13" name="mailClientID">
+      <Position>1</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="101" parent="13" name="messagingAuthToken">
+      <Position>1</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="102" parent="13" name="stopsInBetweenDestination">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="103" parent="13" name="updatedAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="104" parent="13" name="mailClientSecret">
+      <Position>2</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="105" parent="13" name="messagingSID">
+      <Position>2</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="106" parent="13" name="stripePublicKey">
+      <Position>2</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="107" parent="13" name="stripeSecretKey">
+      <Position>3</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="108" parent="13" name="timeToAcceptRequest">
+      <Position>4</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <index id="109" parent="13" name="_id_">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <column id="110" parent="14" name="_id">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="111" parent="14" name="__v">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="112" parent="14" name="createdAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="113" parent="14" name="updatedAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="114" parent="14" name="userCountryId">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="115" parent="14" name="userName">
+      <Position>1</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="116" parent="14" name="userEmail">
+      <Position>2</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="117" parent="14" name="userPaymentCustomerId">
+      <Position>2</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="118" parent="14" name="userPhone">
+      <Position>3</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="119" parent="14" name="userProfile">
+      <Position>4</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <index id="120" parent="14" name="_id_">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="121" parent="14" name="userEmail_1">
+      <ColNames>userEmail</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="122" parent="14" name="userPhone_1">
+      <ColNames>userPhone</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <column id="123" parent="15" name="_id">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="124" parent="15" name="__v">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="125" parent="15" name="countryId">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="126" parent="15" name="createdAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="127" parent="15" name="driverProfit">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="128" parent="15" name="maxSpace">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="129" parent="15" name="minimumFare">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="130" parent="15" name="pricePerUnitDistance">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="131" parent="15" name="updatedAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="132" parent="15" name="vehicleTypeId">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="133" parent="15" name="basePrice">
+      <Position>2</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="134" parent="15" name="distanceForBasePrice">
+      <Position>2</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="135" parent="15" name="pricePerUnitTime">
+      <Position>2</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="136" parent="15" name="cityId">
+      <Position>3</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <index id="137" parent="15" name="_id_">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <column id="138" parent="16" name="_id">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="139" parent="16" name="__v">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="140" parent="16" name="updatedAt">
+      <Position>1</Position>
+      <StoredType>ISODate|91s</StoredType>
+    </column>
+    <column id="141" parent="16" name="vehicleIcon">
+      <Position>1</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="142" parent="16" name="vehicleName">
+      <Position>2</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <index id="143" parent="16" name="_id_">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="144" parent="16" name="vehicleName_1">
+      <ColNames>vehicleName</ColNames>
+      <Unique>1</Unique>
+    </index>
+  </database-model>
+</dataSource>

@@ -3,7 +3,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { DriverService } from 'src/app/shared/driver.service';
-import { MessagingService } from 'src/app/shared/messaging.service';
 import { RideService } from 'src/app/shared/ride.service';
 import { VehicleTypeService } from 'src/app/shared/vehicle-type.service';
 import { WebSocketService } from 'src/app/shared/web-socket.service';
@@ -26,7 +25,7 @@ export class ConfirmedRideComponent implements OnInit {
   public rideFilter: FormGroup;
   public p: number = 1;
   public totalRecordLength: number;
-  
+
   private modalRef: NgbModalRef;
 
   constructor(
@@ -35,7 +34,6 @@ export class ConfirmedRideComponent implements OnInit {
     private _modalService: NgbModal,
     private _toastrService: ToastrService,
     private _webSocketService: WebSocketService,
-    private _messagingService: MessagingService,
     private _vehicleTypeService: VehicleTypeService
   ) { }
 
@@ -43,7 +41,7 @@ export class ConfirmedRideComponent implements OnInit {
     // this.getRideData();
     this.listenToSocket();
     this.getVehicalTypeList();
-    
+
     this.rideFilter = new FormGroup({
       rideSearchData: new FormControl(null, []),
       rideStatus: new FormControl(null, []),
@@ -51,11 +49,6 @@ export class ConfirmedRideComponent implements OnInit {
       rideFromDate: new FormControl(null, []),
       rideToDate : new FormControl(null, []),
     })
-
-    //Do not delete
-    // this._messagingService.requestPermission();
-    // this._messagingService.receiveMessaging();
-    // this.message = this._messagingService.currentMessage;
   }
 
   ngAfterViewInit() {
@@ -118,7 +111,7 @@ export class ConfirmedRideComponent implements OnInit {
     if (confirm("Are you sure you want to cancel the ride")) {
       const rideData = new FormData();
       rideData.append('rideStatus', '0');
-      
+
       this._rideService.updateRide(id, rideData).subscribe({
         next: (response) => {
           this.getRideData();
@@ -163,7 +156,7 @@ export class ConfirmedRideComponent implements OnInit {
     if (this.selectedRowIndex === undefined) {
       return this._toastrService.info("please select a driver to assign", "Driver not selected");
     }
-    
+
     this._webSocketService.emit('assignSelectedDriver', {driver: this.driverList[this.selectedRowIndex], rideDriverAssignType: 1, ride: this.rideDetails});
     this.modalRef.close();
     this.getRideData();
@@ -196,7 +189,7 @@ export class ConfirmedRideComponent implements OnInit {
       rideFromDate: this.rideFilter.get('rideFromDate').value || "null",
       rideToDate: toDate || "null"
     }
-    
+
     this._rideService.getRideData([1,2,3],rideFilterData, 0).subscribe({
       next: (response) => {
         if (response.ride.length == 0) {

@@ -2,31 +2,38 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "node --test tests",
-    "start": "nodemon src/index.js",
-    "dev": "nodemon src/index.js"
-  },
+    "start": "cross-env NODE_ENV=production node src/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/index.js",
+    "test": "cross-env NODE_ENV=development node -r ./src/config/env.js --test tests"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
-    "bcrypt": "^5.1.0",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "googleapis": "^118.0.0",
-    "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.8.1",
-    "multer": "^2.0.2",
-    "node-cron": "^3.0.2",
-    "nodemailer": "^6.9.3",
-    "socket.io": "^4.6.1",
-    "stripe": "^12.8.0",
-    "twilio": "^4.11.2",
-    "validator": "^13.9.0"
+    "dotenv": "^16.4.5",
+    "envalid": "^8.1.1",
+    "express": "^4.19.2",
+    "googleapis": "^128.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.8.4",
+    "multer": "2.0.2",
+    "node-cron": "^3.0.3",
+    "nodemailer": "7.0.11",
+    "socket.io": "^4.7.5",
+    "stripe": "^14.25.0",
+    "twilio": "^4.23.0",
+    "validator": "^13.12.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "cross-env": "^10.1.0",
+    "nodemon": "^3.0.3"
   }
 }
