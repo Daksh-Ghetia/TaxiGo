@@ -6,6 +6,7 @@ import { CityService } from 'src/app/shared/city.service';
 import { CountryService } from 'src/app/shared/country.service';
 import { DriverService } from 'src/app/shared/driver.service';
 import { VehiclePricingService } from 'src/app/shared/vehicle-pricing.service';
+import {environment} from "src/environments/environment";
 
 @Component({
   selector: 'app-driver-list',
@@ -27,7 +28,8 @@ export class DriverListComponent implements OnInit {
   private modalRef: NgbModalRef;
   public p: any = 1;
   public totalRecordLength: number;
-  
+  protected apiBaseUrl: string = environment.apiBaseUrl;
+
 
   /**For sorting data */
   private sortedColumn: string = 'createdAt';
@@ -72,7 +74,7 @@ export class DriverListComponent implements OnInit {
     if (this.sideButtonTitle == "Add") {
       data = (document.getElementById('searchDriver') as HTMLInputElement).value;
     }
-    
+
     this._driverService.getDriverData(data, this.p-1, this.sortedColumn, this.currentSortDirection == "asc" ? 1 : -1).subscribe({
       next: (response) => {
         this.totalRecordLength = response.totalRecord;
@@ -96,12 +98,12 @@ export class DriverListComponent implements OnInit {
       },
       error: (error) => {
         this._toastrService.error(error.error.msg, "Error occured while getting country data");
-        console.log(error);        
+        console.log(error);
       },
       complete: () => {}
     })
   }
-  
+
   fillCityDropDown(countryName: string) {
     this._cityService.getCityList(countryName).subscribe({
       next: (response) => {
@@ -111,7 +113,7 @@ export class DriverListComponent implements OnInit {
         this.cityList = response.city;
       },
       error: (error) => {
-        console.log(error);        
+        console.log(error);
         return this._toastrService.error(error.error.msg, "Error occured while getting city data");
       },
       complete: () => {}
@@ -152,7 +154,7 @@ export class DriverListComponent implements OnInit {
 
     if (this.actionButton == "Edit") {
       return this.editDriver(driverFormData);
-    }    
+    }
 
     this._driverService.addNewDriver(driverFormData).subscribe({
       next: (response) => {
@@ -236,7 +238,7 @@ export class DriverListComponent implements OnInit {
       'driverPhone': data.driverPhone
     });
     (document.getElementById('editDriverId') as HTMLElement).textContent = data._id;
-    
+
     this.sideButtonTitle = "Search";
     this.actionButton = "Edit";
   }
@@ -314,9 +316,9 @@ export class DriverListComponent implements OnInit {
     }
 
     /**Create a new form data and bind it with necessary information, along with this also get the driver id */
-    let driverFormData: FormData;    
+    let driverFormData: FormData;
     let driverId = (document.getElementById('editDriverId') as HTMLElement).textContent;
-    if (operation !== 'Delete') {      
+    if (operation !== 'Delete') {
       const driverForm = (document.getElementById('driverServiceType') as HTMLFormElement);
       driverFormData = new FormData(driverForm);
     } else {
@@ -337,7 +339,7 @@ export class DriverListComponent implements OnInit {
       },
       complete: () => {}
     })
-    
+
   }
 
   scrollToTop() {

@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { WebSocketService } from './shared/web-socket.service';
-import { MessagingService } from './shared/messaging.service';
-import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 import { BnNgIdleService } from 'bn-ng-idle';
 import { Router } from '@angular/router';
 
@@ -15,19 +13,9 @@ export class AppComponent {
 
   constructor(
     private _webSocketService: WebSocketService,
-    private messaging: AngularFireMessaging,
     private _bnIdle: BnNgIdleService,
     private router: Router
   ) {
-
-
-    // this.messaging.requestPermission.subscribe({
-    //   next:(data:any)=>{
-    //     console.log('permission granted!');
-    //   },error:(error)=>{
-    //     console.log('permission denied', error);
-    //   }
-    // })
   }
 
   ngOnInit(): void {

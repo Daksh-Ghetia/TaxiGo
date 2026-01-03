@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import {environment} from "src/environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -22,17 +23,17 @@ export class CountryService {
   }
 
   getCountry(data: any = "") : Observable<any> {
-    this._url = "http://localhost:3000/country/GetCountryDetails?countryName=" + encodeURIComponent(data);
+    this._url = `${environment.apiBaseUrl}/country/GetCountryDetails?countryName=` + encodeURIComponent(data);
     return this.http.get<any>(this._url)
   }
 
   addCountry(data: any) : Observable<any> {
-    this._url = "http://localhost:3000/country/AddNewCountry";
+    this._url = `${environment.apiBaseUrl}/country/AddNewCountry`;
     return this.http.post(this._url, data);
   }
 
   deleteCountry(id: string) : Observable<any> {
-    this._url = "http://localhost:3000/country/DeleteCountry/" + encodeURIComponent(id);
+    this._url = `${environment.apiBaseUrl}/country/DeleteCountry/` + encodeURIComponent(id);
     return this.http.delete(this._url);
   }
 }
