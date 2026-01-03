@@ -14,11 +14,17 @@ dotenv.config({
 });
 console.log(`Environment: ${process.env.NODE_ENV}`);
 
+const isProd = nodeEnv === "production";
+
 const env = cleanEnv(process.env, {
-    NODE_ENV: str({ choices: ['development', 'production'], default: 'development' }),
+    NODE_ENV: str({ choices: ['development', "test", 'production'], default: 'development' }),
     PORT: port({ default:3000 }),
-    MONGO_URI: str(),
-    JWT_SECRET: str(),
+    MONGO_URI: str({
+        default: isProd ? undefined : "mongodb://127.0.0.1:27017/taxigo_test",
+    }),
+    JWT_SECRET: str({
+        default: isProd ? undefined : "test_jwt_secret_do_not_use_in_prod",
+    }),
 });
 
 module.exports = env;

@@ -7,7 +7,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon src/index.js",
-    "test": "cross-env NODE_ENV=development node -r ./src/config/env.js --test tests"
+    "test": "cross-env NODE_ENV=test node -r ./src/config/env.js --test tests"
 },
   "keywords": [],
   "author": "",
