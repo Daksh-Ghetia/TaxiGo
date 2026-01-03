@@ -27,4 +27,9 @@ const env = cleanEnv(process.env, {
     }),
 });
 
+process.env.NODE_ENV = env.NODE_ENV;
+process.env.PORT = String(env.PORT);
+process.env.MONGO_URI = env.MONGO_URI;
+process.env.JWT_SECRET = env.JWT_SECRET;
+
 module.exports = env;
