@@ -2,54 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9ce804a-c4f6-470d-85f4-333888b0f922" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/02ad7ed2-984c-46a6-b0e1-68a5d8392bba.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/.env.demo" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/config/env.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/02ad7ed2-984c-46a6-b0e1-68a5d8392bba.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/db/mongoose.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/db/mongoose.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/middleware/authentication.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/middleware/authentication.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/models/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/models/admin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/tests/authentication.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/tests/authentication.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/.firebaserc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/firebase.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/functions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/functions/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.component.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/layouts/admin-layout/admin-layout.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/layouts/admin-layout/admin-layout.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/confirmed-ride/confirmed-ride.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/confirmed-ride/confirmed-ride.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/driver-list/driver-list.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/driver-list/driver-list.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/driver-list/driver-list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/driver-list/driver-list.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/user/user.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/user/user.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/user/user.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/user/user.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/vehicle-type/vehicle-type.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/vehicle-type/vehicle-type.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/vehicle-type/vehicle-type.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/vehicle-type/vehicle-type.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/auth.interceptor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/auth.interceptor.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/auth.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/city.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/city.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/country.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/country.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/driver.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/driver.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/feedback.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/feedback.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/messaging.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/ride.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/ride.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/setting.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/setting.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/user.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/vehicle-pricing.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/vehicle-pricing.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/vehicle-type.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/vehicle-type.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/shared/web-socket.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/shared/web-socket.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/testing/testing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/testing/testing.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/browserslist" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/browserslist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/environments/environment.prod.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/environments/environment.prod.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/environments/environment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/environments/environment.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/firebase-messaging-sw.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,7 +124,7 @@
       <workItem from="1766450016688" duration="23404000" />
       <workItem from="1766967973160" duration="14877000" />
       <workItem from="1767105873302" duration="1671000" />
-      <workItem from="1767297753837" duration="13847000" />
+      <workItem from="1767297753837" duration="16114000" />
     </task>
     <servers />
   </component>
